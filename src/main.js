@@ -3,11 +3,14 @@ import {createTripTabsTemplate} from './view/trip-tabs.js';
 import {createTripFiltersTemplate} from './view/trip-filters.js';
 import {createTripSortTemplate} from './view/trip-sort.js';
 import {createTripEventsElementTemplate} from './view/trip-events-element.js';
-import {createTripEventsListTemplate} from './view/trip-events-list.js';
+import {createPointTemplate} from './view/point.js';
 import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventAddTemplate} from './view/trip-event-add.js';
+import {generatePoint} from './mock/point.js';
 
-const TRIP_COUNT = 3;
+const TRIP_COUNT = 15;
+
+const points = new Array(TRIP_COUNT).fill().map(generatePoint);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -30,12 +33,12 @@ render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 render(tripEventsElement, createTripSortTemplate(), `beforeend`);
 render(tripEventsElement, createTripEventsElementTemplate(), `beforeend`);
 
-const tripEventsListElement = mainElement.querySelector(`.trip-events__list`);
+const pointElement = mainElement.querySelector(`.trip-events__list`);
 for (let i = 0; i < TRIP_COUNT; i++) {
-  render(tripEventsListElement, createTripEventsListTemplate(), `beforeend`);
+  render(pointElement, createPointTemplate(points[i]), `beforeend`);
 }
 
-const tripEventsItemElement = tripEventsListElement.querySelector(`.trip-events__item:first-child`);
+const tripEventsItemElement = pointElement.querySelector(`.trip-events__item:first-child`);
 tripEventsItemElement.innerHTML = ``;
 render(tripEventsItemElement, createTripEventEditTemplate(), `beforeend`);
 render(tripEventsItemElement, createTripEventAddTemplate(), `beforeend`);
