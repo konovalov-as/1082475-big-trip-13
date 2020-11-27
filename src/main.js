@@ -1,5 +1,5 @@
 import {createInfoTemplate} from './view/info.js';
-import {createTripTabsTemplate} from './view/trip-tabs.js';
+import {createTabsTemplate} from './view/tabs.js';
 import {createTripFiltersTemplate} from './view/trip-filters.js';
 import {createTripSortTemplate} from './view/trip-sort.js';
 import {createTripEventsElementTemplate} from './view/trip-events-element.js';
@@ -8,11 +8,13 @@ import {createTripEventEditTemplate} from './view/trip-event-edit.js';
 import {createTripEventAddTemplate} from './view/trip-event-add.js';
 import {generatePoint} from './mock/point.js';
 import {generateInfo} from './mock/info.js';
+import {generateTab} from './mock/tabs.js';
 
 const TRIP_COUNT = 15;
 
 const points = new Array(TRIP_COUNT).fill().map(generatePoint);
 const info = new Array(1).fill().map(generateInfo);
+const tabs = new Array(1).fill().map(generateTab);
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -29,7 +31,8 @@ const tripEventsElement = mainElement.querySelector(`.trip-events`);
 
 render(tripMainElement, createInfoTemplate(info[0]), `afterbegin`);
 tripControlsElement.innerHTML = ``;
-render(tripControlsElement, createTripTabsTemplate(), `beforeend`);
+render(tripControlsElement, createTabsTemplate(tabs[0]), `beforeend`);
+
 render(tripControlsElement, createTripFiltersTemplate(), `beforeend`);
 
 render(tripEventsElement, createTripSortTemplate(), `beforeend`);
