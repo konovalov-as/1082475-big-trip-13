@@ -17,7 +17,7 @@ const TRIP_COUNT = 15;
 const points = new Array(TRIP_COUNT).fill().map(generatePoint);
 const info = new Array(1).fill().map(generateInfo);
 const tabs = new Array(1).fill().map(generateTab);
-const filters = new Array(1).fill().map(generateFilter);
+const filters = generateFilter();
 
 const render = (container, template, place) => {
   container.insertAdjacentHTML(place, template);
@@ -40,7 +40,7 @@ render(tripControlsElement, createTabsTemplate(tabs[0]), `beforeend`);
 // filters
 render(tripControlsElement, createFilterContainerTemplate(), `beforeend`);
 const filterContainer = headerElement.querySelector(`.trip-filters`);
-render(filterContainer, createFilterTemplate(filters[0]), `beforeend`);
+render(filterContainer, createFilterTemplate(filters), `beforeend`);
 
 render(tripEventsElement, createTripSortTemplate(), `beforeend`);
 render(tripEventsElement, createTripEventsElementTemplate(), `beforeend`);

@@ -1,9 +1,18 @@
 export const generateFilter = () => {
-  const filters = [`everything`, `future`, `past`];
-  const isChecked = [`checked`, ``, ``];
+  const filters = [{
+    name: `everything`,
+    isChecked: true,
+  },
+  {
+    name: `future`,
+    isChecked: false,
+  },
+  {
+    name: `past`,
+    isChecked: false,
+  }];
 
   return {
-    filters,
-    isChecked,
+    filters
   };
 };
