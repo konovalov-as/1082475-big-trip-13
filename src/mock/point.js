@@ -48,8 +48,8 @@ const generateDestinationCity = () => {
   return destinationCity[randomIndex];
 };
 
-const generateConditions = () => {
-  const additionalConditions = [{
+const generateOffers = () => {
+  const offers = [{
     id: 1,
     condition: `Add luggage`,
     cost: getRandomInteger(FROM_COST, TO_COST),
@@ -101,11 +101,11 @@ const generateConditions = () => {
   },
   ];
 
-  const quantity = getRandomInteger(0, additionalConditions.length - 1);
+  const quantity = getRandomInteger(0, 5);
 
   const generateCondition = () => {
-    const randomIndex = getRandomInteger(0, additionalConditions.length - 1);
-    return additionalConditions[randomIndex];
+    const randomIndex = getRandomInteger(0, offers.length - 1);
+    return offers[randomIndex];
   };
 
   const options = new Array(quantity).fill().map(generateCondition);
@@ -114,24 +114,28 @@ const generateConditions = () => {
 
 const generateDate = () => {
   const FROM = 1;
-  const TO = 30;
-  const maxGap = getRandomInteger(FROM, TO);
-  const gap = getRandomInteger(-maxGap, maxGap);
-  return dayjs().add(gap, `day`).add(gap, `hours`);
+  const TO = 7;
+  const maxDaysGap = getRandomInteger(FROM, TO);
+  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const maxHoursGap = getRandomInteger(FROM, TO);
+  const hoursGap = getRandomInteger(-maxHoursGap, maxHoursGap);
+  const maxMinutesGap = getRandomInteger(FROM, TO);
+  const minutesGap = getRandomInteger(-maxMinutesGap, maxMinutesGap);
+  return dayjs().add(daysGap, `day`).add(hoursGap, `hours`).add(minutesGap, `minutes`);
 };
 
 export const generatePoint = () => {
   const dateTimeStartEvent = generateDate();
   let dateTimeEndEvent = generateDate();
 
-  while (dateTimeStartEvent.isAfter(dateTimeEndEvent)) {
+  while ((dateTimeStartEvent.isAfter(dateTimeEndEvent) && !(dayjs(dateTimeStartEvent).isSame(dayjs(dateTimeEndEvent))))) {
     dateTimeEndEvent = generateDate();
   }
 
   return {
     pointType: generatePointType(),
     destinationCity: generateDestinationCity(),
-    additionalConditions: generateConditions(),
+    offers: generateOffers(),
     destinationInfo: [{
       description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.`,
       photos: [`http://picsum.photos/248/152?r=${Math.random()}`, `http://picsum.photos/248/152?r=${Math.random()}`, `http://picsum.photos/248/152?r=${Math.random()}`],
