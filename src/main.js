@@ -1,24 +1,25 @@
-import {createInfoTemplate} from './view/info.js';
-import {createTabsTemplate} from './view/tabs.js';
-import {createFilterContainerTemplate} from './view/filterContainer';
+import {createInfoTemplate} from './view/info';
+import {createTabsTemplate} from './view/tabs';
+import {createFilterContainerTemplate} from './view/filter-container';
 import {createFilterTemplate} from './view/filter';
 import {createSortingContainerTemplate} from './view/sorting-container';
 import {createSortingTemplate} from './view/sorting';
-import {createTripEventsElementTemplate} from './view/trip-events-element.js';
-import {createPointTemplate} from './view/point.js';
-import {createTripEventEditTemplate} from './view/trip-event-edit.js';
-import {createTripEventAddTemplate} from './view/trip-event-add.js';
-import {generatePoint} from './mock/point.js';
-import {generateInfo} from './mock/info.js';
-import {generateTab} from './mock/tabs.js';
+import {createPointContainerTemplate} from './view/point-container';
+import {createPointTemplate} from './view/point';
+import {createPointEditTemplate} from './view/point-edit';
+import {createPointAddTemplate} from './view/point-add';
+
+import {generatePoint} from './mock/point';
+import {generateInfo} from './mock/info';
+import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
 const TRIP_COUNT = 15;
 
 const points = new Array(TRIP_COUNT).fill().map(generatePoint);
-const info = new Array(1).fill().map(generateInfo);
-const tabs = new Array(1).fill().map(generateTab);
+const info = generateInfo();
+const tabs = generateTab();
 const filters = generateFilter();
 const sorting = generateSorting();
 
@@ -27,39 +28,39 @@ const render = (container, template, place) => {
 };
 
 // header
-const headerElement = document.querySelector(`.page-header`);
-const tripMainElement = headerElement.querySelector(`.trip-main`);
-const tripControlsElement = headerElement.querySelector(`.trip-controls`);
+const headerContainer = document.querySelector(`.page-header`);
+const tripContainer = headerContainer.querySelector(`.trip-main`);
+const controlsContainer = headerContainer.querySelector(`.trip-controls`);
 
 // main
-const mainElement = document.querySelector(`.page-main`);
-const pointsContainer = mainElement.querySelector(`.trip-events`);
+const mainContainer = document.querySelector(`.page-main`);
+const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-render(tripMainElement, createInfoTemplate(info[0]), `afterbegin`);
-tripControlsElement.innerHTML = ``;
-render(tripControlsElement, createTabsTemplate(tabs[0]), `beforeend`);
+render(tripContainer, createInfoTemplate(info), `afterbegin`);
+controlsContainer.innerHTML = ``;
+render(controlsContainer, createTabsTemplate(tabs), `beforeend`);
 
 // filters
-render(tripControlsElement, createFilterContainerTemplate(), `beforeend`);
-const filterContainer = headerElement.querySelector(`.trip-filters`);
+render(controlsContainer, createFilterContainerTemplate(), `beforeend`);
+const filterContainer = headerContainer.querySelector(`.trip-filters`);
 render(filterContainer, createFilterTemplate(filters), `beforeend`);
 
-// sort
+// sorting
 render(pointsContainer, createSortingContainerTemplate(), `beforeend`);
 const sortContainer = pointsContainer.querySelector(`.trip-sort`);
 for (const sort of sorting) {
   render(sortContainer, createSortingTemplate(sort), `beforeend`);
 }
 
-render(pointsContainer, createTripEventsElementTemplate(), `beforeend`);
-
-const pointElement = mainElement.querySelector(`.trip-events__list`);
-for (let i = 0; i < TRIP_COUNT; i++) {
-  render(pointElement, createPointTemplate(points[i]), `beforeend`);
+// points
+render(pointsContainer, createPointContainerTemplate(), `beforeend`);
+const pointElement = mainContainer.querySelector(`.trip-events__list`);
+for (const point of points) {
+  render(pointElement, createPointTemplate(point), `beforeend`);
 }
 
 const tripEventsItemElement = pointElement.querySelector(`.trip-events__item:first-child`);
 tripEventsItemElement.innerHTML = ``;
-render(tripEventsItemElement, createTripEventEditTemplate(), `beforeend`);
-render(tripEventsItemElement, createTripEventAddTemplate(), `beforeend`);
+render(tripEventsItemElement, createPointEditTemplate(), `beforeend`);
+render(tripEventsItemElement, createPointAddTemplate(), `beforeend`);
