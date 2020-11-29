@@ -80,9 +80,9 @@ render(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforee
 // add
 render(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
 const pointHeaderAddContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__header`);
-render(pointHeaderAddContainer, createPointHeaderAddTemplate(), `beforeend`);
+render(pointHeaderAddContainer, createPointHeaderAddTemplate(points[0]), `beforeend`);
 const pointAddAvailableOffersContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__available-offers`);
 render(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
 const pointAddDescription = pointElement.querySelector(`.event--edit:nth-child(2) .event__section--destination`);
 render(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
-render(pointAddDescription, createPointPhotosTemplate(), `beforeend`);
+render(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
