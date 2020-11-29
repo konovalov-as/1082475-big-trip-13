@@ -60,8 +60,8 @@ for (const sort of sorting) {
 // points
 render(pointsContainer, createPointContainerTemplate(), `beforeend`);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
-for (const point of points) {
-  render(pointElement, createPointTemplate(point), `beforeend`);
+for (let point = 1; point < points.length; point++) {
+  render(pointElement, createPointTemplate(points[point]), `beforeend`);
 }
 
 // point add / edit
@@ -71,11 +71,11 @@ render(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
 
 // edit
 const pointHeaderEditContainer = pointElement.querySelector(`.event--edit:first-child .event__header`);
-render(pointHeaderEditContainer, createPointHeaderEditTemplate(), `beforeend`);
+render(pointHeaderEditContainer, createPointHeaderEditTemplate(points[0]), `beforeend`);
 const pointEditAvailableOffersContainer = pointElement.querySelector(`.event--edit:first-child .event__available-offers`);
 render(pointEditAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
 const pointEditDescription = pointElement.querySelector(`.event--edit:first-child .event__section--destination`);
-render(pointEditDescription, createPointDescriptionTemplate(), `beforeend`);
+render(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 
 // add
 render(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
@@ -84,5 +84,5 @@ render(pointHeaderAddContainer, createPointHeaderAddTemplate(), `beforeend`);
 const pointAddAvailableOffersContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__available-offers`);
 render(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
 const pointAddDescription = pointElement.querySelector(`.event--edit:nth-child(2) .event__section--destination`);
-render(pointAddDescription, createPointDescriptionTemplate(), `beforeend`);
+render(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 render(pointAddDescription, createPointPhotosTemplate(), `beforeend`);
