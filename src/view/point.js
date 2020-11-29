@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {createOfferTemplate} from './offers';
+import {createSelectedOfferTemplate} from './selected-offers';
 
 export const createPointTemplate = (point) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, offers} = point;
@@ -51,7 +51,7 @@ export const createPointTemplate = (point) => {
 
   let options = ``;
   for (const offer of offers) {
-    options += createOfferTemplate(offer);
+    options += createSelectedOfferTemplate(offer);
   }
 
   return `
