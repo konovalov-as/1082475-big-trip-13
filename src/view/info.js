@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
 
+const DESTINATION_CITY_ONE = 1;
+const DESTINATION_CITY_TWO = 2;
+
 export const createInfoTemplate = (info) => {
   const {destinationCities, dateTimeStartEvent, dateTimeEndEvent, cost} = info;
 
@@ -12,13 +15,13 @@ export const createInfoTemplate = (info) => {
     : ``;
 
   let listCities = ``;
-  if (destinationCities.length === 1) {
+  if (destinationCities.length === DESTINATION_CITY_ONE) {
     listCities = destinationCities[0];
   }
-  if (destinationCities.length === 2) {
+  if (destinationCities.length === DESTINATION_CITY_TWO) {
     listCities = destinationCities[0] + ` - ` + destinationCities[1];
   }
-  if (destinationCities.length > 2) {
+  if (destinationCities.length > DESTINATION_CITY_TWO) {
     listCities = destinationCities[0] + ` - ... - ` + destinationCities[destinationCities.length - 1];
   }
 

@@ -12,14 +12,18 @@ const getRandomInteger = (a = 0, b = 1) => {
 
 const generateDate = () => {
   const FROM = 1;
-  const TO = 30;
-  const maxGap = getRandomInteger(FROM, TO);
-  const gap = getRandomInteger(-maxGap, maxGap);
-  return dayjs().add(gap, `day`).add(gap, `hours`);
+  const TO = 7;
+  const maxDaysGap = getRandomInteger(FROM, TO);
+  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
+  const maxHoursGap = getRandomInteger(FROM, TO);
+  const hoursGap = getRandomInteger(-maxHoursGap, maxHoursGap);
+  const maxMinutesGap = getRandomInteger(FROM, TO);
+  const minutesGap = getRandomInteger(-maxMinutesGap, maxMinutesGap);
+  return dayjs().add(daysGap, `day`).add(hoursGap, `hours`).add(minutesGap, `minutes`);
 };
 
 const generateDestinationCity = () => {
-  const destinationCity = [
+  const destinationCities = [
     `London`,
     `San Francisco`,
     `Barcelona`,
@@ -32,9 +36,9 @@ const generateDestinationCity = () => {
     `Vienna`,
   ];
 
-  const randomIndex = getRandomInteger(0, destinationCity.length - 1);
+  const randomIndex = getRandomInteger(0, destinationCities.length - 1);
 
-  return destinationCity[randomIndex];
+  return destinationCities[randomIndex];
 };
 
 const generateDestinationCities = () => {
@@ -52,7 +56,7 @@ export const generateInfo = () => {
   const dateTimeStartEvent = generateDate();
   let dateTimeEndEvent = generateDate();
 
-  while (dateTimeStartEvent.isAfter(dateTimeEndEvent)) {
+  while ((dateTimeStartEvent.isAfter(dateTimeEndEvent) && !(dayjs(dateTimeStartEvent).isSame(dayjs(dateTimeEndEvent))))) {
     dateTimeEndEvent = generateDate();
   }
 

@@ -19,9 +19,9 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
-const TRIP_COUNT = 15;
+const POINT_COUNT = 15;
 
-const points = new Array(TRIP_COUNT).fill().map(generatePoint);
+const points = new Array(POINT_COUNT).fill().map(generatePoint);
 const info = generateInfo();
 const tabs = generateTab();
 const filters = generateFilter();

@@ -33,20 +33,24 @@ export const createPointTemplate = (point) => {
     : ``;
 
   let dateTime = 0;
-  if (diffDateTime <= 60) {
-    dateTime = `${diffDateTime < 10 ? `0${diffDateTime}M` : `${diffDateTime}M`}`;
-  } else if (diffDateTime > 60 && diffDateTime <= 1440) {
-    const hours = Math.trunc(diffDateTime / 60);
-    const minutes = diffDateTime - (hours * 60);
-    dateTime = `${hours < 10 ? `0${hours}` : `${hours}`}H
-                ${minutes < 10 ? `0${minutes}` : `${minutes}`}M`;
-  } else if (diffDateTime > 1440) {
-    const days = Math.trunc(diffDateTime / 1440);
-    const hours = Math.trunc((diffDateTime - (days * 1440)) / 60);
-    const minutes = (diffDateTime - (days * 1440)) - (hours * 60);
-    dateTime = `${days < 10 ? `0${days}` : `${days}`}D
-                ${hours < 10 ? `0${hours}` : `${hours}`}H
-                ${minutes < 10 ? `0${minutes}` : `${minutes}`}M`;
+  const ONE_HOUR = 60;
+  const ONE_DAY = 1440;
+  const TWO_DIGITS = 10;
+
+  if (diffDateTime <= ONE_HOUR) {
+    dateTime = `${diffDateTime < TWO_DIGITS ? `0${diffDateTime}M` : `${diffDateTime}M`}`;
+  } else if (diffDateTime > ONE_HOUR && diffDateTime <= ONE_DAY) {
+    const hours = Math.trunc(diffDateTime / ONE_HOUR);
+    const minutes = diffDateTime - (hours * ONE_HOUR);
+    dateTime = `${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
+                ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
+  } else if (diffDateTime > ONE_DAY) {
+    const days = Math.trunc(diffDateTime / ONE_DAY);
+    const hours = Math.trunc((diffDateTime - (days * ONE_DAY)) / ONE_HOUR);
+    const minutes = (diffDateTime - (days * ONE_DAY)) - (hours * ONE_HOUR);
+    dateTime = `${days < TWO_DIGITS ? `0${days}` : `${days}`}D
+                ${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
+                ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
   }
 
   let options = ``;
