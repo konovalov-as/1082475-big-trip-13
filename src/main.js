@@ -19,9 +19,9 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
-const POINT_COUNT = 15;
+const pointsCount = 15;
 
-const points = new Array(POINT_COUNT).fill().map(generatePoint);
+const points = new Array(pointsCount).fill().map(generatePoint);
 const info = generateInfo();
 const tabs = generateTab();
 const filters = generateFilter();
@@ -54,6 +54,7 @@ render(filterContainer, createFilterTemplate(filters), `beforeend`);
 render(pointsContainer, createSortingContainerTemplate(), `beforeend`);
 const sortContainer = pointsContainer.querySelector(`.trip-sort`);
 for (const sort of sorting) {
+  // сделать вставку через фрагмент
   render(sortContainer, createSortingTemplate(sort), `beforeend`);
 }
 

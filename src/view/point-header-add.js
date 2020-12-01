@@ -1,21 +1,10 @@
 import dayjs from 'dayjs';
-
-const pointTypes = [
-  `Taxi`,
-  `Bus`,
-  `Train`,
-  `Ship`,
-  `Transport`,
-  `Drive`,
-  `Flight`,
-  `Check-in`,
-  `Sightseeing`,
-  `Restaurant`,
-];
+import {DESTINATION_CITIES} from '../const';
+import {POINT_TYPES} from '../const';
 
 const generatePointType = () => {
   let pointsList = ``;
-  for (const pointType of pointTypes) {
+  for (const pointType of POINT_TYPES) {
     pointsList += `
     <div class="event__type-item">
       <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
@@ -26,22 +15,9 @@ const generatePointType = () => {
   return pointsList;
 };
 
-const destinationCities = [
-  `London`,
-  `San Francisco`,
-  `Barcelona`,
-  `Saint Petersburg`,
-  `Helsinki`,
-  `Copenhagen`,
-  `Moscow`,
-  `Hamburg`,
-  `Milan`,
-  `Vienna`,
-];
-
 const generateCity = () => {
   let citiesList = ``;
-  for (const destinationCity of destinationCities) {
+  for (const destinationCity of DESTINATION_CITIES) {
     citiesList += `
       <option value="${destinationCity}"></option>
     `;

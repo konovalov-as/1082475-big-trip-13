@@ -1,5 +1,5 @@
 export const generateFilter = () => {
-  const filters = [{
+  return [{
     name: `everything`,
     isChecked: true,
   },
@@ -11,8 +11,4 @@ export const generateFilter = () => {
     name: `past`,
     isChecked: false,
   }];
-
-  return {
-    filters
-  };
 };
