@@ -1,4 +1,5 @@
-import {createInfoTemplate} from './view/info';
+// import {createInfoTemplate} from './view/info';
+import InfoView from './view/info';
 import {createTabsTemplate} from './view/tabs';
 import {createFilterContainerTemplate} from './view/filter-container';
 import {createFilterTemplate} from './view/filter';
@@ -19,7 +20,7 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
-import {renderTemplate} from "./utils.js";
+import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
 
 const pointsCount = 15;
 
@@ -39,7 +40,8 @@ const mainContainer = document.querySelector(`.page-main`);
 const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-renderTemplate(tripContainer, createInfoTemplate(info), `afterbegin`);
+// renderTemplate(tripContainer, createInfoTemplate(info), `afterbegin`);
+renderElement(tripContainer, new InfoView(info).getElement(), RenderPosition.BEFOREEND);
 controlsContainer.innerHTML = ``;
 renderTemplate(controlsContainer, createTabsTemplate(tabs), `beforeend`);
 
