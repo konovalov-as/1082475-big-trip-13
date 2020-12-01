@@ -19,6 +19,8 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
+import {renderTemplate} from "./utils.js";
+
 const pointsCount = 15;
 
 const points = new Array(pointsCount).fill().map(generatePoint);
@@ -26,10 +28,6 @@ const info = generateInfo();
 const tabs = generateTab();
 const filters = generateFilter();
 const sorting = generateSorting();
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
 
 // header
 const headerContainer = document.querySelector(`.page-header`);
@@ -41,49 +39,49 @@ const mainContainer = document.querySelector(`.page-main`);
 const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-render(tripContainer, createInfoTemplate(info), `afterbegin`);
+renderTemplate(tripContainer, createInfoTemplate(info), `afterbegin`);
 controlsContainer.innerHTML = ``;
-render(controlsContainer, createTabsTemplate(tabs), `beforeend`);
+renderTemplate(controlsContainer, createTabsTemplate(tabs), `beforeend`);
 
 // filters
-render(controlsContainer, createFilterContainerTemplate(), `beforeend`);
+renderTemplate(controlsContainer, createFilterContainerTemplate(), `beforeend`);
 const filterContainer = headerContainer.querySelector(`.trip-filters`);
-render(filterContainer, createFilterTemplate(filters), `beforeend`);
+renderTemplate(filterContainer, createFilterTemplate(filters), `beforeend`);
 
 // sorting
-render(pointsContainer, createSortingContainerTemplate(), `beforeend`);
+renderTemplate(pointsContainer, createSortingContainerTemplate(), `beforeend`);
 const sortContainer = pointsContainer.querySelector(`.trip-sort`);
 for (const sort of sorting) {
   // сделать вставку через фрагмент
-  render(sortContainer, createSortingTemplate(sort), `beforeend`);
+  renderTemplate(sortContainer, createSortingTemplate(sort), `beforeend`);
 }
 
 // points
-render(pointsContainer, createPointContainerTemplate(), `beforeend`);
+renderTemplate(pointsContainer, createPointContainerTemplate(), `beforeend`);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
 for (let point = 1; point < points.length; point++) {
-  render(pointElement, createPointTemplate(points[point]), `beforeend`);
+  renderTemplate(pointElement, createPointTemplate(points[point]), `beforeend`);
 }
 
 // point add / edit
 const pointItemContainer = pointElement.querySelector(`.trip-events__item:first-child`);
 pointItemContainer.innerHTML = ``;
-render(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
+renderTemplate(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
 
 // edit
 const pointHeaderEditContainer = pointElement.querySelector(`.event--edit:first-child .event__header`);
-render(pointHeaderEditContainer, createPointHeaderEditTemplate(points[0]), `beforeend`);
+renderTemplate(pointHeaderEditContainer, createPointHeaderEditTemplate(points[0]), `beforeend`);
 const pointEditAvailableOffersContainer = pointElement.querySelector(`.event--edit:first-child .event__available-offers`);
-render(pointEditAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
+renderTemplate(pointEditAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
 const pointEditDescription = pointElement.querySelector(`.event--edit:first-child .event__section--destination`);
-render(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
+renderTemplate(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 
 // add
-render(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
+renderTemplate(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
 const pointHeaderAddContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__header`);
-render(pointHeaderAddContainer, createPointHeaderAddTemplate(points[0]), `beforeend`);
+renderTemplate(pointHeaderAddContainer, createPointHeaderAddTemplate(points[0]), `beforeend`);
 const pointAddAvailableOffersContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__available-offers`);
-render(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
+renderTemplate(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
 const pointAddDescription = pointElement.querySelector(`.event--edit:nth-child(2) .event__section--destination`);
-render(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
-render(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
+renderTemplate(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
+renderTemplate(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
