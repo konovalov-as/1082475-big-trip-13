@@ -4,8 +4,8 @@ import FilterContainerView from './view/filter-container';
 import FilterView from './view/filter';
 import SortingContainerView from './view/sorting-container';
 import SortingView from './view/sorting';
-import {createPointContainerTemplate} from './view/point-container';
-import {createPointTemplate} from './view/point';
+import PointContainerView from './view/point-container';
+import PointView from './view/point';
 import {createPointEditContainerTemplate} from './view/point-edit-container';
 import {createPointHeaderEditTemplate} from './view/point-header-edit';
 import {createPointHeaderAddTemplate} from './view/point-header-add';
@@ -57,10 +57,10 @@ for (const sort of sorting) {
 }
 
 // points
-renderTemplate(pointsContainer, createPointContainerTemplate(), `beforeend`);
+renderElement(pointsContainer, new PointContainerView().getElement(), RenderPosition.BEFOREEND);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
 for (let point = 1; point < points.length; point++) {
-  renderTemplate(pointElement, createPointTemplate(points[point]), `beforeend`);
+  renderElement(pointElement, new PointView(points[point]).getElement(), RenderPosition.BEFOREEND);
 }
 
 // point add / edit
