@@ -9,7 +9,7 @@ import PointView from './view/point';
 import PointEditContainerView from './view/point-edit-container';
 import PointHeaderAddView from './view/point-header-add';
 import PointHeaderEditView from './view/point-header-edit';
-import {createAvailableOfferTemplate} from './view/available-offers';
+import AvailableOfferView from './view/available-offers';
 import {createPointDescriptionTemplate} from './view/point-description';
 import {createPointPhotosTemplate} from './view/point-photos';
 
@@ -72,7 +72,7 @@ renderElement(pointItemContainer, new PointEditContainerView().getElement(), Ren
 const pointHeaderEditContainer = pointElement.querySelector(`div:first-child .event--edit .event__header`);
 renderElement(pointHeaderEditContainer, new PointHeaderEditView(points[0]).getElement(), RenderPosition.BEFOREEND);
 const pointEditAvailableOffersContainer = pointElement.querySelector(`div:first-child .event--edit .event__available-offers`);
-renderTemplate(pointEditAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
+renderElement(pointEditAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
 const pointEditDescription = pointElement.querySelector(`div:first-child .event--edit .event__section--destination`);
 renderTemplate(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 
@@ -81,7 +81,7 @@ renderElement(pointItemContainer, new PointEditContainerView().getElement(), Ren
 const pointHeaderAddContainer = pointElement.querySelector(`div:nth-child(2) .event--edit .event__header`);
 renderElement(pointHeaderAddContainer, new PointHeaderAddView(points[0]).getElement(), RenderPosition.BEFOREEND);
 const pointAddAvailableOffersContainer = pointElement.querySelector(`div:nth-child(2) .event--edit .event__available-offers`);
-renderTemplate(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
+renderElement(pointAddAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
 const pointAddDescription = pointElement.querySelector(`div:nth-child(2) .event--edit .event__section--destination`);
 renderTemplate(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 renderTemplate(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
