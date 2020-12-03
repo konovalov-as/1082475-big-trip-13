@@ -1,5 +1,5 @@
 import InfoView from './view/info';
-import {createTabsTemplate} from './view/tabs';
+import TabsView from './view/tabs';
 import {createFilterContainerTemplate} from './view/filter-container';
 import {createFilterTemplate} from './view/filter';
 import {createSortingContainerTemplate} from './view/sorting-container';
@@ -41,7 +41,7 @@ const pointsContainer = mainContainer.querySelector(`.trip-events`);
 // tabs
 renderElement(tripContainer, new InfoView(info).getElement(), RenderPosition.AFTERBEGIN);
 controlsContainer.innerHTML = ``;
-renderTemplate(controlsContainer, createTabsTemplate(tabs), `beforeend`);
+renderElement(controlsContainer, new TabsView(tabs).getElement(), RenderPosition.BEFOREEND);
 
 // filters
 renderTemplate(controlsContainer, createFilterContainerTemplate(), `beforeend`);
