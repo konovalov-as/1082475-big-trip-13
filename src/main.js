@@ -1,7 +1,7 @@
 import InfoView from './view/info';
 import TabsView from './view/tabs';
-import {createFilterContainerTemplate} from './view/filter-container';
-import {createFilterTemplate} from './view/filter';
+import FilterContainerView from './view/filter-container';
+import FilterView from './view/filter';
 import {createSortingContainerTemplate} from './view/sorting-container';
 import {createSortingTemplate} from './view/sorting';
 import {createPointContainerTemplate} from './view/point-container';
@@ -44,9 +44,9 @@ controlsContainer.innerHTML = ``;
 renderElement(controlsContainer, new TabsView(tabs).getElement(), RenderPosition.BEFOREEND);
 
 // filters
-renderTemplate(controlsContainer, createFilterContainerTemplate(), `beforeend`);
+renderElement(controlsContainer, new FilterContainerView().getElement(), RenderPosition.BEFOREEND);
 const filterContainer = headerContainer.querySelector(`.trip-filters`);
-renderTemplate(filterContainer, createFilterTemplate(filters), `beforeend`);
+renderElement(filterContainer, new FilterView(filters).getElement(), RenderPosition.BEFOREEND);
 
 // sorting
 renderTemplate(pointsContainer, createSortingContainerTemplate(), `beforeend`);
