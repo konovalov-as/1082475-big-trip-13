@@ -1,4 +1,3 @@
-// import {createInfoTemplate} from './view/info';
 import InfoView from './view/info';
 import {createTabsTemplate} from './view/tabs';
 import {createFilterContainerTemplate} from './view/filter-container';
@@ -40,8 +39,7 @@ const mainContainer = document.querySelector(`.page-main`);
 const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-// renderTemplate(tripContainer, createInfoTemplate(info), `afterbegin`);
-renderElement(tripContainer, new InfoView(info).getElement(), RenderPosition.BEFOREEND);
+renderElement(tripContainer, new InfoView(info).getElement(), RenderPosition.AFTERBEGIN);
 controlsContainer.innerHTML = ``;
 renderTemplate(controlsContainer, createTabsTemplate(tabs), `beforeend`);
 

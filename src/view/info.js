@@ -1,4 +1,4 @@
-import {createElement} from "../utils.js";
+import {createElement} from '../utils';
 import dayjs from 'dayjs';
 
 const DestinationCity = {
@@ -12,8 +12,8 @@ export default class Info {
     this._element = null;
   }
 
-  createInfoTemplate(_info) {
-    const {destinationCities, dateTimeStartEvent, dateTimeEndEvent, cost} = _info;
+  createInfoTemplate(info) {
+    const {destinationCities, dateTimeStartEvent, dateTimeEndEvent, cost} = info;
 
     const dateStart = dateTimeStartEvent !== null
       ? dayjs(dateTimeStartEvent).format(`MMM DD`)
