@@ -11,7 +11,7 @@ import PointHeaderAddView from './view/point-header-add';
 import PointHeaderEditView from './view/point-header-edit';
 import AvailableOfferView from './view/available-offers';
 import PointDescriptionView from './view/point-description';
-import {createPointPhotosTemplate} from './view/point-photos';
+import PointPhotosView from './view/point-photos';
 
 import {generatePoint} from './mock/point';
 import {generateInfo} from './mock/info';
@@ -19,7 +19,7 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
-import {renderTemplate, renderElement, RenderPosition} from "./utils.js";
+import {renderElement, RenderPosition} from "./utils.js";
 
 const pointsCount = 15;
 
@@ -84,4 +84,4 @@ const pointAddAvailableOffersContainer = pointElement.querySelector(`div:nth-chi
 renderElement(pointAddAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
 const pointAddDescription = pointElement.querySelector(`div:nth-child(2) .event--edit .event__section--destination`);
 renderElement(pointAddDescription, new PointDescriptionView(points[0]).getElement(), RenderPosition.BEFOREEND);
-renderTemplate(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
+renderElement(pointAddDescription, new PointPhotosView(points[0]).getElement(), RenderPosition.BEFOREEND);
