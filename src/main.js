@@ -4,7 +4,6 @@ import FilterContainerView from './view/filter-container';
 import FilterView from './view/filter';
 import SortingContainerView from './view/sorting-container';
 import SortingView from './view/sorting';
-// import {createSortingTemplate} from './view/sorting';
 import {createPointContainerTemplate} from './view/point-container';
 import {createPointTemplate} from './view/point';
 import {createPointEditContainerTemplate} from './view/point-edit-container';
@@ -54,7 +53,6 @@ renderElement(pointsContainer, new SortingContainerView().getElement(), RenderPo
 const sortContainer = pointsContainer.querySelector(`.trip-sort`);
 for (const sort of sorting) {
   // сделать вставку через фрагмент
-  // renderTemplate(sortContainer, createSortingTemplate(sort), `beforeend`);
   renderElement(sortContainer, new SortingView(sort).getElement(), RenderPosition.BEFOREEND);
 }
 
