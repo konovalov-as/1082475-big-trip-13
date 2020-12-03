@@ -6,9 +6,9 @@ import SortingContainerView from './view/sorting-container';
 import SortingView from './view/sorting';
 import PointContainerView from './view/point-container';
 import PointView from './view/point';
-import {createPointEditContainerTemplate} from './view/point-edit-container';
-import {createPointHeaderEditTemplate} from './view/point-header-edit';
-import {createPointHeaderAddTemplate} from './view/point-header-add';
+import PointEditContainerView from './view/point-edit-container';
+import PointHeaderAddView from './view/point-header-add';
+import PointHeaderEditView from './view/point-header-edit';
 import {createAvailableOfferTemplate} from './view/available-offers';
 import {createPointDescriptionTemplate} from './view/point-description';
 import {createPointPhotosTemplate} from './view/point-photos';
@@ -66,22 +66,22 @@ for (let point = 1; point < points.length; point++) {
 // point add / edit
 const pointItemContainer = pointElement.querySelector(`.trip-events__item:first-child`);
 pointItemContainer.innerHTML = ``;
-renderTemplate(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
+renderElement(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);
 
 // edit
-const pointHeaderEditContainer = pointElement.querySelector(`.event--edit:first-child .event__header`);
-renderTemplate(pointHeaderEditContainer, createPointHeaderEditTemplate(points[0]), `beforeend`);
-const pointEditAvailableOffersContainer = pointElement.querySelector(`.event--edit:first-child .event__available-offers`);
+const pointHeaderEditContainer = pointElement.querySelector(`div:first-child .event--edit .event__header`);
+renderElement(pointHeaderEditContainer, new PointHeaderEditView(points[0]).getElement(), RenderPosition.BEFOREEND);
+const pointEditAvailableOffersContainer = pointElement.querySelector(`div:first-child .event--edit .event__available-offers`);
 renderTemplate(pointEditAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
-const pointEditDescription = pointElement.querySelector(`.event--edit:first-child .event__section--destination`);
+const pointEditDescription = pointElement.querySelector(`div:first-child .event--edit .event__section--destination`);
 renderTemplate(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 
 // add
-renderTemplate(pointItemContainer, createPointEditContainerTemplate(), `beforeend`);
-const pointHeaderAddContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__header`);
-renderTemplate(pointHeaderAddContainer, createPointHeaderAddTemplate(points[0]), `beforeend`);
-const pointAddAvailableOffersContainer = pointElement.querySelector(`.event--edit:nth-child(2) .event__available-offers`);
+renderElement(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);
+const pointHeaderAddContainer = pointElement.querySelector(`div:nth-child(2) .event--edit .event__header`);
+renderElement(pointHeaderAddContainer, new PointHeaderAddView(points[0]).getElement(), RenderPosition.BEFOREEND);
+const pointAddAvailableOffersContainer = pointElement.querySelector(`div:nth-child(2) .event--edit .event__available-offers`);
 renderTemplate(pointAddAvailableOffersContainer, createAvailableOfferTemplate(), `beforeend`);
-const pointAddDescription = pointElement.querySelector(`.event--edit:nth-child(2) .event__section--destination`);
+const pointAddDescription = pointElement.querySelector(`div:nth-child(2) .event--edit .event__section--destination`);
 renderTemplate(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
 renderTemplate(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
