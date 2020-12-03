@@ -10,7 +10,7 @@ import PointEditContainerView from './view/point-edit-container';
 import PointHeaderAddView from './view/point-header-add';
 import PointHeaderEditView from './view/point-header-edit';
 import AvailableOfferView from './view/available-offers';
-import {createPointDescriptionTemplate} from './view/point-description';
+import PointDescriptionView from './view/point-description';
 import {createPointPhotosTemplate} from './view/point-photos';
 
 import {generatePoint} from './mock/point';
@@ -74,7 +74,7 @@ renderElement(pointHeaderEditContainer, new PointHeaderEditView(points[0]).getEl
 const pointEditAvailableOffersContainer = pointElement.querySelector(`div:first-child .event--edit .event__available-offers`);
 renderElement(pointEditAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
 const pointEditDescription = pointElement.querySelector(`div:first-child .event--edit .event__section--destination`);
-renderTemplate(pointEditDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
+renderElement(pointEditDescription, new PointDescriptionView(points[0]).getElement(), RenderPosition.BEFOREEND);
 
 // add
 renderElement(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);
@@ -83,5 +83,5 @@ renderElement(pointHeaderAddContainer, new PointHeaderAddView(points[0]).getElem
 const pointAddAvailableOffersContainer = pointElement.querySelector(`div:nth-child(2) .event--edit .event__available-offers`);
 renderElement(pointAddAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
 const pointAddDescription = pointElement.querySelector(`div:nth-child(2) .event--edit .event__section--destination`);
-renderTemplate(pointAddDescription, createPointDescriptionTemplate(points[0]), `beforeend`);
+renderElement(pointAddDescription, new PointDescriptionView(points[0]).getElement(), RenderPosition.BEFOREEND);
 renderTemplate(pointAddDescription, createPointPhotosTemplate(points[0]), `beforeend`);
