@@ -32,6 +32,9 @@ export default class PointEditContainer {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+      const editForm = this._element.querySelector(`.event--edit`);
+      this._editForm = editForm;
+      // console.log(editForm);
     }
 
     return this._element;
