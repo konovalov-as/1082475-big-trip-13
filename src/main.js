@@ -51,10 +51,12 @@ render(filterContainer, new FilterView(filters).getElement(), RenderPosition.BEF
 // sorting
 render(pointsContainer, new SortingContainerView().getElement(), RenderPosition.BEFOREEND);
 const sortContainer = pointsContainer.querySelector(`.trip-sort`);
+
+let fragment = document.createDocumentFragment();
 for (const sort of sorting) {
-  // сделать вставку через фрагмент
-  render(sortContainer, new SortingView(sort).getElement(), RenderPosition.BEFOREEND);
+  fragment.appendChild(new SortingView(sort).getElement());
 }
+render(sortContainer, fragment, RenderPosition.BEFOREEND);
 
 const renderPoint = (pointElement, point) => {
   const pointComponent = new PointView(point);
