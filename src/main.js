@@ -8,10 +8,10 @@ import PointContainerView from './view/point-container';
 import PointView from './view/point';
 import PointEditContainerView from './view/point-edit-container';
 // import PointHeaderAddView from './view/point-header-add';
-import PointHeaderEditView from './view/point-header-edit';
-import AvailableOfferView from './view/available-offers';
-import PointDescriptionView from './view/point-description';
-// import PointPhotosView from './view/point-photos';
+// import PointHeaderEditView from './view/point-header-edit'; // move to point-edit-container
+// import AvailableOfferView from './view/available-offers'; // move to point-edit-container
+// import PointDescriptionView from './view/point-description'; // move to point-edit-container
+// import PointPhotosView from './view/point-photos'; // move to point-edit-container
 
 import {generatePoint} from './mock/point';
 import {generateInfo} from './mock/info';
@@ -56,25 +56,53 @@ for (const sort of sorting) {
   render(sortContainer, new SortingView(sort).getElement(), RenderPosition.BEFOREEND);
 }
 
+const renderPoint = (pointElement, point) => {
+  const pointComponent = new PointView(point);
+  const pointEditComponent = new PointEditContainerView(point);
+
+  const replacePointToForm = () => {
+    pointElement.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
+  };
+
+  const replaceFormToPoint = () => {
+    pointElement.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
+  };
+
+  pointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+    replacePointToForm();
+  });
+
+  pointEditComponent.getElement().querySelector(`.event--edit`).addEventListener(`submit`, (evt) => {
+    evt.preventDefault();
+    replaceFormToPoint();
+  });
+
+  render(pointElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
+};
+
 // points
+// const pointListComponent = new PointContainerView();
+// render(boardComponent.getElement(), taskListComponent.getElement(), RenderPosition.BEFOREEND);
 render(pointsContainer, new PointContainerView().getElement(), RenderPosition.BEFOREEND);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
 for (const point of points) {
-  render(pointElement, new PointView(point).getElement(), RenderPosition.BEFOREEND);
+  renderPoint(pointElement, point);
 }
 
 // point add / edit
-const pointItemContainer = pointElement.querySelector(`.trip-events__item:first-child`);
-pointItemContainer.innerHTML = ``;
-render(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);
+// const pointItemContainer = pointElement.querySelector(`.trip-events__item`);
+// pointItemContainer.innerHTML = ``;
+// render(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);
 
 // edit
-const pointHeaderEditContainer = pointElement.querySelector(`div:first-child .event--edit .event__header`);
-render(pointHeaderEditContainer, new PointHeaderEditView(points[0]).getElement(), RenderPosition.BEFOREEND);
-const pointEditAvailableOffersContainer = pointElement.querySelector(`div:first-child .event--edit .event__available-offers`);
-render(pointEditAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
-const pointEditDescription = pointElement.querySelector(`div:first-child .event--edit .event__section--destination`);
-render(pointEditDescription, new PointDescriptionView(points[0]).getElement(), RenderPosition.BEFOREEND);
+// const pointHeaderEditContainer = pointElement.querySelector(`div:first-child .event--edit .event__header`);
+// render(pointHeaderEditContainer, new PointHeaderEditView(points[0]).getElement(), RenderPosition.BEFOREEND);
+
+// const pointEditAvailableOffersContainer = pointElement.querySelector(`div:first-child .event--edit .event__available-offers`);
+// render(pointEditAvailableOffersContainer, new AvailableOfferView().getElement(), RenderPosition.BEFOREEND);
+
+// const pointEditDescription = pointElement.querySelector(`div:first-child .event--edit .event__section--destination`);
+// render(pointEditDescription, new PointDescriptionView(points[0]).getElement(), RenderPosition.BEFOREEND);
 
 // add
 // render(pointItemContainer, new PointEditContainerView().getElement(), RenderPosition.BEFOREEND);

@@ -109,10 +109,6 @@ export default class Point {
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
-      const rollupButton = this._element.querySelector(`.event__rollup-btn`);
-      rollupButton.addEventListener(`click`, function () {
-        // console.log(this);
-      });
     }
 
     return this._element;
