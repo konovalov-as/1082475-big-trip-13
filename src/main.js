@@ -98,6 +98,7 @@ const renderPoint = (pointElement, point) => {
 render(pointsContainer, new PointContainerView().getElement(), RenderPosition.BEFOREEND);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
 for (const point of points) {
+  // todo - получается здесь тоже сделать вставку точек через фрагмент?
   renderPoint(pointElement, point);
 }
 
