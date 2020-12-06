@@ -1,3 +1,4 @@
+import AbstractView from './abstract';
 import {createElement, render, RenderPosition} from '../utils';
 import PointHeaderEditView from './point-header-edit';
 import AvailableOfferView from './available-offers';
@@ -23,9 +24,9 @@ const createPointEditContainerTemplate = () => {
   </li>`;
 };
 
-export default class PointEditContainer {
+export default class PointEditContainer extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
     this._editForm = null;
     this._headerEditContainer = null;
@@ -61,9 +62,5 @@ export default class PointEditContainer {
     }
 
     return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

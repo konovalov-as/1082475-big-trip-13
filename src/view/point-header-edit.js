@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 import dayjs from 'dayjs';
 import {DESTINATION_CITIES} from '../const';
 import {POINT_TYPES} from '../const';
@@ -87,25 +87,13 @@ const createPointHeaderEditTemplate = (point) => {
   </header>`;
 };
 
-export default class PointHeaderEdit {
+export default class PointHeaderEdit extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createPointHeaderEditTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

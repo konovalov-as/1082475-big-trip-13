@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
 const createTabsTemplate = (tabs, filters) => {
   const [table, stats] = tabs;
@@ -28,26 +28,14 @@ const createFilterTemplate = (filters) => {
   return template;
 };
 
-export default class Controls {
+export default class Controls extends AbstractView {
   constructor(tabs, filters) {
-    this._element = null;
+    super();
     this._tabs = tabs;
     this._filters = filters;
   }
 
   getTemplate() {
     return createTabsTemplate(this._tabs, this._filters);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

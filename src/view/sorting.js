@@ -1,3 +1,4 @@
+import AbstractView from './abstract';
 import {createElement, render, RenderPosition} from '../utils';
 import SortingElementView from './sorting-element';
 
@@ -5,9 +6,9 @@ const createSortingContainerTemplate = () => {
   return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get"></form>`;
 };
 
-export default class Sorting {
+export default class Sorting extends AbstractView {
   constructor(sorting) {
-    this._element = null;
+    super();
     this._sorting = sorting;
   }
 
@@ -30,7 +31,4 @@ export default class Sorting {
     return this._element;
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }

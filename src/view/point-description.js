@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
 const createPointDescriptionTemplate = (offer) => {
   const {destinationCity, destinationInfo} = offer;
@@ -6,25 +6,13 @@ const createPointDescriptionTemplate = (offer) => {
   return `<p class="event__destination-description">${destinationCity} ${destinationInfo[0].description}</p>`;
 };
 
-export default class PointDescription {
+export default class PointDescription extends AbstractView {
   constructor(offer) {
-    this._element = null;
+    super();
     this._offer = offer;
   }
 
   getTemplate() {
     return createPointDescriptionTemplate(this._offer);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
 const createPointPhotosTemplate = (point) => {
   const photos = point.destinationInfo[0].photos;
@@ -17,25 +17,13 @@ const createPointPhotosTemplate = (point) => {
   </div>`;
 };
 
-export default class PointPhotos {
+export default class PointPhotos extends AbstractView {
   constructor(point) {
-    this._element = null;
+    super();
     this._point = point;
   }
 
   getTemplate() {
     return createPointPhotosTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

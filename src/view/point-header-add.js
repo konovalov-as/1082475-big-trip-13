@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 import dayjs from 'dayjs';
 import {DESTINATION_CITIES} from '../const';
 import {POINT_TYPES} from '../const';
@@ -80,25 +80,13 @@ const createPointHeaderAddTemplate = (point) => {
   <button class="event__reset-btn" type="reset">Cancel</button>`;
 };
 
-export default class PointHeaderAdd {
+export default class PointHeaderAdd extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
   }
 
   getTemplate() {
     return createPointHeaderAddTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

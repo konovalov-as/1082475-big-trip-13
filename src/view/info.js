@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 import dayjs from 'dayjs';
 
 const DestinationCity = {
@@ -40,25 +40,13 @@ const createInfoTemplate = (info) => {
   </section>`;
 };
 
-export default class Info {
+export default class Info extends AbstractView {
   constructor(info) {
-    this._element = null;
+    super();
     this._info = info;
   }
 
   getTemplate() {
     return createInfoTemplate(this._info);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
