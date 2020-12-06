@@ -4,6 +4,25 @@ import AvailableOfferView from './available-offers';
 import PointDescriptionView from './point-description';
 import PointPhotosView from './point-photos';
 
+const createPointEditContainerTemplate = () => {
+  return `<li class="trip-events__item">
+  <form class="event event--edit" action="#" method="post">
+    <section class="event__details">
+      <section class="event__section  event__section--offers">
+        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+
+        <div class="event__available-offers"></div>
+      </section>
+
+      <section class="event__section  event__section--destination">
+        <h3 class="event__section-title  event__section-title--destination">Destination</h3>
+
+      </section>
+    </section>
+  </form>
+  </li>`;
+};
+
 export default class PointEditContainer {
   constructor(point) {
     this._element = null;
@@ -17,37 +36,17 @@ export default class PointEditContainer {
     this._photos = null;
   }
 
-  createPointEditContainerTemplate() {
-    return `
-    <form class="event event--edit" action="#" method="post">
-      <header class="event__header"></header>
-      <section class="event__details">
-        <section class="event__section  event__section--offers">
-          <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-
-          <div class="event__available-offers"></div>
-        </section>
-
-        <section class="event__section  event__section--destination">
-          <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-
-        </section>
-      </section>
-    </form>
-  `;
-  }
-
   getTemplate() {
-    return this.createPointEditContainerTemplate();
+    return createPointEditContainerTemplate();
   }
 
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
 
-      this._editForm = this._element.querySelector(`.event--edit .event__header`);
+      this._editForm = this._element.querySelector(`.event--edit`);
       this._headerEditContainer = new PointHeaderEditView(this._point).getElement();
-      render(this._editForm, this._headerEditContainer, RenderPosition.BEFOREEND);
+      render(this._editForm, this._headerEditContainer, RenderPosition.AFTERBEGIN);
 
       this._pointEditAvailableOffersContainer = this._element.querySelector(`.event__available-offers`);
       this._availableOffer = new AvailableOfferView(this._point).getElement();

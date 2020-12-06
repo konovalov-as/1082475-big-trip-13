@@ -1,49 +1,43 @@
+import {createElement} from '../utils';
 import dayjs from 'dayjs';
 import {DESTINATION_CITIES} from '../const';
 import {POINT_TYPES} from '../const';
-import {createElement} from '../utils';
 
-export default class PointHeaderEdit {
-  constructor(point) {
-    this._point = point;
-    this._element = null;
+const generatePointType = () => {
+  let pointsList = ``;
+  for (const pointType of POINT_TYPES) {
+    pointsList += `
+    <div class="event__type-item">
+      <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+      <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1" style="::before">${pointType}</label>
+    </div>
+    `;
   }
+  return pointsList;
+};
 
-  generatePointType() {
-    let pointsList = ``;
-    for (const pointType of POINT_TYPES) {
-      pointsList += `
-      <div class="event__type-item">
-        <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
-        <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1" style="::before">${pointType}</label>
-      </div>
-      `;
-    }
-    return pointsList;
+const generateCity = () => {
+  let citiesList = ``;
+  for (const destinationCity of DESTINATION_CITIES) {
+    citiesList += `
+      <option value="${destinationCity}"></option>
+    `;
   }
+  return citiesList;
+};
 
-  generateCity() {
-    let citiesList = ``;
-    for (const destinationCity of DESTINATION_CITIES) {
-      citiesList += `
-        <option value="${destinationCity}"></option>
-      `;
-    }
-    return citiesList;
-  }
+const createPointHeaderEditTemplate = (point) => {
+  const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost} = point;
 
-  createPointHeaderEditTemplate(point) {
-    const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost} = point;
+  const dateStart = dateTimeStartEvent !== null
+    ? dayjs(dateTimeStartEvent).format(`DD/MM/YY HH:mm`)
+    : ``;
 
-    const dateStart = dateTimeStartEvent !== null
-      ? dayjs(dateTimeStartEvent).format(`DD/MM/YY HH:mm`)
-      : ``;
+  const dateEnd = dateTimeEndEvent !== null
+    ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
+    : ``;
 
-    const dateEnd = dateTimeEndEvent !== null
-      ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
-      : ``;
-
-    return `
+  return `<header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
@@ -54,7 +48,7 @@ export default class PointHeaderEdit {
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${this.generatePointType()}
+          ${generatePointType()}
         </fieldset>
       </div>
     </div>
@@ -65,7 +59,7 @@ export default class PointHeaderEdit {
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationCity}" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${this.generateCity()}
+        ${generateCity()}
       </datalist>
     </div>
 
@@ -90,11 +84,17 @@ export default class PointHeaderEdit {
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
-    `;
+  </header>`;
+};
+
+export default class PointHeaderEdit {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
   }
 
   getTemplate() {
-    return this.createPointHeaderEditTemplate(this._point);
+    return createPointHeaderEditTemplate(this._point);
   }
 
   getElement() {

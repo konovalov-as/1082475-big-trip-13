@@ -1,16 +1,16 @@
 import {createElement} from '../utils';
 
+const createPointContainerTemplate = () => {
+  return `<ul class="trip-events__list"></ul>`;
+};
+
 export default class PointContainer {
   constructor() {
     this._element = null;
   }
 
-  createPointContainerTemplate() {
-    return `<ul class="trip-events__list"></ul>`;
-  }
-
   getTemplate() {
-    return this.createPointContainerTemplate();
+    return createPointContainerTemplate();
   }
 
   getElement() {

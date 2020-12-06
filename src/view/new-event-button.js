@@ -1,16 +1,16 @@
 import {createElement} from '../utils';
 
-export default class SortingContainer {
+const createButtonTemplate = () => {
+  return `<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">New event</button>`;
+};
+
+export default class NewEventButton {
   constructor() {
     this._element = null;
   }
 
-  createSortingContainerTemplate() {
-    return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get"></form>`;
-  }
-
   getTemplate() {
-    return this.createSortingContainerTemplate();
+    return createButtonTemplate();
   }
 
   getElement() {

@@ -1,21 +1,19 @@
 import {createElement} from '../utils';
 
+const createPointDescriptionTemplate = (offer) => {
+  const {destinationCity, destinationInfo} = offer;
+
+  return `<p class="event__destination-description">${destinationCity} ${destinationInfo[0].description}</p>`;
+};
+
 export default class PointDescription {
   constructor(offer) {
-    this._offer = offer;
     this._element = null;
-  }
-
-  createPointDescriptionTemplate(offer) {
-    const {destinationCity, destinationInfo} = offer;
-
-    return `
-    <p class="event__destination-description">${destinationCity} ${destinationInfo[0].description}</p>
-    `;
+    this._offer = offer;
   }
 
   getTemplate() {
-    return this.createPointDescriptionTemplate(this._offer);
+    return createPointDescriptionTemplate(this._offer);
   }
 
   getElement() {
