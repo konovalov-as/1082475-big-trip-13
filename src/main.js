@@ -60,13 +60,12 @@ const renderPoint = (pointElement, point) => {
     }
   };
 
-  pointComponent.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, () => {
+  pointComponent.setOnRollupButtonClick(() => {
     replacePointToForm();
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
-  pointEditComponent.getElement().querySelector(`.event--edit`).addEventListener(`submit`, (evt) => {
-    evt.preventDefault();
+  pointEditComponent.setOnFormSubmitClick(() => {
     replaceFormToPoint();
     document.removeEventListener(`keydown`, onEscKeyDown);
   });

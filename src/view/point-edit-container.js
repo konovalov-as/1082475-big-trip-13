@@ -35,6 +35,7 @@ export default class PointEditContainer extends AbstractView {
     this._descriptionContainer = null;
     this._description = null;
     this._photos = null;
+    this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
   }
 
   getTemplate() {
@@ -62,5 +63,15 @@ export default class PointEditContainer extends AbstractView {
     }
 
     return this._element;
+  }
+
+  _onFormSubmitClick(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
+  }
+
+  setOnFormSubmitClick(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector(`.event--edit`).addEventListener(`click`, this._onFormSubmitClick);
   }
 }
