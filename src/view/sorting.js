@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {createElement, render, RenderPosition} from '../utils';
+import {createElement, render, RenderPosition} from '../utils/render';
 import SortingElementView from './sorting-element';
 
 const createSortingContainerTemplate = () => {

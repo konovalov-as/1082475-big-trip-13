@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {createElement, render, RenderPosition} from '../utils';
+import {createElement, render, RenderPosition} from '../utils/render';
 import PointHeaderEditView from './point-header-edit';
 import AvailableOfferView from './available-offers';
 import PointDescriptionView from './point-description';

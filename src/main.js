@@ -12,7 +12,7 @@ import {generateTab} from './mock/tabs';
 import {generateFilter} from './mock/filter';
 import {generateSorting} from './mock/sorting';
 
-import {render, RenderPosition} from "./utils.js";
+import {render, RenderPosition, replace} from './utils/render';
 
 const pointsCount = 20;
 
@@ -32,12 +32,12 @@ const mainContainer = document.querySelector(`.page-main`);
 const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-render(tripContainer, new InfoView(info).getElement(), RenderPosition.BEFOREEND);
-render(tripContainer, new ControlsView(tabs, filters).getElement(), RenderPosition.BEFOREEND);
-render(tripContainer, new NewEventButtonView().getElement(), RenderPosition.BEFOREEND);
+render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
+render(tripContainer, new ControlsView(tabs, filters), RenderPosition.BEFOREEND);
+render(tripContainer, new NewEventButtonView(), RenderPosition.BEFOREEND);
 
 // sorting
-render(pointsContainer, new SortingView(sorting).getElement(), RenderPosition.BEFOREEND);
+render(pointsContainer, new SortingView(sorting), RenderPosition.BEFOREEND);
 
 // points
 const renderPoint = (pointElement, point) => {
@@ -45,11 +45,11 @@ const renderPoint = (pointElement, point) => {
   const pointEditComponent = new PointEditContainerView(point);
 
   const replacePointToForm = () => {
-    pointElement.replaceChild(pointEditComponent.getElement(), pointComponent.getElement());
+    replace(pointEditComponent, pointComponent);
   };
 
   const replaceFormToPoint = () => {
-    pointElement.replaceChild(pointComponent.getElement(), pointEditComponent.getElement());
+    replace(pointComponent, pointEditComponent);
   };
 
   const onEscKeyDown = (evt) => {
@@ -70,10 +70,10 @@ const renderPoint = (pointElement, point) => {
     document.removeEventListener(`keydown`, onEscKeyDown);
   });
 
-  render(pointElement, pointComponent.getElement(), RenderPosition.BEFOREEND);
+  render(pointElement, pointComponent, RenderPosition.BEFOREEND);
 };
 
-render(pointsContainer, new PointContainerView().getElement(), RenderPosition.BEFOREEND);
+render(pointsContainer, new PointContainerView(), RenderPosition.BEFOREEND);
 const pointElement = mainContainer.querySelector(`.trip-events__list`);
 for (const point of points) {
   // todo - получается здесь тоже сделать вставку точек через фрагмент?
