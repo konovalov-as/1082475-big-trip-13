@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 import {generateOptions} from '../mock/point';
 
 const generateAvailableOfferTemplate = (offers) => {
@@ -22,24 +22,8 @@ const createAvailableOfferTemplate = () => {
   return `${generateAvailableOfferTemplate(offers)}`;
 };
 
-export default class AvailableOffer {
-  constructor() {
-    this._element = null;
-  }
-
+export default class AvailableOffer extends AbstractView {
   getTemplate() {
     return createAvailableOfferTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
