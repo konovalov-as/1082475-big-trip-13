@@ -3,27 +3,15 @@ import dayjs from 'dayjs';
 import {DESTINATION_CITIES} from '../const';
 import {POINT_TYPES} from '../const';
 
-const generatePointType = () => {
-  let pointsList = ``;
-  for (const pointType of POINT_TYPES) {
-    pointsList += `
-    <div class="event__type-item">
-      <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
-      <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1" style="::before">${pointType}</label>
-    </div>
-    `;
-  }
-  return pointsList;
+const createPointTemplate = (pointType) => {
+  return `<div class="event__type-item">
+  <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
+  <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1" style="::before">${pointType}</label>
+</div>`;
 };
 
-const generateCity = () => {
-  let citiesList = ``;
-  for (const destinationCity of DESTINATION_CITIES) {
-    citiesList += `
-      <option value="${destinationCity}"></option>
-    `;
-  }
-  return citiesList;
+const createDestinationCityTemplate = (destinationCity) => {
+  return `<option value="${destinationCity}"></option>`;
 };
 
 const createPointHeaderEditTemplate = (point) => {
@@ -37,6 +25,15 @@ const createPointHeaderEditTemplate = (point) => {
     ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
     : ``;
 
+
+  let pointsTypeList = POINT_TYPES
+  .map((pointTypeItem) => createPointTemplate(pointTypeItem))
+  .join(``);
+
+  let citiesList = DESTINATION_CITIES
+  .map((destinationCityItem) => createDestinationCityTemplate(destinationCityItem))
+  .join(``);
+
   return `<header class="event__header">
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -48,7 +45,7 @@ const createPointHeaderEditTemplate = (point) => {
       <div class="event__type-list">
         <fieldset class="event__type-group">
           <legend class="visually-hidden">Event type</legend>
-          ${generatePointType()}
+          ${pointsTypeList}
         </fieldset>
       </div>
     </div>
@@ -59,7 +56,7 @@ const createPointHeaderEditTemplate = (point) => {
       </label>
       <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${destinationCity}" list="destination-list-1">
       <datalist id="destination-list-1">
-        ${generateCity()}
+        ${citiesList}
       </datalist>
     </div>
 
