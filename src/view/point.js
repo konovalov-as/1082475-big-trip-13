@@ -1,6 +1,13 @@
 import AbstractView from './abstract';
 import dayjs from 'dayjs';
-import {createSelectedOfferTemplate} from './selected-offers';
+
+const createSelectedOfferTemplate = (offer) => {
+  return `<li class="event__offer">
+    <span class="event__offer-title">${offer.condition}</span>
+    &plus;&euro;&nbsp;
+    <span class="event__offer-price">${offer.cost}</span>
+  </li>`;
+};
 
 const createPointTemplate = (point) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, offers} = point;
@@ -54,10 +61,9 @@ const createPointTemplate = (point) => {
                 ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
   }
 
-  let options = ``;
-  for (const offer of offers) {
-    options += createSelectedOfferTemplate(offer);
-  }
+  let options = offers
+  .map((offer) => createSelectedOfferTemplate(offer))
+  .join(``);
 
   return `<li class="trip-events__item">
     <div class="event">
