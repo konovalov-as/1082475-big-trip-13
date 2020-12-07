@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
-import {getRandomInteger} from '../utils';
+import {nanoid} from 'nanoid';
+import {getRandomInteger} from '../utils/common';
 import {OfferCost, DateGap} from '../const';
 import {DESTINATION_CITIES} from '../const';
 import {POINT_TYPES} from '../const';
@@ -16,78 +17,27 @@ const generateDestinationCity = () => {
   return DESTINATION_CITIES[randomIndex];
 };
 
-const generateOffers = () => {
-  const offers = [{
-    id: 1,
-    condition: `Add luggage`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 2,
-    condition: `Rent a car`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 3,
-    condition: `Add breakfast`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 4,
-    condition: `Book tickets`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 5,
-    condition: `Switch to comfort`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 6,
-    condition: `Order Uber`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 7,
-    condition: `Add meal`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 8,
-    condition: `Choose seats`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 9,
-    condition: `Lunch in city`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  {
-    id: 10,
-    condition: `Travel by train`,
-    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
-    isChecked: Boolean(getRandomInteger(0, 1)),
-  },
-  ];
+const conditions = [`Add luggage`, `Rent a car`, `Add breakfast`, `Book tickets`, `Switch to comfort`, `Order Uber`, `Add meal`, `Choose seats`, `Lunch in city`, `Travel by train`];
 
-  const offersCount = getRandomInteger(0, 5);
-
-  const generateCondition = () => {
-    const randomIndex = getRandomInteger(0, offers.length - 1);
-    return offers[randomIndex];
+const generateOffer = () => {
+  const randomIndex = getRandomInteger(0, conditions.length - 1);
+  return {
+    id: nanoid(),
+    condition: conditions[randomIndex],
+    cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
+    isChecked: Boolean(getRandomInteger(0, 1)),
   };
+};
 
-  const options = new Set(new Array(offersCount).fill().map(generateCondition));
-  return options;
+const generateOffers = () => {
+  const offersCount = getRandomInteger(0, 5);
+  const offers = [];
+
+  for (let offerIndex = 0; offerIndex < offersCount; offerIndex++) {
+    offers.push(generateOffer());
+  }
+
+  return offers;
 };
 
 const generatePhotos = () => {

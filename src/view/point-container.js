@@ -1,27 +1,11 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
-export default class PointContainer {
-  constructor() {
-    this._element = null;
-  }
+const createPointContainerTemplate = () => {
+  return `<ul class="trip-events__list"></ul>`;
+};
 
-  createPointContainerTemplate() {
-    return `<ul class="trip-events__list"></ul>`;
-  }
-
+export default class PointContainer extends AbstractView {
   getTemplate() {
-    return this.createPointContainerTemplate();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createPointContainerTemplate();
   }
 }

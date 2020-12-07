@@ -1,45 +1,30 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
 
-export default class PointPhotos {
-  constructor(point) {
-    this._point = point;
-    this._element = null;
-  }
+const createPointPhotosTemplate = (point) => {
+  const createPhotoTemplate = (photo) => {
+    return `<img class="event__photo" src="${photo}" alt="Event photo">`;
+  };
 
-  createPointPhotosTemplate(point) {
-    const photos = point.destinationInfo[0].photos;
-    let photosList = ``;
-    const createPhoto = () => {
-      for (const photo of photos) {
-        photosList += `
-        <img class="event__photo" src="${photo}" alt="Event photo">
-        `;
-      }
-      return photosList;
-    };
+  const photos = point.destinationInfo[0].photos;
 
-    return `
-    <div class="event__photos-container">
-      <div class="event__photos-tape">
-      ${createPhoto()}
-      </div>
+  let photosList = photos
+  .map((photo) => createPhotoTemplate(photo))
+  .join(``);
+
+  return `<div class="event__photos-container">
+    <div class="event__photos-tape">
+    ${photosList}
     </div>
-    `;
+  </div>`;
+};
+
+export default class PointPhotos extends AbstractView {
+  constructor(point) {
+    super();
+    this._point = point;
   }
 
   getTemplate() {
-    return this.createPointPhotosTemplate(this._point);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
+    return createPointPhotosTemplate(this._point);
   }
 }

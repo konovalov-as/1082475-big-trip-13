@@ -1,35 +1,34 @@
-import {createElement} from '../utils';
+import AbstractView from './abstract';
+import {createElement, render, RenderPosition} from '../utils/render';
+import SortingElementView from './sorting-element';
 
-export default class Sorting {
+const createSortingContainerTemplate = () => {
+  return `<form class="trip-events__trip-sort  trip-sort" action="#" method="get"></form>`;
+};
+
+export default class Sorting extends AbstractView {
   constructor(sorting) {
+    super();
     this._sorting = sorting;
-    this._element = null;
-  }
-
-  createSortingTemplate(sorting) {
-    return `
-    <form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-      <div class="trip-sort__item  trip-sort__item--${sorting.name}">
-        <input id="sort-${sorting.name}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-${sorting.name}" ${sorting.isChecked ? `checked` : ``} ${sorting.isDisabled ? `disabled` : ``}>
-        <label class="trip-sort__btn" for="sort-${sorting.name}">${sorting.name}</label>
-      </div>
-    </form>
-    `;
   }
 
   getTemplate() {
-    return this.createSortingTemplate(this._sorting);
+    return createSortingContainerTemplate();
   }
 
   getElement() {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
+
+      let fragment = document.createDocumentFragment();
+      for (const sort of this._sorting) {
+        fragment.appendChild(new SortingElementView(sort).getElement());
+      }
+
+      render(this._element, fragment, RenderPosition.BEFOREEND);
     }
 
     return this._element;
   }
 
-  removeElement() {
-    this._element = null;
-  }
 }
