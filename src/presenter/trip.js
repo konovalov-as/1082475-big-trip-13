@@ -1,7 +1,9 @@
 import TripView from '../view/point-container';
 import SortingView from '../view/sorting';
+import PointView from './view/point';
+import PointEditContainerView from './view/point-edit-container';
 
-import {render, RenderPosition} from '../utils/render';
+import {render, RenderPosition, replace} from '../utils/render';
 
 export default class Trip {
   constructor(tripContainer) {
@@ -30,6 +32,36 @@ export default class Trip {
   _renderPoint(point) {
     // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
+    const pointComponent = new PointView(point);
+    const pointEditComponent = new PointEditContainerView(point);
+
+    const replacePointToForm = () => {
+      replace(pointEditComponent, pointComponent);
+    };
+
+    const replaceFormToPoint = () => {
+      replace(pointComponent, pointEditComponent);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === `Escape` || evt.key === `Esc`) {
+        evt.preventDefault();
+        replaceFormToPoint();
+        document.removeEventListener(`keydown`, onEscKeyDown);
+      }
+    };
+
+    pointComponent.setOnRollupButtonClick(() => {
+      replacePointToForm();
+      document.addEventListener(`keydown`, onEscKeyDown);
+    });
+
+    pointEditComponent.setOnFormSubmitClick(() => {
+      replaceFormToPoint();
+      document.removeEventListener(`keydown`, onEscKeyDown);
+    });
+
+    render(this._tripComponent, pointComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoints() {
