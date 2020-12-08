@@ -1,6 +1,8 @@
 import TripView from '../view/point-container';
 import SortingView from '../view/sorting';
 
+import {render, RenderPosition} from '../utils/render';
+
 export default class Trip {
   constructor(tripContainer) {
     this._tripContainer = tripContainer;
@@ -15,6 +17,9 @@ export default class Trip {
     this._points = points.slice();
     // Метод для инициализации (начала работы) модуля,
     // малая часть текущей функции renderBoard в main.js
+    render(this._tripComponent, this._tripComponent, RenderPosition.BEFOREEND);
+
+    this._renderTrip();
   }
 
   _renderSort() {
@@ -42,5 +47,14 @@ export default class Trip {
   _renderTrip() {
     // Метод для инициализации (начала работы) модуля,
     // бОльшая часть текущей функции renderBoard в main.js
+
+    if (this._points.length === 0) {
+      this._renderNoPoints();
+      return;
+    }
+
+    this._renderSort();
+
+    this._renderPoints(this._points);
   }
 }
