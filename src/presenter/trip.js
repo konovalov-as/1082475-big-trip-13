@@ -24,19 +24,22 @@ export default class Trip {
 
   _renderSort() {
     // Метод для рендеринга сортировки
+    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
   }
 
-  _renderPoint() {
+  _renderPoint(point) {
     // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
   }
 
   _renderPoints() {
     // Метод для рендеринга N-задач за раз
+    this._points.forEach((point) => this._renderPoint(point));
   }
 
   _renderNoPoints() {
     // Метод для рендеринга заглушки
+    render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
 
   // _renderLoadMoreButton() {
