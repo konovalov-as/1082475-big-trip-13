@@ -8,7 +8,7 @@ const createFilterTemplate = (filter) => {
 };
 
 const createFilters = (filters) => {
-  let template = filters
+  const template = filters
   .map((filter) => createFilterTemplate(filter))
   .join(``);
 
