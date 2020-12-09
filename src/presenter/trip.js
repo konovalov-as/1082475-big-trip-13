@@ -3,6 +3,8 @@ import SortingView from '../view/sorting';
 
 import PointPresenter from '../presenter/point';
 
+import {updateItem} from '../utils/common';
+
 import {render, RenderPosition} from '../utils/render';
 
 export default class Trip {
@@ -15,6 +17,8 @@ export default class Trip {
     this._sortingComponent = new SortingView(this._sorting);
     // this._taskListComponent = new TaskListView();
     this._noPointComponent = null;
+
+    this._onPointChange = this._onPointChange.bind(this);
   }
 
   init(points, sorting) {
@@ -24,6 +28,11 @@ export default class Trip {
     // малая часть текущей функции renderBoard в main.js
     this._renderSort();
     this._renderTrip();
+  }
+
+  _onPointChange(updatedPoint) {
+    this._points = updateItem(this._points, updatedPoint);
+    this._pointPresenter[updatedPoint.id].init(updatedPoint);
   }
 
   _renderSort() {
