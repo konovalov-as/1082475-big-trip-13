@@ -75,7 +75,7 @@ export default class PointEditContainer extends AbstractView {
 
   _onFormSubmitClick(evt) {
     evt.preventDefault();
-    this._callback.formSubmit();
+    this._callback.formSubmit(this._point);
   }
 
   setOnFormSubmitClick(callback) {

@@ -43,7 +43,7 @@ export default class Trip {
   _renderPoint(point) {
     // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
-    const pointPresenter = new PointPresenter(this._tripListComponent);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._onPointChange);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }

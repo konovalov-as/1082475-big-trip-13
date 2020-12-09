@@ -83,5 +83,6 @@ export const generatePoint = () => {
     dateTimeStartEvent,
     dateTimeEndEvent,
     cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };
