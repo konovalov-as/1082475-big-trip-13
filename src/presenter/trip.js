@@ -4,7 +4,6 @@ import SortingView from '../view/sorting';
 import PointPresenter from './point';
 
 import {updateItem} from '../utils/common';
-
 import {render, RenderPosition} from '../utils/render';
 
 export default class Trip {
@@ -19,6 +18,7 @@ export default class Trip {
     this._noPointComponent = null;
 
     this._onPointChange = this._onPointChange.bind(this);
+    this._onModeChange = this._onModeChange.bind(this);
   }
 
   init(points, sorting) {
@@ -28,6 +28,12 @@ export default class Trip {
     // малая часть текущей функции renderBoard в main.js
     this._renderSort();
     this._renderTrip();
+  }
+
+  _onModeChange() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.resetView());
   }
 
   _onPointChange(updatedPoint) {
@@ -43,7 +49,7 @@ export default class Trip {
   _renderPoint(point) {
     // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._onPointChange);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._onPointChange, this._onModeChange);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
