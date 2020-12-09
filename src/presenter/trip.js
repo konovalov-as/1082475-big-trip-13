@@ -14,7 +14,6 @@ export default class Trip {
     this._tripListComponent = new TripView();
     this._sorting = sorting;
     this._sortingComponent = new SortingView(this._sorting);
-    // this._taskListComponent = new TaskListView();
     this._noPointComponent = null;
 
     this._onPointChange = this._onPointChange.bind(this);
@@ -24,8 +23,6 @@ export default class Trip {
   init(points, sorting) {
     this._points = points.slice();
     this._sorting = sorting;
-    // Метод для инициализации (начала работы) модуля,
-    // малая часть текущей функции renderBoard в main.js
     this._renderSort();
     this._renderTrip();
   }
@@ -42,32 +39,22 @@ export default class Trip {
   }
 
   _renderSort() {
-    // Метод для рендеринга сортировки
     render(this._tripContainer, this._sortingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(point) {
-    // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
-    // текущая функция renderTask в main.js
     const pointPresenter = new PointPresenter(this._tripListComponent, this._onPointChange, this._onModeChange);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
   _renderPoints() {
-    // Метод для рендеринга N-задач за раз
     this._points.forEach((point) => this._renderPoint(point));
   }
 
   _renderNoPoints() {
-    // Метод для рендеринга заглушки
     render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
-
-  // _renderLoadMoreButton() {
-  //   // Метод, куда уйдёт логика по отрисовке компонетов задачи,
-  //   // текущая функция renderTask в main.js
-  // }
 
   _clearTaskList() {
     Object
@@ -77,8 +64,6 @@ export default class Trip {
   }
 
   _renderTrip() {
-    // Метод для инициализации (начала работы) модуля,
-    // бОльшая часть текущей функции renderBoard в main.js
     if (this._points.length === 0) {
       this._renderNoPoints();
       return;
