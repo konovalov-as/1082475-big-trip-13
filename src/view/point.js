@@ -1,6 +1,61 @@
 import AbstractView from './abstract';
 import dayjs from 'dayjs';
 
+const Duration = {
+  ONE_HOUR: 60,
+  ONE_DAY: 1440,
+};
+
+const TWO_DIGITS = 10;
+
+const convertDateTime = (diffDateTime) => {
+  if (diffDateTime <= Duration.ONE_HOUR) {
+    return `${diffDateTime < TWO_DIGITS ? `0${diffDateTime}M` : `${diffDateTime}M`}`;
+  }
+  if (diffDateTime > Duration.ONE_HOUR && diffDateTime <= Duration.ONE_DAY) {
+    const hours = Math.trunc(diffDateTime / Duration.ONE_HOUR);
+    const minutes = diffDateTime - (hours * Duration.ONE_HOUR);
+    return `${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
+            ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
+  }
+  const days = Math.trunc(diffDateTime / Duration.ONE_DAY);
+  const hours = Math.trunc((diffDateTime - (days * Duration.ONE_DAY)) / Duration.ONE_HOUR);
+  const minutes = (diffDateTime - (days * Duration.ONE_DAY)) - (hours * Duration.ONE_HOUR);
+  return `${days < TWO_DIGITS ? `0${days}` : `${days}`}D
+          ${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
+          ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
+};
+
+const formatDateTime = (dateTimeStartEvent, dateTimeEndEvent) => {
+  const eventDate = {};
+
+  eventDate.dateStart = dateTimeStartEvent !== null
+    ? dayjs(dateTimeStartEvent).format(`MMM DD`)
+    : ``;
+
+  eventDate.timeStart = dateTimeStartEvent !== null
+    ? dayjs(dateTimeStartEvent).format(`HH:MM`)
+    : ``;
+
+  eventDate.timeEnd = dateTimeEndEvent !== null
+    ? dayjs(dateTimeEndEvent).format(`HH:MM`)
+    : ``;
+
+  eventDate.machineDateStart = dateTimeStartEvent !== null
+    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DD`)
+    : ``;
+
+  eventDate.machineDateTimeStart = dateTimeStartEvent !== null
+    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DDTHH:MM`)
+    : ``;
+
+  eventDate.machineDateTimeEnd = dateTimeEndEvent !== null
+    ? dayjs(dateTimeEndEvent).format(`YYYY-MM-DDTHH:MM`)
+    : ``;
+
+  return eventDate;
+};
+
 const createSelectedOfferTemplate = (offer) => {
   return `<li class="event__offer">
     <span class="event__offer-title">${offer.condition}</span>
@@ -12,71 +67,30 @@ const createSelectedOfferTemplate = (offer) => {
 const createPointTemplate = (point) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, offers, isFavorite} = point;
 
-  const dateStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`MMM DD`)
-    : ``;
-
-  const timeStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`HH:MM`)
-    : ``;
-
-  const timeEnd = dateTimeEndEvent !== null
-    ? dayjs(dateTimeEndEvent).format(`HH:MM`)
-    : ``;
-
-  const machineDateStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DD`)
-    : ``;
-
-  const machineDateTimeStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DDTHH:MM`)
-    : ``;
-
-  const machineDateTimeEnd = dateTimeEndEvent !== null
-    ? dayjs(dateTimeEndEvent).format(`YYYY-MM-DDTHH:MM`)
-    : ``;
+  const eventDate = formatDateTime(dateTimeStartEvent, dateTimeEndEvent);
 
   const diffDateTime = (dateTimeStartEvent !== null && dateTimeEndEvent)
     ? dateTimeEndEvent.diff(dateTimeStartEvent, `minute`)
     : ``;
 
-  let dateTime = 0;
-  const ONE_HOUR = 60;
-  const ONE_DAY = 1440;
-  const TWO_DIGITS = 10;
+  const dateTime = convertDateTime(diffDateTime);
 
-  if (diffDateTime <= ONE_HOUR) {
-    dateTime = `${diffDateTime < TWO_DIGITS ? `0${diffDateTime}M` : `${diffDateTime}M`}`;
-  } else if (diffDateTime > ONE_HOUR && diffDateTime <= ONE_DAY) {
-    const hours = Math.trunc(diffDateTime / ONE_HOUR);
-    const minutes = diffDateTime - (hours * ONE_HOUR);
-    dateTime = `${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
-                ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
-  } else if (diffDateTime > ONE_DAY) {
-    const days = Math.trunc(diffDateTime / ONE_DAY);
-    const hours = Math.trunc((diffDateTime - (days * ONE_DAY)) / ONE_HOUR);
-    const minutes = (diffDateTime - (days * ONE_DAY)) - (hours * ONE_HOUR);
-    dateTime = `${days < TWO_DIGITS ? `0${days}` : `${days}`}D
-                ${hours < TWO_DIGITS ? `0${hours}` : `${hours}`}H
-                ${minutes < TWO_DIGITS ? `0${minutes}` : `${minutes}`}M`;
-  }
-
-  let options = offers
+  const options = offers
   .map((offer) => createSelectedOfferTemplate(offer))
   .join(``);
 
   return `<li class="trip-events__item">
     <div class="event">
-      <time class="event__date" datetime="${machineDateStart}">${dateStart}</time>
+      <time class="event__date" datetime="${eventDate.machineDateStart}">${eventDate.dateStart}</time>
       <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType}.png" alt="Event type icon">
       </div>
       <h3 class="event__title">${pointType} ${destinationCity}</h3>
       <div class="event__schedule">
         <p class="event__time">
-          <time class="event__start-time" datetime="${machineDateTimeStart}">${timeStart}</time>
+          <time class="event__start-time" datetime="${eventDate.machineDateTimeStart}">${eventDate.timeStart}</time>
           &mdash;
-          <time class="event__end-time" datetime="${machineDateTimeEnd}">${timeEnd}</time>
+          <time class="event__end-time" datetime="${eventDate.machineDateTimeEnd}">${eventDate.timeEnd}</time>
         </p>
         <p class="event__duration">${dateTime}</p>
       </div>

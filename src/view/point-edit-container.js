@@ -80,6 +80,6 @@ export default class PointEditContainer extends AbstractView {
 
   setOnFormSubmitClick(callback) {
     this._callback.formSubmit = callback;
-    this.getElement().querySelector(`.event--edit`).addEventListener(`click`, this._onFormSubmitClick);
+    this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._onFormSubmitClick);
   }
 }
