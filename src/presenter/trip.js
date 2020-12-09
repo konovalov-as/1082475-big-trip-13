@@ -1,7 +1,7 @@
 import TripView from '../view/trip';
 import SortingView from '../view/sorting';
 
-import PointPresenter from '../presenter/point';
+import PointPresenter from './point';
 
 import {updateItem} from '../utils/common';
 
