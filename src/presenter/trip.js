@@ -1,17 +1,17 @@
 import TripView from '../view/trip';
 import SortingView from '../view/sorting';
-import PointView from '../view/point';
-import PointEditContainerView from '../view/point-edit-container';
 
-import {render, RenderPosition, replace} from '../utils/render';
+import PointPresenter from '../presenter/point';
+
+import {render, RenderPosition} from '../utils/render';
 
 export default class Trip {
   constructor(tripContainer, sorting) {
     this._tripContainer = tripContainer;
 
-    this._tripComponent = new TripView();
+    this._tripListComponent = new TripView();
     this._sorting = sorting;
-    this._sortComponent = new SortingView(this._sorting);
+    this._sortingComponent = new SortingView(this._sorting);
     // this._taskListComponent = new TaskListView();
     this._noPointComponent = null;
   }
@@ -27,42 +27,14 @@ export default class Trip {
 
   _renderSort() {
     // Метод для рендеринга сортировки
-    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._sortingComponent, RenderPosition.BEFOREEND);
   }
 
   _renderPoint(point) {
     // Метод, куда уйдёт логика созданию и рендерингу компонетов задачи,
     // текущая функция renderTask в main.js
-    const pointComponent = new PointView(point);
-    const pointEditComponent = new PointEditContainerView(point);
-
-    const replacePointToForm = () => {
-      replace(pointEditComponent, pointComponent);
-    };
-
-    const replaceFormToPoint = () => {
-      replace(pointComponent, pointEditComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        replaceFormToPoint();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    pointComponent.setOnRollupButtonClick(() => {
-      replacePointToForm();
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    pointEditComponent.setOnFormSubmitClick(() => {
-      replaceFormToPoint();
-      document.removeEventListener(`keydown`, onEscKeyDown);
-    });
-
-    render(this._tripComponent, pointComponent, RenderPosition.BEFOREEND);
+    const pointPresenter = new PointPresenter(this._tripListComponent);
+    pointPresenter.init(point);
   }
 
   _renderPoints() {
@@ -88,7 +60,7 @@ export default class Trip {
       return;
     }
 
-    render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
     this._renderPoints();
   }
