@@ -1,26 +1,27 @@
-import TripView from '../view/point-container';
+import TripView from '../view/trip';
 import SortingView from '../view/sorting';
-import PointView from './view/point';
-import PointEditContainerView from './view/point-edit-container';
+import PointView from '../view/point';
+import PointEditContainerView from '../view/point-edit-container';
 
 import {render, RenderPosition, replace} from '../utils/render';
 
 export default class Trip {
-  constructor(tripContainer) {
+  constructor(tripContainer, sorting) {
     this._tripContainer = tripContainer;
 
     this._tripComponent = new TripView();
-    this._sortComponent = new SortingView();
+    this._sorting = sorting;
+    this._sortComponent = new SortingView(this._sorting);
     // this._taskListComponent = new TaskListView();
     this._noPointComponent = null;
   }
 
-  init(points) {
+  init(points, sorting) {
     this._points = points.slice();
+    this._sorting = sorting;
     // Метод для инициализации (начала работы) модуля,
     // малая часть текущей функции renderBoard в main.js
-    render(this._tripComponent, this._tripComponent, RenderPosition.BEFOREEND);
-
+    this._renderSort();
     this._renderTrip();
   }
 
@@ -82,14 +83,13 @@ export default class Trip {
   _renderTrip() {
     // Метод для инициализации (начала работы) модуля,
     // бОльшая часть текущей функции renderBoard в main.js
-
     if (this._points.length === 0) {
       this._renderNoPoints();
       return;
     }
 
-    this._renderSort();
+    render(this._tripContainer, this._tripComponent, RenderPosition.BEFOREEND);
 
-    this._renderPoints(this._points);
+    this._renderPoints();
   }
 }
