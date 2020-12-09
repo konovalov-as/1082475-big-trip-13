@@ -1,6 +1,6 @@
 import PointView from '../view/point';
 import PointEditContainerView from '../view/point-edit-container';
-import {render, RenderPosition, replace} from '../utils/render';
+import {render, RenderPosition, replace, remove} from '../utils/render';
 
 export default class Point {
   constructor(tripListContainer) {
@@ -17,13 +17,37 @@ export default class Point {
   init(point) {
     this._point = point;
 
+    const prevPointComponent = this._pointComponent;
+    const prevPointEditComponent = this._pointEditComponent;
+
     this._pointComponent = new PointView(point);
     this._pointEditComponent = new PointEditContainerView(point);
 
     this._pointComponent.setOnRollupButtonClick(this._onRollupButtonClick);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmitClick);
 
-    render(this._tripListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+    if (prevPointComponent === null || prevPointEditComponent === null) {
+      render(this._tripListContainer, this._pointComponent, RenderPosition.BEFOREEND);
+      return;
+    }
+
+    // Проверка на наличие в DOM необходима,
+    // чтобы не пытаться заменить то, что не было отрисовано
+    if (this._tripListContainer.getElement().contains(prevPointComponent.getElement())) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._tripListContainer.getElement().contains(prevPointEditComponent.getElement())) {
+      replace(this._pointEditComponent, prevPointEditComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevPointEditComponent);
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointEditComponent);
   }
 
   _replacePointToForm() {
