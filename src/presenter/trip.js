@@ -8,6 +8,7 @@ import {render, RenderPosition} from '../utils/render';
 export default class Trip {
   constructor(tripContainer, sorting) {
     this._tripContainer = tripContainer;
+    this._pointPresenter = {};
 
     this._tripListComponent = new TripView();
     this._sorting = sorting;
@@ -35,6 +36,7 @@ export default class Trip {
     // текущая функция renderTask в main.js
     const pointPresenter = new PointPresenter(this._tripListComponent);
     pointPresenter.init(point);
+    this._pointPresenter[point.id] = pointPresenter;
   }
 
   _renderPoints() {
@@ -51,6 +53,13 @@ export default class Trip {
   //   // Метод, куда уйдёт логика по отрисовке компонетов задачи,
   //   // текущая функция renderTask в main.js
   // }
+
+  _clearTaskList() {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+  }
 
   _renderTrip() {
     // Метод для инициализации (начала работы) модуля,

@@ -72,6 +72,7 @@ export const generatePoint = () => {
   }
 
   return {
+    id: nanoid(),
     pointType: generatePointTypes(),
     destinationCity: generateDestinationCity(),
     offers: generateOffers(),
