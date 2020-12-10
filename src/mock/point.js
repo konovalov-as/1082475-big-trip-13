@@ -72,6 +72,7 @@ export const generatePoint = () => {
   }
 
   return {
+    id: nanoid(),
     pointType: generatePointTypes(),
     destinationCity: generateDestinationCity(),
     offers: generateOffers(),
@@ -82,5 +83,6 @@ export const generatePoint = () => {
     dateTimeStartEvent,
     dateTimeEndEvent,
     cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
+    isFavorite: Boolean(getRandomInteger(0, 1)),
   };
 };

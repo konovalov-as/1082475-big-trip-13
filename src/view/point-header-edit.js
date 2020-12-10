@@ -26,11 +26,11 @@ const createPointHeaderEditTemplate = (point) => {
     : ``;
 
 
-  let pointsTypeList = POINT_TYPES
+  const pointsTypeList = POINT_TYPES
   .map((pointTypeItem) => createPointTemplate(pointTypeItem))
   .join(``);
 
-  let citiesList = DESTINATION_CITIES
+  const citiesList = DESTINATION_CITIES
   .map((destinationCityItem) => createDestinationCityTemplate(destinationCityItem))
   .join(``);
 

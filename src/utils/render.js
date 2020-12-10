@@ -6,21 +6,26 @@ export const RenderPosition = {
 };
 
 export const render = (container, child, place) => {
+  let receivedContainer = container;
+  let receivedChild = child;
+
   if (container instanceof Abstract) {
-    container = container.getElement();
+    receivedContainer = container.getElement();
   }
 
   if (child instanceof Abstract) {
-    child = child.getElement();
+    receivedChild = child.getElement();
   }
 
   switch (place) {
     case RenderPosition.AFTERBEGIN:
-      container.prepend(child);
+      receivedContainer.prepend(receivedChild);
       break;
     case RenderPosition.BEFOREEND:
-      container.append(child);
+      receivedContainer.append(receivedChild);
       break;
+    default:
+      throw new Error(`Unknown place of insert a DOM-element: '${place}'!`);
   }
 };
 

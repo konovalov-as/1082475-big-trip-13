@@ -20,7 +20,7 @@ export default class Sorting extends AbstractView {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
 
-      let fragment = document.createDocumentFragment();
+      const fragment = document.createDocumentFragment();
       for (const sort of this._sorting) {
         fragment.appendChild(new SortingElementView(sort).getElement());
       }
