@@ -1,5 +1,5 @@
 import PointView from '../view/point';
-import PointEditContainerView from '../view/point-edit-container';
+import PointEditView from '../view/point-edit';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
@@ -36,7 +36,7 @@ export default class Point {
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new PointView(point);
-    this._pointEditComponent = new PointEditContainerView(point);
+    this._pointEditComponent = new PointEditView(point);
 
     this._pointComponent.setOnRollupButtonClick(this._onRollupButtonClick);
     this._pointComponent.setOnFavoriteClick(this._onFavoriteClick);
