@@ -3,9 +3,14 @@ import PointEditContainerView from '../view/point-edit-container';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
+const Key = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`,
+};
+
 const Mode = {
   DEFAULT: `DEFAULT`,
-  EDITING: `EDITING`
+  EDITING: `EDITING`,
 };
 
 export default class Point {
@@ -79,7 +84,7 @@ export default class Point {
   }
 
   _onEscKeyDown(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
+    if (evt.key === Key.ESCAPE || evt.key === Key.ESC) {
       evt.preventDefault();
       this._replaceFormToPoint();
     }
