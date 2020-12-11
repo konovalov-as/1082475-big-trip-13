@@ -120,6 +120,7 @@ export default class Point extends AbstractView {
     this._point = point;
     this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
+    this._callback = {};
   }
 
   getTemplate() {
@@ -128,21 +129,21 @@ export default class Point extends AbstractView {
 
   _onRollupButtonClick(evt) {
     evt.preventDefault();
-    this._callback.buttonClick();
+    this._callback.onRollupButtonClick();
   }
 
   setOnRollupButtonClick(callback) {
-    this._callback.buttonClick = callback;
+    this._callback.onRollupButtonClick = callback;
     this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onRollupButtonClick);
   }
 
   _onFavoriteClick(evt) {
     evt.preventDefault();
-    this._callback.favoriteClick();
+    this._callback.onFavoriteClick();
   }
 
   setOnFavoriteClick(callback) {
-    this._callback.favoriteClick = callback;
+    this._callback.onFavoriteClick = callback;
     this.getElement().querySelector(`.event__favorite-btn`).addEventListener(`click`, this._onFavoriteClick);
   }
 }

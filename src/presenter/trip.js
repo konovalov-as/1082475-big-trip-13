@@ -1,5 +1,6 @@
 import TripView from '../view/trip';
 import SortingView from '../view/sorting';
+import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
 
@@ -11,19 +12,19 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._pointPresenter = {};
 
-    this._tripListComponent = new TripView();
     this._sorting = sorting;
+    this._points = null;
+
+    this._tripListComponent = new TripView();
     this._sortingComponent = new SortingView(this._sorting);
-    this._noPointComponent = null;
+    this._noPointComponent = new NoPointView();
 
     this._onPointChange = this._onPointChange.bind(this);
     this._onModeChange = this._onModeChange.bind(this);
   }
 
-  init(points, sorting) {
-    this._points = points.slice();
-    this._sorting = sorting;
-    this._renderSort();
+  init(points) {
+    this._points = points;
     this._renderTrip();
   }
 
@@ -68,6 +69,8 @@ export default class Trip {
       this._renderNoPoints();
       return;
     }
+
+    this._renderSort();
 
     render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
