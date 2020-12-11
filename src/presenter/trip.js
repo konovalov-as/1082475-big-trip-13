@@ -70,9 +70,10 @@ export default class Trip {
       return;
     }
 
+    this._renderSort();
+
     render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
-    this._renderSort();
     this._renderPoints();
   }
 }
