@@ -231,8 +231,10 @@ export default class PointEdit extends AbstractView {
   _onPointTypeChange(evt) {
     if (evt.target.matches(`input.event__type-input`)) {
       evt.preventDefault();
-      const updatedPoint = this._point.offers = generateOffers();
-      this.updateData(updatedPoint);
+      this.updateData({
+        offers: generateOffers(),
+        pointType: evt.target.value,
+      });
     }
   }
 
