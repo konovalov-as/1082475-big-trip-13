@@ -56,12 +56,7 @@ export default class PointEdit extends AbstractView {
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
 
-    this.getElement()
-      .querySelector(`.event__type-list`)
-      .addEventListener(`click`, this._onPointTypeChange);
-    this.getElement()
-      .querySelector(`#event-destination-1`)
-      .addEventListener(`input`, this._onDestinationChange);
+    this._setInnerOn();
   }
 
   getTemplate() {
@@ -90,6 +85,22 @@ export default class PointEdit extends AbstractView {
     const newElement = this.getElement();
 
     parent.replaceChild(newElement, prevElement);
+
+    this.restoreOn();
+  }
+
+  restoreOn() {
+    this._setInnerOn();
+    this.setOnFormSubmitClick(this._callback.onFormSubmitClick);
+  }
+
+  _setInnerOn() {
+    this.getElement()
+      .querySelector(`.event__type-list`)
+      .addEventListener(`click`, this._onPointTypeChange);
+    this.getElement()
+      .querySelector(`#event-destination-1`)
+      .addEventListener(`input`, this._onDestinationChange);
   }
 
   _onPointTypeChange(evt) {
