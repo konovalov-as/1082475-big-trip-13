@@ -63,7 +63,7 @@ export default class PointEdit extends AbstractView {
     return createPointEditContainerTemplate(this._point);
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating) {
     if (!update) {
       return;
     }
@@ -73,6 +73,10 @@ export default class PointEdit extends AbstractView {
         this._point,
         update
     );
+
+    if (justDataUpdating) {
+      return;
+    }
 
     this.updateElement();
   }
@@ -113,8 +117,12 @@ export default class PointEdit extends AbstractView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
+    // console.log(evt.target.value);
+    // const updatedPoint = this._point.destinationInfo[0].description = generateDescription();
+    // this.updateData(updatedPoint);
+
     const updatedPoint = this._point.destinationInfo[0].description = generateDescription();
-    this.updateData(updatedPoint);
+    this.updateData(updatedPoint, true);
   }
 
   getElement() {
