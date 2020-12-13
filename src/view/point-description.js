@@ -1,7 +1,7 @@
 import AbstractView from './abstract';
 
 const createPointDescriptionTemplate = (offer) => {
-  const {destinationCity, destinationInfo} = offer;
+  const {destinationInfo} = offer;
 
   return `<p class="event__destination-description">${destinationInfo[0].description}</p>`;
 };
