@@ -4,11 +4,14 @@ import PointHeaderEditView from './point-header-edit';
 import PointDescriptionView from './point-description';
 import PointPhotosView from './point-photos';
 
+import {generateOffers} from '../mock/point';
+import {generateDescription} from '../mock/point';
+
 const createAvailableOfferTemplate = (offer) => {
   return `<div class="event__offer-selector">
   <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.condition}-1" type="checkbox" name="event-offer-${offer.condition}" ${offer.isChecked ? `checked` : ``}>
   <label class="event__offer-label" for="event-offer-${offer.condition}-1">
-    <span class="event__offer-title">Add ${offer.condition}</span>
+    <span class="event__offer-title">${offer.condition}</span>
     &plus;&euro;&nbsp;
   <span class="event__offer-price">${offer.cost}</span>
   </label>
@@ -38,7 +41,7 @@ const createPointEditContainerTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEditContainer extends AbstractView {
+export default class PointEdit extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
@@ -49,10 +52,58 @@ export default class PointEditContainer extends AbstractView {
     this._photos = null;
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._callback = {};
+
+    this._onPointTypeChange = this._onPointTypeChange.bind(this);
+    this._onDestinationChange = this._onDestinationChange.bind(this);
+
+    this.getElement()
+      .querySelector(`.event__type-list`)
+      .addEventListener(`click`, this._onPointTypeChange);
+    this.getElement()
+      .querySelector(`#event-destination-1`)
+      .addEventListener(`input`, this._onDestinationChange);
   }
 
   getTemplate() {
     return createPointEditContainerTemplate(this._point);
+  }
+
+  updateData(update) {
+    if (!update) {
+      return;
+    }
+
+    this._point = Object.assign(
+        {},
+        this._point,
+        update
+    );
+
+    this.updateElement();
+  }
+
+  updateElement() {
+    let prevElement = this.getElement();
+    const parent = prevElement.parentElement;
+    this.removeElement();
+
+    const newElement = this.getElement();
+
+    parent.replaceChild(newElement, prevElement);
+  }
+
+  _onPointTypeChange(evt) {
+    if (evt.target.matches(`input.event__type-input`)) {
+      evt.preventDefault();
+      const updatedPoint = this._point.offers = generateOffers();
+      this.updateData(updatedPoint);
+    }
+  }
+
+  _onDestinationChange(evt) {
+    evt.preventDefault();
+    const updatedPoint = this._point.destinationInfo[0].description = generateDescription();
+    this.updateData(updatedPoint);
   }
 
   getElement() {
