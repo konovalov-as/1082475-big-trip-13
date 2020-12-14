@@ -82,10 +82,10 @@ export const generatePoint = () => {
     pointType: generatePointTypes(),
     destinationCity: generateDestinationCity(),
     offers: generateOffers(),
-    destinationInfo: [{
+    destinationInfo: {
       description: generateDescription(),
       photos: generatePhotos(),
-    }],
+    },
     dateTimeStartEvent,
     dateTimeEndEvent,
     cost: getRandomInteger(OfferCost.FROM, OfferCost.TO),
