@@ -183,6 +183,7 @@ export default class PointEdit extends SmartView {
     this._onDateStartChange = this._onDateStartChange.bind(this);
     this._onDateEndChange = this._onDateEndChange.bind(this);
     this._onCostChange = this._onCostChange.bind(this);
+    this._onEditFormClose = this.onEditFormClose.bind(this);
 
     this._setInnerOn();
   }
@@ -268,6 +269,16 @@ export default class PointEdit extends SmartView {
     this.updateData({
       cost: evt.target.value,
     }, true);
+  }
+
+  onEditFormClose(evt) {
+    evt.preventDefault();
+    this._callback.onEditFormClose();
+  }
+
+  setOnEditFormClose(callback) {
+    this._callback.onEditFormClose = callback;
+    this.getElement().querySelector(`.event__rollup-btn`).addEventListener(`click`, this._onEditFormClose);
   }
 
   _onFormSubmitClick(evt) {
