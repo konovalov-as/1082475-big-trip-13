@@ -187,6 +187,10 @@ export default class PointEdit extends SmartView {
     this._setInnerOn();
   }
 
+  reset(point) {
+    this.updateData(point);
+  }
+
   getTemplate() {
     return createPointEditTemplate(this._data);
   }
