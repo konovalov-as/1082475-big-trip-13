@@ -1,4 +1,5 @@
-import AbstractView from './abstract';
+// import AbstractView from './abstract';
+import SmartView from './smart';
 import dayjs from 'dayjs';
 
 import {DESTINATION_CITIES} from '../const';
@@ -152,12 +153,12 @@ const createPointDetailsContainerTemplate = (offersContainerTemplate, destinatio
   </section>`;
 };
 
-const createPointEditTemplate = (point) => {
-  const pointHeaderTemplate = createPointHeaderTemplate(point);
-  const offersTemplate = createOffersTemplate(point);
+const createPointEditTemplate = (data) => {
+  const pointHeaderTemplate = createPointHeaderTemplate(data);
+  const offersTemplate = createOffersTemplate(data);
   const offersContainerTemplate = createOffersContainerTemplate(offersTemplate);
-  const destinationTemplate = createDestinationTemplate(point.destinationInfo);
-  const photosTemplate = createPhotosTemplate(point.destinationInfo);
+  const destinationTemplate = createDestinationTemplate(data.destinationInfo);
+  const photosTemplate = createPhotosTemplate(data.destinationInfo);
   const destinationContainerTemplate = createDestinationContainerTemplate(destinationTemplate, photosTemplate);
   const pointDetailsContainerTemplate = createPointDetailsContainerTemplate(offersContainerTemplate, destinationContainerTemplate);
 
@@ -169,10 +170,11 @@ const createPointEditTemplate = (point) => {
   </li>`;
 };
 
-export default class PointEdit extends AbstractView {
+export default class PointEdit extends SmartView {
   constructor(point) {
     super();
-    this._point = point;
+    // this._point = point;
+    this._data = point;
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._callback = {};
 
@@ -186,37 +188,7 @@ export default class PointEdit extends AbstractView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._point);
-  }
-
-  updateData(update, justDataUpdating) {
-    if (!update) {
-      return;
-    }
-
-    this._point = Object.assign(
-        {},
-        this._point,
-        update
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    let prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreOn();
+    return createPointEditTemplate(this._data);
   }
 
   restoreOn() {
@@ -267,7 +239,7 @@ export default class PointEdit extends AbstractView {
       destinationCity: evt.target.value,
       destinationInfo: Object.assign(
           {},
-          this._point.destinationInfo,
+          this._data.destinationInfo,
           {description: evt.target.value + generateDescription()},
       )
     }, true);
@@ -296,7 +268,7 @@ export default class PointEdit extends AbstractView {
 
   _onFormSubmitClick(evt) {
     evt.preventDefault();
-    this._callback.onFormSubmitClick(this._point);
+    this._callback.onFormSubmitClick(this._data);
   }
 
   setOnFormSubmitClick(callback) {
