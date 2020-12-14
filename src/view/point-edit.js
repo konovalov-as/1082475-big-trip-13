@@ -178,6 +178,7 @@ export default class PointEdit extends AbstractView {
 
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
+    this._onCostChange = this._onCostChange.bind(this);
 
     this._setInnerOn();
   }
@@ -228,6 +229,9 @@ export default class PointEdit extends AbstractView {
     this.getElement()
       .querySelector(`#event-destination-1`)
       .addEventListener(`input`, this._onDestinationChange);
+    this.getElement()
+      .querySelector(`#event-price-1`)
+      .addEventListener(`input`, this._onCostChange);
   }
 
   _onPointTypeChange(evt) {
@@ -258,6 +262,13 @@ export default class PointEdit extends AbstractView {
           this._point.destinationInfo,
           {description: evt.target.value + generateDescription()},
       )
+    }, true);
+  }
+
+  _onCostChange(evt) {
+    evt.preventDefault();
+    this.updateData({
+      cost: evt.target.value,
     }, true);
   }
 
