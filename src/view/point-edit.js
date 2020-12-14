@@ -242,11 +242,21 @@ export default class PointEdit extends AbstractView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
+    DESTINATION_CITIES.find((destinationCity) => {
+      if (destinationCity !== evt.target.value) {
+        // todo найти способ блокировки кнопки save
+        // условие всегда истинно, так как value
+        // сравнивается с изменёнными данными
+        // value сравнивается с value
+        isSubmitDisabled = true;
+      }
+    });
     this.updateData({
+      destinationCity: evt.target.value,
       destinationInfo: Object.assign(
           {},
           this._point.destinationInfo,
-          {description: evt.target.value + generateDescription()}
+          {description: evt.target.value + generateDescription()},
       )
     }, true);
   }
