@@ -7,6 +7,8 @@ import {POINT_TYPES} from '../const';
 import {generateOffers} from '../mock/point';
 import {generateDescription} from '../mock/point';
 
+let isSubmitDisabled = false;
+
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
   <input id="event-type-${pointType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType.toLowerCase()}">
@@ -79,7 +81,7 @@ const createPointHeaderTemplate = (point) => {
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost}">
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
     <button class="event__reset-btn" type="reset">Delete</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
@@ -114,7 +116,7 @@ const createOffersContainerTemplate = (offersTemplate) => {
 };
 
 const createDestinationTemplate = (destinationInfo) => {
-  return `<p class="event__destination-description">${destinationInfo[0].description}</p>`;
+  return `<p class="event__destination-description">${destinationInfo.description}</p>`;
 };
 
 const createPhotoTemplate = (photo) => {
@@ -122,7 +124,7 @@ const createPhotoTemplate = (photo) => {
 };
 
 const createPhotosTemplate = (destinationInfo) => {
-  const photos = destinationInfo[0].photos;
+  const photos = destinationInfo.photos;
 
   const photosList = photos
   .map((photo) => createPhotoTemplate(photo))
@@ -240,12 +242,13 @@ export default class PointEdit extends AbstractView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
-    // console.log(evt.target.value);
-    // const updatedPoint = this._point.destinationInfo[0].description = generateDescription();
-    // this.updateData(updatedPoint);
-
-    const updatedPoint = this._point.destinationInfo[0].description = generateDescription();
-    this.updateData(updatedPoint, true);
+    this.updateData({
+      destinationInfo: Object.assign(
+          {},
+          this._point.destinationInfo,
+          {description: evt.target.value + generateDescription()}
+      )
+    }, true);
   }
 
   _onFormSubmitClick(evt) {
