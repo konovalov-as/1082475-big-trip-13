@@ -100,7 +100,7 @@ export default class Point {
   }
 
   _onEditFormClose() {
-    this.resetView();
+    this._replaceFormToPoint();
   }
 
   _onFavoriteClick() {
