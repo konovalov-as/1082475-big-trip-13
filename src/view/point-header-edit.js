@@ -5,8 +5,8 @@ import {POINT_TYPES} from '../const';
 
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
-  <input id="event-type-${pointType}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType}">
-  <label class="event__type-label  event__type-label--${pointType}" for="event-type-${pointType}-1" style="::before">${pointType}</label>
+  <input id="event-type-${pointType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType.toLowerCase()}">
+  <label class="event__type-label event__type-label--${pointType.toLowerCase()}" for="event-type-${pointType.toLowerCase()}-1">${pointType}</label>
 </div>`;
 };
 
@@ -38,7 +38,7 @@ const createPointHeaderEditTemplate = (point) => {
     <div class="event__type-wrapper">
       <label class="event__type  event__type-btn" for="event-type-toggle-1">
         <span class="visually-hidden">Choose event type</span>
-        <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType}.png" alt="Event type icon">
+        <img class="event__type-icon" width="17" height="17" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon"
       </label>
       <input class="event__type-toggle  visually-hidden" id="event-type-toggle-1" type="checkbox">
 

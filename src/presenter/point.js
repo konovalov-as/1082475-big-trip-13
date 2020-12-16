@@ -24,6 +24,8 @@ export default class Point {
     this._mode = Mode.DEFAULT;
 
     this._onRollupButtonClick = this._onRollupButtonClick.bind(this);
+    this._onEditFormClose = this._onEditFormClose.bind(this);
+
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
@@ -39,6 +41,8 @@ export default class Point {
     this._pointEditComponent = new PointEditView(point);
 
     this._pointComponent.setOnRollupButtonClick(this._onRollupButtonClick);
+    this._pointEditComponent.setOnEditFormClose(this._onEditFormClose);
+
     this._pointComponent.setOnFavoriteClick(this._onFavoriteClick);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmitClick);
 
@@ -86,12 +90,17 @@ export default class Point {
   _onEscKeyDown(evt) {
     if (evt.key === Key.ESCAPE || evt.key === Key.ESC) {
       evt.preventDefault();
+      this._pointEditComponent.reset(this._point);
       this._replaceFormToPoint();
     }
   }
 
   _onRollupButtonClick() {
     this._replacePointToForm();
+  }
+
+  _onEditFormClose() {
+    this._replaceFormToPoint();
   }
 
   _onFavoriteClick() {
