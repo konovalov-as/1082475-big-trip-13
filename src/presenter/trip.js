@@ -8,7 +8,9 @@ import {updateItem} from '../utils/common';
 import {render, RenderPosition} from '../utils/render';
 
 export default class Trip {
-  constructor(tripContainer, sorting) {
+  constructor(tripContainer, pointsModel, sorting) {
+    this._pointsModel = pointsModel;
+
     this._tripContainer = tripContainer;
     this._pointPresenter = {};
 
@@ -26,6 +28,10 @@ export default class Trip {
   init(points) {
     this._points = points;
     this._renderTrip();
+  }
+
+  _getPoints() {
+    return this._pointsModel.getPoints();
   }
 
   _onModeChange() {
