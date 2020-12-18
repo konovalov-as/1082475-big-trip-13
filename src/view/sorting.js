@@ -1,4 +1,5 @@
 import AbstractView from './abstract';
+// import {SortType} from "../const.js";
 import {createElement, render, RenderPosition} from '../utils/render';
 import SortingElementView from './sorting-element';
 
@@ -31,4 +32,17 @@ export default class Sorting extends AbstractView {
     return this._element;
   }
 
+  _onSortTypeChange(evt) {
+    // if (evt.target.tagName !== `A`) {
+    //   return;
+    // }
+
+    evt.preventDefault();
+    // this._callback.sortTypeChange(evt.target.dataset.sortType);
+  }
+
+  setOnSortTypeChange(callback) {
+    this._callback.sortTypeChange = callback;
+    this.getElement().addEventListener(`click`, this._onSortTypeChange);
+  }
 }
