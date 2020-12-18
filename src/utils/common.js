@@ -6,17 +6,3 @@ export const getRandomInteger = (a = 0, b = 1) => {
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
-
-export const updateItem = (items, updatedItems) => {
-  const index = items.findIndex((item) => item.id === updatedItems.id);
-
-  if (index === -1) {
-    return items;
-  }
-
-  return [
-    ...items.slice(0, index),
-    updatedItems,
-    ...items.slice(index + 1)
-  ];
-};
