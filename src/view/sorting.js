@@ -8,8 +8,9 @@ const createSortingContainerTemplate = () => {
 };
 
 export default class Sorting extends AbstractView {
-  constructor(sorting) {
+  constructor(currentSortType, sorting) {
     super();
+    this._currentSortType = currentSortType;
     this._sorting = sorting;
   }
 
