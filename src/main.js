@@ -41,4 +41,4 @@ const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
 
 const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting);
-tripPresenter.init(points);
+tripPresenter.init();
