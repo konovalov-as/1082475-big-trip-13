@@ -3,6 +3,8 @@ import PointEditView from '../view/point-edit';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
+import {UserAction, UpdateType} from '../const';
+
 const Key = {
   ESCAPE: `Escape`,
   ESC: `Esc`,
@@ -105,6 +107,8 @@ export default class Point {
 
   _onFavoriteClick() {
     this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
         Object.assign(
             {},
             this._point,
@@ -116,7 +120,11 @@ export default class Point {
   }
 
   _onFormSubmitClick(point) {
-    this._changeData(point);
+    this._changeData(
+        UserAction.UPDATE_TASK,
+        UpdateType.MINOR,
+        point
+    );
     this._replaceFormToPoint();
   }
 }

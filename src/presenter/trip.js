@@ -4,7 +4,6 @@ import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
 
-// import {updateItem} from '../utils/common';
 import {sortPointOlder, sortPointNewer} from '../utils/point';
 import {render, RenderPosition} from '../utils/render';
 import {SortType} from '../const';
@@ -24,9 +23,13 @@ export default class Trip {
     this._sortingComponent = new SortingView(this._sorting);
     this._noPointComponent = new NoPointView();
 
-    this._onPointChange = this._onPointChange.bind(this);
+    // this._onPointChange = this._onPointChange.bind(this);
+    this._onViewAction = this._onViewAction.bind(this);
+    this._onModelEvent = this._onModelEvent.bind(this);
     this._onModeChange = this._onModeChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
+
+    this._pointsModel.addObserver(this._onModelEvent);
   }
 
   init() {
@@ -51,10 +54,23 @@ export default class Trip {
       .forEach((presenter) => presenter.resetView());
   }
 
-  _onPointChange(updatedPoint) {
+  _onViewAction(actionType, updateType, update) {
     // this._points = updateItem(this._points, updatedPoint);
-    // Здесь будем вызывать обновление модели
-    this._pointPresenter[updatedPoint.id].init(updatedPoint);
+    // this._pointPresenter[updatedPoint.id].init(updatedPoint);
+
+    console.log(actionType, updateType, update);
+    // Здесь будем вызывать обновление модели.
+    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
+    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
+    // update - обновленные данные
+  }
+
+  _onModelEvent(updateType, data) {
+    console.log(updateType, data);
+    // В зависимости от типа изменений решаем, что делать:
+    // - обновить часть списка (например, когда поменялось описание)
+    // - обновить список (например, когда задача ушла в архив)
+    // - обновить всю доску (например, при переключении фильтра)
   }
 
   _onSortTypeChange(sortType) {
@@ -73,7 +89,7 @@ export default class Trip {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._onPointChange, this._onModeChange);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
     pointPresenter.init(point);
     this._pointPresenter[point.id] = pointPresenter;
   }
