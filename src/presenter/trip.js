@@ -5,7 +5,7 @@ import NoPointView from '../view/no-point';
 import PointPresenter from './point';
 
 import {sortPointOlder, sortPointNewer} from '../utils/point';
-import {render, RenderPosition} from '../utils/render';
+import {render, RenderPosition, remove} from '../utils/render';
 import {SortType, UpdateType, UserAction} from '../const';
 
 export default class Trip {
@@ -20,7 +20,8 @@ export default class Trip {
     this._points = null;
 
     this._tripListComponent = new TripView();
-    this._sortingComponent = new SortingView(this._sorting);
+    // this._sortingComponent = new SortingView(this._sorting);
+    this._sortingComponent = null;
     this._noPointComponent = new NoPointView();
 
     // this._onPointChange = this._onPointChange.bind(this);
@@ -57,13 +58,13 @@ export default class Trip {
 
   _onViewAction(actionType, updateType, update) {
     switch (actionType) {
-      case UserAction.UPDATE_TASK:
+      case UserAction.UPDATE_POINT:
         this._pointsModel.updatePoint(updateType, update);
         break;
-      case UserAction.ADD_TASK:
+      case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
         break;
-      case UserAction.DELETE_TASK:
+      case UserAction.DELETE_POINT:
         this._pointsModel.deletePoint(updateType, update);
         break;
       // todo default
@@ -79,9 +80,13 @@ export default class Trip {
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
+        this._clearTrip();
+        this._renderTrip();
         break;
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
+        this._clearTrip({resetSortType: true});
+        this._renderTrip();
         break;
       // todo default
     }
@@ -93,13 +98,22 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-    this._clearPointList();
+    // this._clearPointList();
     // this._renderPointList();
+    this._clearTrip();
+    this._renderTrip();
   }
 
   _renderSort() {
-    render(this._tripContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    if (this._sortingComponent !== null) {
+      this._sortingComponent = null;
+    }
+
+    this._sortingComponent = new SortingView(this._currentSortType, this._sorting);
     this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
+
+    render(this._tripContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
   _renderPoint(point) {
@@ -123,9 +137,26 @@ export default class Trip {
     this._pointPresenter = {};
   }
 
+  _clearTrip({resetSortType = false} = {}) {
+    Object
+      .values(this._pointPresenter)
+      .forEach((presenter) => presenter.destroy());
+    this._pointPresenter = {};
+
+    remove(this._sortingComponent);
+    remove(this._noPointComponent);
+
+    if (resetSortType) {
+      this._currentSortType = SortType.DEFAULT;
+    }
+  }
+
+
   _renderTrip() {
     const points = this._getPoints();
-    if (points.length === 0) {
+    const pointCount = points.length;
+
+    if (pointCount === 0) {
       this._renderNoPoints();
       return;
     }
