@@ -107,7 +107,7 @@ export default class Point {
 
   _onFavoriteClick() {
     this._changeData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         Object.assign(
             {},
@@ -121,7 +121,7 @@ export default class Point {
 
   _onFormSubmitClick(point) {
     this._changeData(
-        UserAction.UPDATE_TASK,
+        UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         point
     );
