@@ -6,7 +6,7 @@ import PointPresenter from './point';
 
 import {sortPointOlder, sortPointNewer} from '../utils/point';
 import {render, RenderPosition} from '../utils/render';
-import {SortType} from '../const';
+import {SortType, UpdateType, UserAction} from '../const';
 
 export default class Trip {
   constructor(tripContainer, pointsModel, sorting) {
@@ -43,6 +43,7 @@ export default class Trip {
         return this._pointsModel.getPoints().slice().sort(sortPointOlder);
       case SortType.DATE_NEWER:
         return this._pointsModel.getPoints().slice().sort(sortPointNewer);
+      // todo default
     }
 
     return this._pointsModel.getPoints();
@@ -55,22 +56,35 @@ export default class Trip {
   }
 
   _onViewAction(actionType, updateType, update) {
-    // this._points = updateItem(this._points, updatedPoint);
-    // this._pointPresenter[updatedPoint.id].init(updatedPoint);
-
-    console.log(actionType, updateType, update);
-    // Здесь будем вызывать обновление модели.
-    // actionType - действие пользователя, нужно чтобы понять, какой метод модели вызвать
-    // updateType - тип изменений, нужно чтобы понять, что после нужно обновить
-    // update - обновленные данные
+    switch (actionType) {
+      case UserAction.UPDATE_TASK:
+        this._pointsModel.updatePoint(updateType, update);
+        break;
+      case UserAction.ADD_TASK:
+        this._pointsModel.addPoint(updateType, update);
+        break;
+      case UserAction.DELETE_TASK:
+        this._pointsModel.deletePoint(updateType, update);
+        break;
+      // todo default
+    }
   }
 
   _onModelEvent(updateType, data) {
-    console.log(updateType, data);
     // В зависимости от типа изменений решаем, что делать:
-    // - обновить часть списка (например, когда поменялось описание)
-    // - обновить список (например, когда задача ушла в архив)
-    // - обновить всю доску (например, при переключении фильтра)
+    switch (updateType) {
+      case UpdateType.PATCH:
+        // - обновить часть списка (например, когда поменялось описание)
+        this.PointPresenter[data.id].init(data);
+        break;
+      case UpdateType.MINOR:
+        // - обновить список (например, когда задача ушла в архив)
+        break;
+      case UpdateType.MAJOR:
+        // - обновить всю доску (например, при переключении фильтра)
+        break;
+      // todo default
+    }
   }
 
   _onSortTypeChange(sortType) {
