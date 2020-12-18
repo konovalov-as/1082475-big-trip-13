@@ -33,3 +33,13 @@ export const POINT_TYPES = [
   `Sightseeing`,
   `Restaurant`,
 ];
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE_NEWER: `date-newer`,
+  DATE_OLDER: `date-older`,
+  COST_MORE: `cost-more`,
+  COST_LESS: `cost-less`,
+  TIME_MORE: `time-more`,
+  TIME_LESS: `time-less`,
+};
