@@ -130,13 +130,6 @@ export default class Trip {
     render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
 
-  _clearTaskList() {
-    Object
-      .values(this._pointPresenter)
-      .forEach((presenter) => presenter.destroy());
-    this._pointPresenter = {};
-  }
-
   _clearTrip({resetSortType = false} = {}) {
     Object
       .values(this._pointPresenter)
