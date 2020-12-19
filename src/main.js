@@ -11,6 +11,7 @@ import {generateSorting} from './mock/sorting';
 import TripPresenter from './presenter/trip';
 
 import PointsModel from './model/points';
+import FilterModel from './model/filter';
 
 import {render, RenderPosition} from './utils/render';
 
@@ -39,6 +40,8 @@ render(tripContainer, new NewEventButtonView(), RenderPosition.BEFOREEND);
 // trip
 const pointsModel = new PointsModel();
 pointsModel.setPoints(points);
+
+const filterModel = new FilterModel();
 
 const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting);
 tripPresenter.init();
