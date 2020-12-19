@@ -1,20 +1,16 @@
-const FilterName = {
-  EVERYTHING: `everything`,
-  FUTURE: `future`,
-  PAST: `past`,
-};
+import {FilterType} from '../const';
 
 export const generateFilter = () => {
   return [{
-    name: FilterName.EVERYTHING,
+    name: FilterType.EVERYTHING,
     isChecked: true,
   },
   {
-    name: FilterName.FUTURE,
+    name: FilterType.FUTURE,
     isChecked: false,
   },
   {
-    name: FilterName.PAST,
+    name: FilterType.PAST,
     isChecked: false,
   }];
 };
