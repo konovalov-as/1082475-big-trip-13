@@ -34,6 +34,12 @@ export const POINT_TYPES = [
   `Restaurant`,
 ];
 
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
+
 export const SortType = {
   DEFAULT: `default`,
   DATE_NEWER: `date-newer`,
