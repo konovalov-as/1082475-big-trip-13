@@ -30,6 +30,7 @@ export default class Point {
 
     this._onFavoriteClick = this._onFavoriteClick.bind(this);
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
+    this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
@@ -47,6 +48,7 @@ export default class Point {
 
     this._pointComponent.setOnFavoriteClick(this._onFavoriteClick);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmitClick);
+    this._pointEditComponent.setOnFormDeleteClick(this._onFormDeleteClick);
 
     if (prevPointComponent === null || prevPointEditComponent === null) {
       render(this._tripListContainer, this._pointComponent, RenderPosition.BEFOREEND);
@@ -126,5 +128,13 @@ export default class Point {
         point
     );
     this._replaceFormToPoint();
+  }
+
+  _onFormDeleteClick(point) {
+    this._changeData(
+        UserAction.DELETE_POINT,
+        UpdateType.MINOR,
+        point
+    );
   }
 }

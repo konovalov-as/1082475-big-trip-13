@@ -190,6 +190,7 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
+    this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
     this._callback = {};
 
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
@@ -215,6 +216,7 @@ export default class PointEdit extends SmartView {
   restoreOn() {
     this._setListeners();
     this.setOnFormSubmitClick(this._callback.onFormSubmitClick);
+    this.setOnFormDeleteClick(this._callback.onFormDeleteClick);
   }
 
   _setListeners() {
@@ -305,6 +307,16 @@ export default class PointEdit extends SmartView {
   setOnFormSubmitClick(callback) {
     this._callback.onFormSubmitClick = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._onFormSubmitClick);
+  }
+
+  _onFormDeleteClick(evt) {
+    evt.preventDefault();
+    this._callback.onFormDeleteClick(PointEdit.parseDataToPoint(this._data));
+  }
+
+  setOnFormDeleteClick(callback) {
+    this._callback.onFormDeleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._onFormDeleteClick);
   }
 
   static parsePointToData(point) {
