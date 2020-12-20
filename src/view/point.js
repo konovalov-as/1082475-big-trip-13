@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import dayjs from 'dayjs';
+import he from 'he';
 
 const Duration = {
   ONE_HOUR: 60,
@@ -60,7 +61,7 @@ const createSelectedOfferTemplate = (offer) => {
   return `<li class="event__offer">
     <span class="event__offer-title">${offer.condition}</span>
     &plus;&euro;&nbsp;
-    <span class="event__offer-price">${offer.cost}</span>
+    <span class="event__offer-price">${he.encode(offer.cost.toString())}</span>
   </li>`;
 };
 
@@ -95,7 +96,7 @@ const createPointTemplate = (point) => {
         <p class="event__duration">${dateTime}</p>
       </div>
       <p class="event__price">
-        &euro;&nbsp;<span class="event__price-value">${cost}</span>
+        &euro;&nbsp;<span class="event__price-value">${he.encode(cost.toString())}</span>
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">

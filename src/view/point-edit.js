@@ -1,5 +1,6 @@
 import SmartView from './smart';
 import dayjs from 'dayjs';
+import he from 'he';
 
 import {POINT_TYPES, DESTINATION_CITIES} from '../const';
 import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
@@ -89,7 +90,7 @@ const createPointHeaderTemplate = (point) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(cost.toString())}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
@@ -106,7 +107,7 @@ const createOfferTemplate = (offer) => {
   <label class="event__offer-label" for="event-offer-${offer.condition}-1">
     <span class="event__offer-title">${offer.condition}</span>
     &plus;&euro;&nbsp;
-  <span class="event__offer-price">${offer.cost}</span>
+  <span class="event__offer-price">${he.encode(offer.cost.toString())}</span>
   </label>
 </div>`;
 };
