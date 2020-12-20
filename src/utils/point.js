@@ -36,3 +36,11 @@ export const sortPointNewer = (pointA, pointB) => {
 
   return dayjs(pointB.dueDate).diff(dayjs(pointA.dueDate));
 };
+
+export const isPointExpired = (endEventDate) => {
+  return endEventDate === null ? false : dayjs().isAfter(endEventDate, `D`);
+};
+
+export const isPointUnexpired = (endStartDate) => {
+  return endStartDate === null ? false : dayjs().isBefore(endStartDate, `D`);
+};
