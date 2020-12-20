@@ -3,11 +3,12 @@ import SortingView from '../view/sorting';
 import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
+import PointNewPresenter from './point-new';
 
 import {sortPointOlder, sortPointNewer} from '../utils/point';
 import {render, RenderPosition, remove} from '../utils/render';
 import {filter} from '../utils/filter';
-import {SortType, UpdateType, UserAction} from '../const';
+import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
   constructor(tripContainer, pointsModel, sorting, filterModel) {
@@ -35,11 +36,19 @@ export default class Trip {
 
     this._pointsModel.addObserver(this._onModelEvent);
     this._filterModel.addObserver(this._onModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction);
   }
 
   init() {
     // this._points = points;
     this._renderTrip();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DEFAULT;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this._pointNewPresenter.init();
   }
 
   _getPoints() {
@@ -61,6 +70,7 @@ export default class Trip {
   }
 
   _onModeChange() {
+    this._pointNewPresenter.destroy();
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.resetView());
@@ -141,6 +151,8 @@ export default class Trip {
   }
 
   _clearTrip({resetSortType = false} = {}) {
+    this._pointNewPresenter.destroy();
+
     Object
       .values(this._pointPresenter)
       .forEach((presenter) => presenter.destroy());

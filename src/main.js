@@ -58,3 +58,8 @@ const controlPresenter = new ControlPresenter(tripContainer, filterModel, points
 
 controlPresenter.init();
 tripPresenter.init();
+
+document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+  evt.preventDefault();
+  tripPresenter.createPoint();
+});
