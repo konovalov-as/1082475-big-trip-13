@@ -1,11 +1,22 @@
 import SmartView from './smart';
 import dayjs from 'dayjs';
 
-import {DESTINATION_CITIES} from '../const';
-import {POINT_TYPES} from '../const';
+import {POINT_TYPES, DESTINATION_CITIES} from '../const';
+import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
 
-import {generateOffers} from '../mock/point';
-import {generateDescription} from '../mock/point';
+const BLANK_POINT = {
+  pointType: POINT_TYPES[0],
+  destinationCity: DESTINATION_CITIES[0],
+  offers: generateOffers(),
+  destinationInfo: {
+    description: generateDescription(),
+    photos: generatePhotos(),
+  },
+  dateTimeStartEvent: null,
+  dateTimeEndEvent: null,
+  cost: 0,
+  isFavorite: false,
+};
 
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
@@ -185,7 +196,7 @@ const createPointEditTemplate = (data) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = PointEdit.parsePointToData(point);
 
