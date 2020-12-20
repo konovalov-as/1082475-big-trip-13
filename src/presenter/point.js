@@ -3,12 +3,7 @@ import PointEditView from '../view/point-edit';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
-import {UserAction, UpdateType} from '../const';
-
-const Key = {
-  ESCAPE: `Escape`,
-  ESC: `Esc`,
-};
+import {UserAction, UpdateType, Key} from '../const';
 
 const Mode = {
   DEFAULT: `DEFAULT`,

@@ -61,3 +61,8 @@ export const UpdateType = {
   MINOR: `MINOR`,
   MAJOR: `MAJOR`
 };
+
+export const Key = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`,
+};
