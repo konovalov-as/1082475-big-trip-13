@@ -53,7 +53,7 @@ pointsModel.setPoints(points);
 
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting);
+const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel);
 const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
 
 controlPresenter.init();

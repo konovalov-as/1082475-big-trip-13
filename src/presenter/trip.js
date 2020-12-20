@@ -6,17 +6,20 @@ import PointPresenter from './point';
 
 import {sortPointOlder, sortPointNewer} from '../utils/point';
 import {render, RenderPosition, remove} from '../utils/render';
+import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting) {
+  constructor(tripContainer, pointsModel, sorting, filterModel) {
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
 
     this._tripContainer = tripContainer;
     this._pointPresenter = {};
-    this._currentSortType = SortType.DEFAULT;
 
+    this._currentSortType = SortType.DEFAULT;
     this._sorting = sorting;
+
     this._points = null;
 
     this._tripListComponent = new TripView();
@@ -31,6 +34,7 @@ export default class Trip {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._onModelEvent);
+    this._filterModel.addObserver(this._onModelEvent);
   }
 
   init() {
@@ -39,15 +43,21 @@ export default class Trip {
   }
 
   _getPoints() {
+    // todo возможно переменные filterType, points, filteredPoints
+    // нужно перенести в поля класса
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+
     switch (this._currentSortType) {
       case SortType.DATE_OLDER:
-        return this._pointsModel.getPoints().slice().sort(sortPointOlder);
+        return filteredPoints.sort(sortPointOlder);
       case SortType.DATE_NEWER:
-        return this._pointsModel.getPoints().slice().sort(sortPointNewer);
+        return filteredPoints.sort(sortPointNewer);
       // todo default
     }
 
-    return this._pointsModel.getPoints();
+    return filteredPoints;
   }
 
   _onModeChange() {
