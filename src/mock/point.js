@@ -40,7 +40,7 @@ export const generateOffers = () => {
   return offers;
 };
 
-const generatePhotos = () => {
+export const generatePhotos = () => {
   const photosCount = getRandomInteger(0, 10);
 
   const generatePhoto = () => {
