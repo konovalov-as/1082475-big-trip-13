@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
+dayjs.extend(isSameOrBefore);
+
 // Функция помещает точки без даты в конце списка,
 // возвращая нужный вес для колбэка sort
 const getWeightForNullDate = (dateA, dateB) => {
@@ -42,5 +45,5 @@ export const isPointExpired = (endEventDate) => {
 };
 
 export const isPointUnexpired = (endStartDate) => {
-  return endStartDate === null ? false : dayjs().isBefore(endStartDate, `D`);
+  return endStartDate === null ? false : dayjs().isSameOrBefore(endStartDate, `D`);
 };
