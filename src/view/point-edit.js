@@ -1,11 +1,23 @@
 import SmartView from './smart';
 import dayjs from 'dayjs';
+import he from 'he';
 
-import {DESTINATION_CITIES} from '../const';
-import {POINT_TYPES} from '../const';
+import {POINT_TYPES, DESTINATION_CITIES} from '../const';
+import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
 
-import {generateOffers} from '../mock/point';
-import {generateDescription} from '../mock/point';
+const BLANK_POINT = {
+  pointType: POINT_TYPES[0],
+  destinationCity: DESTINATION_CITIES[0],
+  offers: generateOffers(),
+  destinationInfo: {
+    description: generateDescription(),
+    photos: generatePhotos(),
+  },
+  dateTimeStartEvent: null,
+  dateTimeEndEvent: null,
+  cost: 0,
+  isFavorite: false,
+};
 
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
@@ -78,7 +90,7 @@ const createPointHeaderTemplate = (point) => {
         <span class="visually-hidden">Price</span>
         &euro;
       </label>
-      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${cost}">
+      <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(cost.toString())}">
     </div>
 
     <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
@@ -95,7 +107,7 @@ const createOfferTemplate = (offer) => {
   <label class="event__offer-label" for="event-offer-${offer.condition}-1">
     <span class="event__offer-title">${offer.condition}</span>
     &plus;&euro;&nbsp;
-  <span class="event__offer-price">${offer.cost}</span>
+  <span class="event__offer-price">${he.encode(offer.cost.toString())}</span>
   </label>
 </div>`;
 };
@@ -185,11 +197,12 @@ const createPointEditTemplate = (data) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = PointEdit.parsePointToData(point);
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
+    this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
     this._callback = {};
 
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
@@ -215,6 +228,7 @@ export default class PointEdit extends SmartView {
   restoreOn() {
     this._setListeners();
     this.setOnFormSubmitClick(this._callback.onFormSubmitClick);
+    this.setOnFormDeleteClick(this._callback.onFormDeleteClick);
   }
 
   _setListeners() {
@@ -305,6 +319,16 @@ export default class PointEdit extends SmartView {
   setOnFormSubmitClick(callback) {
     this._callback.onFormSubmitClick = callback;
     this.getElement().querySelector(`.event--edit`).addEventListener(`submit`, this._onFormSubmitClick);
+  }
+
+  _onFormDeleteClick(evt) {
+    evt.preventDefault();
+    this._callback.onFormDeleteClick(PointEdit.parseDataToPoint(this._data));
+  }
+
+  setOnFormDeleteClick(callback) {
+    this._callback.onFormDeleteClick = callback;
+    this.getElement().querySelector(`.event__reset-btn`).addEventListener(`click`, this._onFormDeleteClick);
   }
 
   static parsePointToData(point) {

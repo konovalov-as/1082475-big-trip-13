@@ -33,3 +33,36 @@ export const POINT_TYPES = [
   `Sightseeing`,
   `Restaurant`,
 ];
+
+export const FilterType = {
+  EVERYTHING: `everything`,
+  FUTURE: `future`,
+  PAST: `past`,
+};
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE_NEWER: `date-newer`,
+  DATE_OLDER: `date-older`,
+  COST_MORE: `cost-more`,
+  COST_LESS: `cost-less`,
+  TIME_MORE: `time-more`,
+  TIME_LESS: `time-less`,
+};
+
+export const UserAction = {
+  UPDATE_POINT: `UPDATE_POINT`,
+  ADD_POINT: `ADD_POINT`,
+  DELETE_POINT: `DELETE_POINT`
+};
+
+export const UpdateType = {
+  PATCH: `PATCH`,
+  MINOR: `MINOR`,
+  MAJOR: `MAJOR`
+};
+
+export const Key = {
+  ESCAPE: `Escape`,
+  ESC: `Esc`,
+};
