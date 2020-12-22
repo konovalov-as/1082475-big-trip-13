@@ -16,6 +16,10 @@ import FilterModel from './model/filter';
 
 import {render, RenderPosition} from './utils/render';
 
+import Api from './api';
+const AUTHORIZATION = `Basic m48tbw5p39vw2beoyh`;
+const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
+
 const pointsCount = 20;
 
 const points = new Array(pointsCount).fill().map(generatePoint);
@@ -32,6 +36,12 @@ const info = generateInfo();
 // ];
 
 const sorting = generateSorting();
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getPoints()
+  .then((points) => {
+    console.log(points);
+  });
 
 // header
 const headerContainer = document.querySelector(`.page-header`);
