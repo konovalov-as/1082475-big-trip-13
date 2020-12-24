@@ -1,5 +1,6 @@
 import TripView from '../view/trip';
 import SortingView from '../view/sorting';
+import LoadingView from '../view/loading';
 import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
@@ -21,11 +22,14 @@ export default class Trip {
     this._currentSortType = SortType.DEFAULT;
     this._sorting = sorting;
 
+    this._isLoading = true;
+
     this._points = null;
 
     this._tripListComponent = new TripView();
     // this._sortingComponent = new SortingView(this._sorting);
     this._sortingComponent = null;
+    this._loadingComponent = new LoadingView();
     this._noPointComponent = new NoPointView();
 
     // this._onPointChange = this._onPointChange.bind(this);
@@ -108,6 +112,12 @@ export default class Trip {
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        // this._clearTrip();
+        this._renderTrip();
+        break;
       // todo default
     }
   }
@@ -146,6 +156,10 @@ export default class Trip {
     points.forEach((point) => this._renderPoint(point));
   }
 
+  _renderLoading() {
+    render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
+  }
+
   _renderNoPoints() {
     render(this._tripContainer, this._noPointComponent, RenderPosition.BEFOREEND);
   }
@@ -159,6 +173,7 @@ export default class Trip {
     this._pointPresenter = {};
 
     remove(this._sortingComponent);
+    remove(this._loadingComponent);
     remove(this._noPointComponent);
 
     if (resetSortType) {
@@ -166,8 +181,12 @@ export default class Trip {
     }
   }
 
-
   _renderTrip() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const points = this._getPoints();
     const pointCount = points.length;
 
