@@ -1,4 +1,6 @@
 import Observer from '../utils/observer';
+import {nanoid} from 'nanoid';
+import dayjs from 'dayjs';
 
 export default class Points extends Observer {
   constructor() {
@@ -6,8 +8,10 @@ export default class Points extends Observer {
     this._points = [];
   }
 
-  setPoints(points) {
+  setPoints(updateType, points) {
     this._points = points.slice();
+
+    this._notify(updateType);
   }
 
   getPoints() {
@@ -55,22 +59,52 @@ export default class Points extends Observer {
   }
 
   static adaptToClient(point) {
+    const getOffers = (offers) => {
+      const incomingOffers = [];
+
+      offers.forEach((offer) => {
+        incomingOffers.push(Object.assign(
+            {},
+            offer,
+            {
+              id: nanoid(),
+              condition: offer.title,
+              cost: offer.price,
+            }
+        ));
+      });
+
+      incomingOffers.forEach((offer) => {
+        delete offer.title;
+        delete offer.price;
+      });
+
+      return incomingOffers;
+    };
+
+    const getPhotos = (photos) => {
+      const incomingPhotos = [];
+
+      photos.forEach((photo) => {
+        incomingPhotos.push(photo.src);
+      });
+
+      return incomingPhotos;
+    };
+
     const adaptedPoint = Object.assign(
         {},
         point,
         {
           pointType: point.type,
           destinationCity: point.destination.name,
-          offers: {
-            condition: point.offers.title,
-            cost: point.offers.price,
-          },
+          offers: getOffers(point.offers),
           destinationInfo: {
             description: point.destination.description,
-            photos: point.destination.picture,
+            photos: getPhotos(point.destination.pictures),
           },
-          dateTimeStartEvent: point.date_from,
-          dateTimeEndEvent: point.date_to,
+          dateTimeStartEvent: dayjs(point.date_from),
+          dateTimeEndEvent: dayjs(point.date_to),
           cost: point.base_price,
           isFavorite: point.is_favorite,
         }
@@ -78,7 +112,6 @@ export default class Points extends Observer {
 
     delete adaptedPoint.type;
     delete adaptedPoint.destination;
-    delete adaptedPoint.offers;
     delete adaptedPoint.date_from;
     delete adaptedPoint.date_to;
     delete adaptedPoint.base_price;
@@ -115,7 +148,7 @@ export default class Points extends Observer {
     delete adaptedPoint.destinationCity;
     delete adaptedPoint.destinationInfo;
     delete adaptedPoint.isFavorite;
-    delete adaptedPoint.offers;
+    // delete adaptedPoint.offers;
     delete adaptedPoint.pointType;
 
     return adaptedPoint;
