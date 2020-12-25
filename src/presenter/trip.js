@@ -12,7 +12,7 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel) {
+  constructor(tripContainer, pointsModel, sorting, filterModel, api) {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
 
@@ -23,6 +23,7 @@ export default class Trip {
     this._sorting = sorting;
 
     this._isLoading = true;
+    this._api = api;
 
     this._points = null;
 
@@ -83,7 +84,10 @@ export default class Trip {
   _onViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.updatePoint(updateType, response);
+          });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
