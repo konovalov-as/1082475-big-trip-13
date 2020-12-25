@@ -60,10 +60,10 @@ export default class Points extends Observer {
 
   static adaptToClient(point) {
     const getOffers = (offers) => {
-      const incomingOffers = [];
+      const readyOffers = [];
 
       offers.forEach((offer) => {
-        incomingOffers.push(Object.assign(
+        readyOffers.push(Object.assign(
             {},
             offer,
             {
@@ -74,22 +74,22 @@ export default class Points extends Observer {
         ));
       });
 
-      incomingOffers.forEach((offer) => {
+      readyOffers.forEach((offer) => {
         delete offer.title;
         delete offer.price;
       });
 
-      return incomingOffers;
+      return readyOffers;
     };
 
     const getPhotos = (photos) => {
-      const incomingPhotos = [];
+      const readyPhotos = [];
 
       photos.forEach((photo) => {
-        incomingPhotos.push(photo.src);
+        readyPhotos.push(photo.src);
       });
 
-      return incomingPhotos;
+      return readyPhotos;
     };
 
     const adaptedPoint = Object.assign(
@@ -121,23 +121,56 @@ export default class Points extends Observer {
   }
 
   static adaptToServer(point) {
+    const getOffers = (offers) => {
+      const readyOffers = [];
+
+      offers.forEach((offer) => {
+        readyOffers.push(Object.assign(
+            {},
+            offer,
+            {
+              title: offer.condition,
+              price: offer.cost,
+            }
+        ));
+      });
+
+      readyOffers.forEach((offer) => {
+        delete offer.id;
+        delete offer.cost;
+        delete offer.condition;
+      });
+
+      return readyOffers;
+    };
+
+    const getPhotos = (photos) => {
+      const readyPhotos = [];
+
+      photos.forEach((photo) => {
+        readyPhotos.push({
+          'src': photo,
+          'description': `description`,
+        });
+      });
+
+      return readyPhotos;
+    };
+
     const adaptedPoint = Object.assign(
         {},
         point,
         {
-          'base_price': point.cost,
-          'date_from': point.dateTimeStartEvent instanceof Date ? point.dateTimeEndEvent.toISOString() : null,
-          'date_to': point.dateTimeEndEvent instanceof Date ? point.dateTimeEndEvent.toISOString() : null,
+          'base_price': parseInt(point.cost, 10),
+          'date_from': point.dateTimeStartEvent instanceof dayjs ? point.dateTimeStartEvent.toISOString() : null,
+          'date_to': point.dateTimeEndEvent instanceof dayjs ? point.dateTimeEndEvent.toISOString() : null,
           'destination': {
-            name: point.destinationCity,
-            description: point.destinationInfo.description,
-            pictures: point.destinationInfo.photos,
+            'name': point.destinationCity,
+            'description': point.destinationInfo.description,
+            'pictures': getPhotos(point.destinationInfo.photos),
           },
           'is_favorite': point.isFavorite,
-          'offers': [{
-            price: point.cost,
-            title: point.offers.condition,
-          }],
+          'offers': getOffers(point.offers),
           'type': point.pointType,
         }
     );
@@ -148,7 +181,6 @@ export default class Points extends Observer {
     delete adaptedPoint.destinationCity;
     delete adaptedPoint.destinationInfo;
     delete adaptedPoint.isFavorite;
-    // delete adaptedPoint.offers;
     delete adaptedPoint.pointType;
 
     return adaptedPoint;
