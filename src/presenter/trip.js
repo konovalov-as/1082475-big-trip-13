@@ -12,9 +12,9 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel, pointEditModel, api) {
+  constructor(tripContainer, pointsModel, sorting, filterModel, offersModel, api) {
     this._pointsModel = pointsModel;
-    this._pointEditModel = pointEditModel;
+    this._offersModel = offersModel;
     this._filterModel = filterModel;
 
     this._tripContainer = tripContainer;
@@ -196,7 +196,7 @@ export default class Trip {
     const pointCount = points.length;
 
     setTimeout(() => {
-      const offers = this._pointEditModel.getOffers();
+      const offers = this._offersModel.getOffers();
 
       if (pointCount === 0) {
         this._renderNoPoints();

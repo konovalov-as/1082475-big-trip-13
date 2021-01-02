@@ -13,7 +13,7 @@ import ControlPresenter from './presenter/controls';
 
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
-import PointEditModel from './model/point-edit';
+import OffersModel from './model/offers';
 
 import {render, RenderPosition} from './utils/render';
 
@@ -57,11 +57,11 @@ render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
 // trip
 const pointsModel = new PointsModel();
 // pointsModel.setPoints(points);
-const pointEditModel = new PointEditModel();
+const offersModel = new OffersModel();
 
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel, pointEditModel, api);
+const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel, offersModel, api);
 const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
 
 controlPresenter.init();
@@ -82,8 +82,8 @@ api.getPoints()
 
 api.getOffers()
   .then((offers) => {
-    pointEditModel.setOffers(UpdateType.INIT, offers);
+    offersModel.setOffers(UpdateType.INIT, offers);
   })
   .catch(() => {
-    pointEditModel.setOffers(UpdateType.INIT, []);
+    offersModel.setOffers(UpdateType.INIT, []);
   });

@@ -1,5 +1,5 @@
 import PointsModel from './model/points';
-import PointEditModel from './model/point-edit';
+import OffersModel from './model/offers';
 
 const Method = {
   GET: `GET`,
@@ -37,7 +37,7 @@ export default class Api {
   getOffers() {
     return this._load({url: `offers`})
       .then(Api.toJSON)
-      .then((offers) => offers.map(PointEditModel.adaptToClient));
+      .then((offers) => offers.map(OffersModel.adaptToClient));
   }
 
   _load({

@@ -1,22 +1,18 @@
 import Observer from '../utils/observer';
-// import {nanoid} from 'nanoid';
-// import dayjs from 'dayjs';
 
-export default class PointEdit extends Observer {
+export default class Offers extends Observer {
   constructor() {
     super();
     this._offers = [];
   }
 
   setOffers(updateType, offers) {
-    // console.log(offers)
     this._offers = offers.slice();
 
     this._notify(updateType);
   }
 
   getOffers() {
-    // console.log(this._offers.length)
     return this._offers;
   }
 
