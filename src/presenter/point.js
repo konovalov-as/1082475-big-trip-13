@@ -29,14 +29,15 @@ export default class Point {
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
   }
 
-  init(point) {
+  init(point, offers) {
     this._point = point;
+    this._offers = offers;
 
     const prevPointComponent = this._pointComponent;
     const prevPointEditComponent = this._pointEditComponent;
 
     this._pointComponent = new PointView(point);
-    this._pointEditComponent = new PointEditView(point);
+    this._pointEditComponent = new PointEditView(point, this._offers);
 
     this._pointComponent.setOnRollupButtonClick(this._onRollupButtonClick);
     this._pointEditComponent.setOnEditFormClose(this._onEditFormClose);

@@ -3,18 +3,18 @@ import dayjs from 'dayjs';
 import he from 'he';
 
 import {POINT_TYPES, DESTINATION_CITIES} from '../const';
-import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
+// import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
 
 const BLANK_POINT = {
   pointType: POINT_TYPES[0],
   destinationCity: DESTINATION_CITIES[0],
-  offers: generateOffers(),
+  offers: [],
   destinationInfo: {
-    description: generateDescription(),
-    photos: generatePhotos(),
+    description: null,
+    photos: [],
   },
-  dateTimeStartEvent: null,
-  dateTimeEndEvent: null,
+  dateTimeStartEvent: dayjs(),
+  dateTimeEndEvent: dayjs(),
   cost: 0,
   isFavorite: false,
 };
@@ -197,9 +197,10 @@ const createPointEditTemplate = (data) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, offers) {
     super();
     this._data = PointEdit.parsePointToData(point);
+    this._offers = offers;
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -249,11 +250,19 @@ export default class PointEdit extends SmartView {
       .addEventListener(`input`, this._onCostChange);
   }
 
+  _getOffers(targetOffer) {
+    const sourceOffer = this._offers.find((offer) => {
+      return offer.pointType === targetOffer;
+    });
+
+    return sourceOffer.offers;
+  }
+
   _onPointTypeChange(evt) {
     if (evt.target.matches(`input.event__type-input`)) {
       evt.preventDefault();
       this.updateData({
-        offers: generateOffers(),
+        offers: this._getOffers(evt.target.value),
         pointType: evt.target.value,
       });
     }

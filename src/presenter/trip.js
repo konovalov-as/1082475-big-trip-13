@@ -12,8 +12,9 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel, api) {
+  constructor(tripContainer, pointsModel, sorting, filterModel, pointEditModel, api) {
     this._pointsModel = pointsModel;
+    this._pointEditModel = pointEditModel;
     this._filterModel = filterModel;
 
     this._tripContainer = tripContainer;
@@ -150,14 +151,14 @@ export default class Trip {
     // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
-  _renderPoint(point) {
+  _renderPoint(point, offers) {
     const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, offers);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
-  _renderPoints(points) {
-    points.forEach((point) => this._renderPoint(point));
+  _renderPoints(points, offers) {
+    points.forEach((point) => this._renderPoint(point, offers));
   }
 
   _renderLoading() {
@@ -194,15 +195,20 @@ export default class Trip {
     const points = this._getPoints();
     const pointCount = points.length;
 
-    if (pointCount === 0) {
-      this._renderNoPoints();
-      return;
-    }
+    setTimeout(() => {
+      const offers = this._pointEditModel.getOffers();
 
-    this._renderSort();
+      if (pointCount === 0) {
+        this._renderNoPoints();
+        return;
+      }
 
-    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
+      this._renderSort();
 
-    this._renderPoints(points);
+      render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
+
+      this._renderPoints(points, offers);
+    }, 500);
+
   }
 }
