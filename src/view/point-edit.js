@@ -270,18 +270,25 @@ export default class PointEdit extends SmartView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
-    this._destinations.find((destinationCity) => {
-      if (destinationCity.name === evt.target.value) {
-        this.updateData({
-          // isWrongCity: false,
-          destinationCity: evt.target.value,
-          destinationInfo: Object.assign(
-              {},
-              this._data.destinationInfo,
-              {description: destinationCity.destinationInfo.description}
-          )
-        }, true);
+    this._destinations.find((destination) => {
+      if (destination.name !== evt.target.value) {
+        evt.target.setCustomValidity(`Необходимо выбрать город списка`);
+        // this.updateData({
+        //   isWrongCity: true,
+        // });
+        return;
       }
+
+      this.updateData({
+        // isWrongCity: false,
+        destinationCity: evt.target.value,
+        destinationInfo: Object.assign(
+            {},
+            this._data.destinationInfo,
+            {description: destination.destinationInfo.description}
+        )
+      });
+
       //  else {
       //   this.updateData({
       //     isWrongCity: true,
