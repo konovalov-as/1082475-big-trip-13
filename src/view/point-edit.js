@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 import he from 'he';
 
 import {POINT_TYPES, DESTINATION_CITIES} from '../const';
-// import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
 
 const BLANK_POINT = {
   pointType: POINT_TYPES[0],
@@ -30,7 +29,7 @@ const createDestinationCityTemplate = (destinationCity) => {
   return `<option value="${destinationCity}"></option>`;
 };
 
-const createPointHeaderTemplate = (point) => {
+const createPointHeaderTemplate = (point, offers, destinations) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity} = point;
 
   const dateStart = dateTimeStartEvent !== null
@@ -41,12 +40,12 @@ const createPointHeaderTemplate = (point) => {
     ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
     : ``;
 
-  const pointsTypeList = POINT_TYPES
-  .map((pointTypeItem) => createPointTemplate(pointTypeItem))
+  const pointsTypeList = offers
+  .map((offer) => createPointTemplate(offer.pointType))
   .join(``);
 
-  const citiesList = DESTINATION_CITIES
-  .map((destinationCityItem) => createDestinationCityTemplate(destinationCityItem))
+  const citiesList = destinations
+  .map((destination) => createDestinationCityTemplate(destination.name))
   .join(``);
 
   const isSubmitDisabled = isWrongCity;
@@ -179,8 +178,8 @@ const createPointDetailsContainerTemplate = (offersContainerTemplate, destinatio
   return ``;
 };
 
-const createPointEditTemplate = (data) => {
-  const pointHeaderTemplate = createPointHeaderTemplate(data);
+const createPointEditTemplate = (data, offers, destinations) => {
+  const pointHeaderTemplate = createPointHeaderTemplate(data, offers, destinations);
   const offersTemplate = createOffersTemplate(data.offers);
   const offersContainerTemplate = createOffersContainerTemplate(offersTemplate);
   const destinationTemplate = createDestinationTemplate(data.destinationInfo.description);
@@ -197,10 +196,11 @@ const createPointEditTemplate = (data) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = BLANK_POINT, offers) {
+  constructor(point = BLANK_POINT, offers, destinations) {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
+    this._destinations = destinations;
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -223,7 +223,7 @@ export default class PointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data);
+    return createPointEditTemplate(this._data, this._offers, this._destinations);
   }
 
   restoreOn() {
@@ -270,22 +270,23 @@ export default class PointEdit extends SmartView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
-    DESTINATION_CITIES.find((destinationCity) => {
-      if (destinationCity === evt.target.value) {
+    this._destinations.find((destinationCity) => {
+      if (destinationCity.name === evt.target.value) {
         this.updateData({
-          isWrongCity: false,
+          // isWrongCity: false,
           destinationCity: evt.target.value,
           destinationInfo: Object.assign(
               {},
               this._data.destinationInfo,
-              {description: evt.target.value + generateDescription()}
+              {description: destinationCity.destinationInfo.description}
           )
         }, true);
-      } else {
-        this.updateData({
-          isWrongCity: true,
-        }, true);
       }
+      //  else {
+      //   this.updateData({
+      //     isWrongCity: true,
+      //   }, true);
+      // }
     });
   }
 

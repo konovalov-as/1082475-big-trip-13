@@ -12,9 +12,10 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel, offersModel, api) {
+  constructor(tripContainer, pointsModel, sorting, filterModel, offersModel, destinationsModel, api) {
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._filterModel = filterModel;
 
     this._tripContainer = tripContainer;
@@ -151,14 +152,14 @@ export default class Trip {
     // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
-  _renderPoint(point, offers) {
+  _renderPoint(point, offers, destinations) {
     const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
-    pointPresenter.init(point, offers);
+    pointPresenter.init(point, offers, destinations);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
-  _renderPoints(points, offers) {
-    points.forEach((point) => this._renderPoint(point, offers));
+  _renderPoints(points, offers, destinations) {
+    points.forEach((point) => this._renderPoint(point, offers, destinations));
   }
 
   _renderLoading() {
@@ -197,6 +198,7 @@ export default class Trip {
 
     setTimeout(() => {
       const offers = this._offersModel.getOffers();
+      const destinations = this._destinationsModel.getDestinations();
 
       if (pointCount === 0) {
         this._renderNoPoints();
@@ -207,7 +209,7 @@ export default class Trip {
 
       render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
-      this._renderPoints(points, offers);
+      this._renderPoints(points, offers, destinations);
     }, 500);
 
   }

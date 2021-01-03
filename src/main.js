@@ -14,6 +14,7 @@ import ControlPresenter from './presenter/controls';
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import OffersModel from './model/offers';
+import DestinationsModel from './model/destinations';
 
 import {render, RenderPosition} from './utils/render';
 
@@ -58,10 +59,10 @@ render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
 const pointsModel = new PointsModel();
 // pointsModel.setPoints(points);
 const offersModel = new OffersModel();
-
+const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel, offersModel, api);
+const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel, offersModel, destinationsModel, api);
 const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
 
 controlPresenter.init();
@@ -86,4 +87,12 @@ api.getOffers()
   })
   .catch(() => {
     offersModel.setOffers(UpdateType.INIT, []);
+  });
+
+api.getDestinations()
+  .then((destinations) => {
+    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+  })
+  .catch(() => {
+    destinationsModel.setDestinations(UpdateType.INIT, []);
   });
