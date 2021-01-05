@@ -270,9 +270,12 @@ export default class PointEdit extends SmartView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
+    const submitButton = this.getElement().querySelector(`.event__save-btn`);
+
     this._destinations.find((destination) => {
       if (destination.name !== evt.target.value) {
-        evt.target.setCustomValidity(`Необходимо выбрать город списка`);
+        evt.target.setCustomValidity(`Необходимо выбрать город из списка`);
+        submitButton.disabled = true;
         // this.updateData({
         //   isWrongCity: true,
         // });
@@ -288,6 +291,8 @@ export default class PointEdit extends SmartView {
             {description: destination.destinationInfo.description}
         )
       });
+      const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+      destinationInput.focus();
 
       //  else {
       //   this.updateData({
