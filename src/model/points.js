@@ -1,4 +1,6 @@
 import Observer from '../utils/observer';
+import {nanoid} from 'nanoid';
+import dayjs from 'dayjs';
 
 export default class Points extends Observer {
   constructor() {
@@ -6,8 +8,10 @@ export default class Points extends Observer {
     this._points = [];
   }
 
-  setPoints(points) {
+  setPoints(updateType, points) {
     this._points = points.slice();
+
+    this._notify(updateType);
   }
 
   getPoints() {
@@ -52,5 +56,133 @@ export default class Points extends Observer {
     ];
 
     this._notify(updateType);
+  }
+
+  static adaptToClient(point) {
+    const getOffers = (offers) => {
+      const readyOffers = [];
+
+      offers.forEach((offer) => {
+        readyOffers.push(Object.assign(
+            {},
+            offer,
+            {
+              id: nanoid(),
+              condition: offer.title,
+              cost: offer.price,
+            }
+        ));
+      });
+
+      readyOffers.forEach((offer) => {
+        delete offer.title;
+        delete offer.price;
+      });
+
+      return readyOffers;
+    };
+
+    const getPhotos = (photos) => {
+      const readyPhotos = [];
+
+      photos.forEach((photo) => {
+        readyPhotos.push(photo.src);
+      });
+
+      return readyPhotos;
+    };
+
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          pointType: point.type,
+          destinationCity: point.destination.name,
+          offers: getOffers(point.offers),
+          destinationInfo: {
+            description: point.destination.description,
+            photos: getPhotos(point.destination.pictures),
+          },
+          dateTimeStartEvent: dayjs(point.date_from),
+          dateTimeEndEvent: dayjs(point.date_to),
+          cost: point.base_price,
+          isFavorite: point.is_favorite,
+        }
+    );
+
+    delete adaptedPoint.type;
+    delete adaptedPoint.destination;
+    delete adaptedPoint.date_from;
+    delete adaptedPoint.date_to;
+    delete adaptedPoint.base_price;
+    delete adaptedPoint.is_favorite;
+
+    return adaptedPoint;
+  }
+
+  static adaptToServer(point) {
+    const getOffers = (offers) => {
+      const readyOffers = [];
+
+      offers.forEach((offer) => {
+        readyOffers.push(Object.assign(
+            {},
+            offer,
+            {
+              title: offer.condition,
+              price: offer.cost,
+            }
+        ));
+      });
+
+      readyOffers.forEach((offer) => {
+        delete offer.id;
+        delete offer.cost;
+        delete offer.condition;
+      });
+
+      return readyOffers;
+    };
+
+    const getPhotos = (photos) => {
+      const readyPhotos = [];
+
+      photos.forEach((photo) => {
+        readyPhotos.push({
+          'src': photo,
+          'description': `description`,
+        });
+      });
+
+      return readyPhotos;
+    };
+
+    const adaptedPoint = Object.assign(
+        {},
+        point,
+        {
+          'base_price': parseInt(point.cost, 10),
+          'date_from': point.dateTimeStartEvent instanceof dayjs ? point.dateTimeStartEvent.toISOString() : null,
+          'date_to': point.dateTimeEndEvent instanceof dayjs ? point.dateTimeEndEvent.toISOString() : null,
+          'destination': {
+            'name': point.destinationCity,
+            'description': point.destinationInfo.description,
+            'pictures': getPhotos(point.destinationInfo.photos),
+          },
+          'is_favorite': point.isFavorite,
+          'offers': getOffers(point.offers),
+          'type': point.pointType,
+        }
+    );
+
+    delete adaptedPoint.cost;
+    delete adaptedPoint.dateTimeStartEvent;
+    delete adaptedPoint.dateTimeEndEvent;
+    delete adaptedPoint.destinationCity;
+    delete adaptedPoint.destinationInfo;
+    delete adaptedPoint.isFavorite;
+    delete adaptedPoint.pointType;
+
+    return adaptedPoint;
   }
 }

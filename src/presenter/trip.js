@@ -1,5 +1,6 @@
 import TripView from '../view/trip';
 import SortingView from '../view/sorting';
+import LoadingView from '../view/loading';
 import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
@@ -11,8 +12,10 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel) {
+  constructor(tripContainer, pointsModel, sorting, filterModel, offersModel, destinationsModel, api) {
     this._pointsModel = pointsModel;
+    this._offersModel = offersModel;
+    this._destinationsModel = destinationsModel;
     this._filterModel = filterModel;
 
     this._tripContainer = tripContainer;
@@ -21,11 +24,15 @@ export default class Trip {
     this._currentSortType = SortType.DEFAULT;
     this._sorting = sorting;
 
+    this._isLoading = true;
+    this._api = api;
+
     this._points = null;
 
     this._tripListComponent = new TripView();
     // this._sortingComponent = new SortingView(this._sorting);
     this._sortingComponent = null;
+    this._loadingComponent = new LoadingView();
     this._noPointComponent = new NoPointView();
 
     // this._onPointChange = this._onPointChange.bind(this);
@@ -79,7 +86,10 @@ export default class Trip {
   _onViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        this._pointsModel.updatePoint(updateType, update);
+        this._api.updatePoint(update)
+          .then((response) => {
+            this._pointsModel.updatePoint(updateType, response);
+          });
         break;
       case UserAction.ADD_POINT:
         this._pointsModel.addPoint(updateType, update);
@@ -106,6 +116,12 @@ export default class Trip {
       case UpdateType.MAJOR:
         // - обновить всю доску (например, при переключении фильтра)
         this._clearTrip({resetSortType: true});
+        this._renderTrip();
+        break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        // this._clearTrip();
         this._renderTrip();
         break;
       // todo default
@@ -136,14 +152,18 @@ export default class Trip {
     // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
-  _renderPoint(point) {
+  _renderPoint(point, offers, destinations) {
     const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
-    pointPresenter.init(point);
+    pointPresenter.init(point, offers, destinations);
     this._pointPresenter[point.id] = pointPresenter;
   }
 
-  _renderPoints(points) {
-    points.forEach((point) => this._renderPoint(point));
+  _renderPoints(points, offers, destinations) {
+    points.forEach((point) => this._renderPoint(point, offers, destinations));
+  }
+
+  _renderLoading() {
+    render(this._tripContainer, this._loadingComponent, RenderPosition.AFTERBEGIN);
   }
 
   _renderNoPoints() {
@@ -159,6 +179,7 @@ export default class Trip {
     this._pointPresenter = {};
 
     remove(this._sortingComponent);
+    remove(this._loadingComponent);
     remove(this._noPointComponent);
 
     if (resetSortType) {
@@ -166,20 +187,30 @@ export default class Trip {
     }
   }
 
-
   _renderTrip() {
-    const points = this._getPoints();
-    const pointCount = points.length;
-
-    if (pointCount === 0) {
-      this._renderNoPoints();
+    if (this._isLoading) {
+      this._renderLoading();
       return;
     }
 
-    this._renderSort();
+    const points = this._getPoints();
+    const pointCount = points.length;
 
-    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
+    setTimeout(() => {
+      const offers = this._offersModel.getOffers();
+      const destinations = this._destinationsModel.getDestinations();
 
-    this._renderPoints(points);
+      if (pointCount === 0) {
+        this._renderNoPoints();
+        return;
+      }
+
+      this._renderSort();
+
+      render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
+
+      this._renderPoints(points, offers, destinations);
+    }, 500);
+
   }
 }

@@ -3,18 +3,17 @@ import dayjs from 'dayjs';
 import he from 'he';
 
 import {POINT_TYPES, DESTINATION_CITIES} from '../const';
-import {generateOffers, generateDescription, generatePhotos} from '../mock/point';
 
 const BLANK_POINT = {
   pointType: POINT_TYPES[0],
   destinationCity: DESTINATION_CITIES[0],
-  offers: generateOffers(),
+  offers: [],
   destinationInfo: {
-    description: generateDescription(),
-    photos: generatePhotos(),
+    description: null,
+    photos: [],
   },
-  dateTimeStartEvent: null,
-  dateTimeEndEvent: null,
+  dateTimeStartEvent: dayjs(),
+  dateTimeEndEvent: dayjs(),
   cost: 0,
   isFavorite: false,
 };
@@ -30,7 +29,7 @@ const createDestinationCityTemplate = (destinationCity) => {
   return `<option value="${destinationCity}"></option>`;
 };
 
-const createPointHeaderTemplate = (point) => {
+const createPointHeaderTemplate = (point, offers, destinations) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity} = point;
 
   const dateStart = dateTimeStartEvent !== null
@@ -41,12 +40,12 @@ const createPointHeaderTemplate = (point) => {
     ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
     : ``;
 
-  const pointsTypeList = POINT_TYPES
-  .map((pointTypeItem) => createPointTemplate(pointTypeItem))
+  const pointsTypeList = offers
+  .map((offer) => createPointTemplate(offer.pointType))
   .join(``);
 
-  const citiesList = DESTINATION_CITIES
-  .map((destinationCityItem) => createDestinationCityTemplate(destinationCityItem))
+  const citiesList = destinations
+  .map((destination) => createDestinationCityTemplate(destination.name))
   .join(``);
 
   const isSubmitDisabled = isWrongCity;
@@ -179,8 +178,8 @@ const createPointDetailsContainerTemplate = (offersContainerTemplate, destinatio
   return ``;
 };
 
-const createPointEditTemplate = (data) => {
-  const pointHeaderTemplate = createPointHeaderTemplate(data);
+const createPointEditTemplate = (data, offers, destinations) => {
+  const pointHeaderTemplate = createPointHeaderTemplate(data, offers, destinations);
   const offersTemplate = createOffersTemplate(data.offers);
   const offersContainerTemplate = createOffersContainerTemplate(offersTemplate);
   const destinationTemplate = createDestinationTemplate(data.destinationInfo.description);
@@ -197,9 +196,11 @@ const createPointEditTemplate = (data) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, offers, destinations) {
     super();
     this._data = PointEdit.parsePointToData(point);
+    this._offers = offers;
+    this._destinations = destinations;
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -222,7 +223,7 @@ export default class PointEdit extends SmartView {
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data);
+    return createPointEditTemplate(this._data, this._offers, this._destinations);
   }
 
   restoreOn() {
@@ -249,11 +250,19 @@ export default class PointEdit extends SmartView {
       .addEventListener(`input`, this._onCostChange);
   }
 
+  _getOffers(targetOffer) {
+    const sourceOffer = this._offers.find((offer) => {
+      return offer.pointType === targetOffer;
+    });
+
+    return sourceOffer.offers;
+  }
+
   _onPointTypeChange(evt) {
     if (evt.target.matches(`input.event__type-input`)) {
       evt.preventDefault();
       this.updateData({
-        offers: generateOffers(),
+        offers: this._getOffers(evt.target.value),
         pointType: evt.target.value,
       });
     }
@@ -261,22 +270,35 @@ export default class PointEdit extends SmartView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
-    DESTINATION_CITIES.find((destinationCity) => {
-      if (destinationCity === evt.target.value) {
-        this.updateData({
-          isWrongCity: false,
-          destinationCity: evt.target.value,
-          destinationInfo: Object.assign(
-              {},
-              this._data.destinationInfo,
-              {description: evt.target.value + generateDescription()}
-          )
-        }, true);
-      } else {
-        this.updateData({
-          isWrongCity: true,
-        }, true);
+    const submitButton = this.getElement().querySelector(`.event__save-btn`);
+
+    this._destinations.find((destination) => {
+      if (destination.name !== evt.target.value) {
+        evt.target.setCustomValidity(`Необходимо выбрать город из списка`);
+        submitButton.disabled = true;
+        // this.updateData({
+        //   isWrongCity: true,
+        // });
+        return;
       }
+
+      this.updateData({
+        // isWrongCity: false,
+        destinationCity: evt.target.value,
+        destinationInfo: Object.assign(
+            {},
+            this._data.destinationInfo,
+            {description: destination.destinationInfo.description}
+        )
+      });
+      const destinationInput = this.getElement().querySelector(`.event__input--destination`);
+      destinationInput.focus();
+
+      //  else {
+      //   this.updateData({
+      //     isWrongCity: true,
+      //   }, true);
+      // }
     });
   }
 
