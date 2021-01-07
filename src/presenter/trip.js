@@ -42,6 +42,8 @@ export default class Trip {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._onModelEvent);
+    this._offersModel.addObserver(this._onModelEvent);
+    this._destinationsModel.addObserver(this._onModelEvent);
     this._filterModel.addObserver(this._onModelEvent);
 
     this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction);
@@ -195,22 +197,18 @@ export default class Trip {
 
     const points = this._getPoints();
     const pointCount = points.length;
+    const offers = this._offersModel.getOffers();
+    const destinations = this._destinationsModel.getDestinations();
 
-    setTimeout(() => {
-      const offers = this._offersModel.getOffers();
-      const destinations = this._destinationsModel.getDestinations();
+    if (pointCount === 0) {
+      this._renderNoPoints();
+      return;
+    }
 
-      if (pointCount === 0) {
-        this._renderNoPoints();
-        return;
-      }
+    this._renderSort();
 
-      this._renderSort();
+    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
-      render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
-
-      this._renderPoints(points, offers, destinations);
-    }, 500);
-
+    this._renderPoints(points, offers, destinations);
   }
 }

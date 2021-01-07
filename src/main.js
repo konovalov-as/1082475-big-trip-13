@@ -83,16 +83,16 @@ api.getPoints()
 
 api.getOffers()
   .then((offers) => {
-    offersModel.setOffers(UpdateType.INIT, offers);
+    offersModel.setOffers(UpdateType.MINOR, offers);
   })
   .catch(() => {
-    offersModel.setOffers(UpdateType.INIT, []);
+    offersModel.setOffers(UpdateType.MINOR, []);
   });
 
 api.getDestinations()
   .then((destinations) => {
-    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+    destinationsModel.setDestinations(UpdateType.MINOR, destinations);
   })
   .catch(() => {
-    destinationsModel.setDestinations(UpdateType.INIT, []);
+    destinationsModel.setDestinations(UpdateType.MINOR, []);
   });
