@@ -109,7 +109,7 @@ export default class Trip {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
-        this.PointPresenter[data.id].init(data);
+        this._pointPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
