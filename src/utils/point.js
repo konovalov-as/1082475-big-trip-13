@@ -4,7 +4,7 @@ dayjs.extend(isSameOrBefore);
 
 // Функция помещает точки без даты в конце списка,
 // возвращая нужный вес для колбэка sort
-const getWeightForNullDate = (dateA, dateB) => {
+const getWeightWithoutDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
   }
@@ -20,24 +20,47 @@ const getWeightForNullDate = (dateA, dateB) => {
   return null;
 };
 
-export const sortPointOlder = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate, pointB.dueDate);
+export const sortPointDateUp = (pointA, pointB) => {
+  const weight = getWeightWithoutDate(pointA.dateTimeStartEvent, pointB.dateTimeStartEvent);
 
   if (weight !== null) {
     return weight;
   }
 
-  return dayjs(pointA.dueDate).diff(dayjs(pointB.dueDate));
+  return dayjs(pointA.dateTimeStartEvent).diff(dayjs(pointB.dateTimeStartEvent));
 };
 
-export const sortPointNewer = (pointA, pointB) => {
-  const weight = getWeightForNullDate(pointA.dueDate, pointB.dueDate);
+export const sortPointTimeMore = (pointA, pointB) => {
+  const weightA = getWeightWithoutDate(pointA.dateTimeStartEvent, pointA.dateTimeEndEvent);
+  const weightB = getWeightWithoutDate(pointB.dateTimeStartEvent, pointB.dateTimeEndEvent);
 
-  if (weight !== null) {
-    return weight;
+  if (weightA !== null) {
+    return weightA;
+  }
+  if (weightB !== null) {
+    return weightB;
   }
 
-  return dayjs(pointB.dueDate).diff(dayjs(pointA.dueDate));
+  const diffA = dayjs(pointA.dateTimeEndEvent).diff(dayjs(pointA.dateTimeStartEvent));
+  const diffB = dayjs(pointB.dateTimeEndEvent).diff(dayjs(pointB.dateTimeStartEvent));
+
+  if (diffA > diffB) {
+    return -1;
+  }
+  if (diffA < diffB) {
+    return 1;
+  }
+  return 0;
+};
+
+export const sortPointCostMore = (pointA, pointB) => {
+  if (pointA.cost > pointB.cost) {
+    return -1;
+  }
+  if (pointA.cost < pointB.cost) {
+    return 1;
+  }
+  return 0;
 };
 
 export const isPointExpired = (endEventDate) => {
