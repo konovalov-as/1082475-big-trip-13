@@ -288,7 +288,10 @@ export default class PointEdit extends SmartView {
         destinationInfo: Object.assign(
             {},
             this._data.destinationInfo,
-            {description: destination.destinationInfo.description}
+            {
+              description: destination.destinationInfo.description,
+              photos: destination.destinationInfo.photos,
+            }
         )
       });
       const destinationInput = this.getElement().querySelector(`.event__input--destination`);

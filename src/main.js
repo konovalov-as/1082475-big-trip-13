@@ -6,7 +6,6 @@ import InfoView from './view/info';
 import {generateInfo} from './mock/info';
 // import {generateTab} from './mock/tabs';
 // import {generateFilter} from './mock/filter';
-import {generateSorting} from './mock/sorting';
 
 import TripPresenter from './presenter/trip';
 import ControlPresenter from './presenter/controls';
@@ -38,7 +37,6 @@ const info = generateInfo();
 //   }
 // ];
 
-const sorting = generateSorting();
 const api = new Api(END_POINT, AUTHORIZATION);
 
 // header
@@ -62,7 +60,7 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
-const tripPresenter = new TripPresenter(pointsContainer, pointsModel, sorting, filterModel, offersModel, destinationsModel, api);
+const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, api);
 const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
 
 controlPresenter.init();
@@ -83,16 +81,16 @@ api.getPoints()
 
 api.getOffers()
   .then((offers) => {
-    offersModel.setOffers(UpdateType.INIT, offers);
+    offersModel.setOffers(UpdateType.MINOR, offers);
   })
   .catch(() => {
-    offersModel.setOffers(UpdateType.INIT, []);
+    offersModel.setOffers(UpdateType.MINOR, []);
   });
 
 api.getDestinations()
   .then((destinations) => {
-    destinationsModel.setDestinations(UpdateType.INIT, destinations);
+    destinationsModel.setDestinations(UpdateType.MINOR, destinations);
   })
   .catch(() => {
-    destinationsModel.setDestinations(UpdateType.INIT, []);
+    destinationsModel.setDestinations(UpdateType.MINOR, []);
   });

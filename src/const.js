@@ -41,13 +41,9 @@ export const FilterType = {
 };
 
 export const SortType = {
-  DEFAULT: `default`,
-  DATE_NEWER: `date-newer`,
-  DATE_OLDER: `date-older`,
-  COST_MORE: `cost-more`,
-  COST_LESS: `cost-less`,
+  DATE_UP: `date-up`,
   TIME_MORE: `time-more`,
-  TIME_LESS: `time-less`,
+  COST_MORE: `cost-more`,
 };
 
 export const UserAction = {

@@ -1,18 +1,18 @@
 import TripView from '../view/trip';
-import SortingView from '../view/sorting';
+import SortView from '../view/sort';
 import LoadingView from '../view/loading';
 import NoPointView from '../view/no-point';
 
 import PointPresenter from './point';
 import PointNewPresenter from './point-new';
 
-import {sortPointOlder, sortPointNewer} from '../utils/point';
+import {sortPointDateUp, sortPointTimeMore, sortPointCostMore} from '../utils/point';
 import {render, RenderPosition, remove} from '../utils/render';
 import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction, FilterType} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, sorting, filterModel, offersModel, destinationsModel, api) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api) {
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
@@ -21,8 +21,7 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._pointPresenter = {};
 
-    this._currentSortType = SortType.DEFAULT;
-    this._sorting = sorting;
+    this._currentSortType = SortType.DATE_UP;
 
     this._isLoading = true;
     this._api = api;
@@ -31,7 +30,7 @@ export default class Trip {
 
     this._tripListComponent = new TripView();
     // this._sortingComponent = new SortingView(this._sorting);
-    this._sortingComponent = null;
+    this._sortComponent = null;
     this._loadingComponent = new LoadingView();
     this._noPointComponent = new NoPointView();
 
@@ -42,6 +41,8 @@ export default class Trip {
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
     this._pointsModel.addObserver(this._onModelEvent);
+    this._offersModel.addObserver(this._onModelEvent);
+    this._destinationsModel.addObserver(this._onModelEvent);
     this._filterModel.addObserver(this._onModelEvent);
 
     this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction);
@@ -53,7 +54,7 @@ export default class Trip {
   }
 
   createPoint() {
-    this._currentSortType = SortType.DEFAULT;
+    this._currentSortType = SortType.DATE_UP;
     this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
     this._pointNewPresenter.init();
   }
@@ -66,10 +67,12 @@ export default class Trip {
     const filteredPoints = filter[filterType](points);
 
     switch (this._currentSortType) {
-      case SortType.DATE_OLDER:
-        return filteredPoints.sort(sortPointOlder);
-      case SortType.DATE_NEWER:
-        return filteredPoints.sort(sortPointNewer);
+      case SortType.DATE_UP:
+        return filteredPoints.sort(sortPointDateUp);
+      case SortType.TIME_MORE:
+        return filteredPoints.sort(sortPointTimeMore);
+      case SortType.COST_MORE:
+        return filteredPoints.sort(sortPointCostMore);
       // todo default
     }
 
@@ -106,7 +109,7 @@ export default class Trip {
     switch (updateType) {
       case UpdateType.PATCH:
         // - обновить часть списка (например, когда поменялось описание)
-        this.PointPresenter[data.id].init(data);
+        this._pointPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
         // - обновить список (например, когда задача ушла в архив)
@@ -141,14 +144,14 @@ export default class Trip {
   }
 
   _renderSort() {
-    if (this._sortingComponent !== null) {
-      this._sortingComponent = null;
+    if (this._sortComponent !== null) {
+      this._sortComponent = null;
     }
 
-    this._sortingComponent = new SortingView(this._currentSortType, this._sorting);
-    this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
+    this._sortComponent = new SortView(this._currentSortType);
+    this._sortComponent.setOnSortTypeChange(this._onSortTypeChange);
 
-    render(this._tripContainer, this._sortingComponent, RenderPosition.BEFOREEND);
+    render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
     // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
@@ -178,7 +181,7 @@ export default class Trip {
       .forEach((presenter) => presenter.destroy());
     this._pointPresenter = {};
 
-    remove(this._sortingComponent);
+    remove(this._sortComponent);
     remove(this._loadingComponent);
     remove(this._noPointComponent);
 
@@ -195,22 +198,18 @@ export default class Trip {
 
     const points = this._getPoints();
     const pointCount = points.length;
+    const offers = this._offersModel.getOffers();
+    const destinations = this._destinationsModel.getDestinations();
 
-    setTimeout(() => {
-      const offers = this._offersModel.getOffers();
-      const destinations = this._destinationsModel.getDestinations();
+    if (pointCount === 0) {
+      this._renderNoPoints();
+      return;
+    }
 
-      if (pointCount === 0) {
-        this._renderNoPoints();
-        return;
-      }
+    this._renderSort();
 
-      this._renderSort();
+    render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
 
-      render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
-
-      this._renderPoints(points, offers, destinations);
-    }, 500);
-
+    this._renderPoints(points, offers, destinations);
   }
 }
