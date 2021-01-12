@@ -62,7 +62,7 @@ export default class Points extends Observer {
     const getOffers = (offers) => {
       const readyOffers = [];
 
-      offers.forEach((offer) => {
+      offers.map((offer) => {
         readyOffers.push(Object.assign(
             {},
             offer,
@@ -74,22 +74,12 @@ export default class Points extends Observer {
         ));
       });
 
-      readyOffers.forEach((offer) => {
+      readyOffers.map((offer) => {
         delete offer.title;
         delete offer.price;
       });
 
       return readyOffers;
-    };
-
-    const getPhotos = (photos) => {
-      const readyPhotos = [];
-
-      photos.forEach((photo) => {
-        readyPhotos.push(photo.src);
-      });
-
-      return readyPhotos;
     };
 
     const adaptedPoint = Object.assign(
@@ -101,7 +91,7 @@ export default class Points extends Observer {
           offers: getOffers(point.offers),
           destinationInfo: {
             description: point.destination.description,
-            photos: getPhotos(point.destination.pictures),
+            photos: point.destination.pictures.map((photo) => photo.src),
           },
           dateTimeStartEvent: dayjs(point.date_from),
           dateTimeEndEvent: dayjs(point.date_to),
@@ -124,7 +114,7 @@ export default class Points extends Observer {
     const getOffers = (offers) => {
       const readyOffers = [];
 
-      offers.forEach((offer) => {
+      offers.map((offer) => {
         readyOffers.push(Object.assign(
             {},
             offer,
@@ -135,7 +125,7 @@ export default class Points extends Observer {
         ));
       });
 
-      readyOffers.forEach((offer) => {
+      readyOffers.map((offer) => {
         delete offer.id;
         delete offer.cost;
         delete offer.condition;
@@ -147,7 +137,7 @@ export default class Points extends Observer {
     const getPhotos = (photos) => {
       const readyPhotos = [];
 
-      photos.forEach((photo) => {
+      photos.map((photo) => {
         readyPhotos.push({
           'src': photo,
           'description': `description`,
