@@ -70,17 +70,17 @@ export default class Filter {
     return [
       {
         type: FilterType.EVERYTHING,
-        name: `EVERYTHING`,
+        name: FilterType.EVERYTHING.toUpperCase(),
         count: filter[FilterType.EVERYTHING](points).length
       },
       {
         type: FilterType.PAST,
-        name: `PAST`,
+        name: FilterType.PAST.toUpperCase(),
         count: filter[FilterType.PAST](points).length
       },
       {
         type: FilterType.FUTURE,
-        name: `FUTURE`,
+        name: FilterType.FUTURE.toUpperCase(),
         count: filter[FilterType.FUTURE](points).length
       },
     ];
