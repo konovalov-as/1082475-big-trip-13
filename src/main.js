@@ -1,6 +1,7 @@
 import InfoView from './view/info';
 // import ControlsView from './view/controls';
 // import NewEventButtonView from './view/new-event-button';
+import StatsView from './view/stats';
 
 // import {generatePoint} from './mock/point';
 import {generateInfo} from './mock/info';
@@ -53,6 +54,8 @@ render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
 // render(tripContainer, new ControlsView(tabs, filters, `everything`), RenderPosition.BEFOREEND);
 // render(tripContainer, new NewEventButtonView(), RenderPosition.BEFOREEND);
 
+const statsContainer = mainContainer.querySelector(`.page-body__container`);
+render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
 // trip
 const pointsModel = new PointsModel();
 // pointsModel.setPoints(points);
