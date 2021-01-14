@@ -1,6 +1,10 @@
 import SmartView from './smart';
 import dayjs from 'dayjs';
+
 import he from 'he';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 import {POINT_TYPES, DESTINATION_CITIES} from '../const';
 
@@ -33,11 +37,11 @@ const createPointHeaderTemplate = (point, offers, destinations) => {
   const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity} = point;
 
   const dateStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`DD/MM/YY HH:mm`)
+    ? dayjs(dateTimeStartEvent).format(`DD/MM/YYYY HH:mm`)
     : ``;
 
   const dateEnd = dateTimeEndEvent !== null
-    ? dayjs(dateTimeEndEvent).format(`DD/MM/YY HH:mm`)
+    ? dayjs(dateTimeEndEvent).format(`DD/MM/YYYY HH:mm`)
     : ``;
 
   const pointsTypeList = offers
@@ -201,6 +205,8 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
     this._destinations = destinations;
+    this._datepickerStart = null;
+    this._datepickerEnd = null;
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -212,8 +218,11 @@ export default class PointEdit extends SmartView {
     this._onDateEndChange = this._onDateEndChange.bind(this);
     this._onCostChange = this._onCostChange.bind(this);
     this._onEditFormClose = this._onEditFormClose.bind(this);
+    this._onStartDateChange = this._onStartDateChange.bind(this);
+    this._onEndDateChange = this._onEndDateChange.bind(this);
 
     this._setListeners();
+    this._setDatepicker();
   }
 
   reset(point) {
@@ -228,8 +237,52 @@ export default class PointEdit extends SmartView {
 
   restoreOn() {
     this._setListeners();
+    this._setDatepicker();
     this.setOnFormSubmitClick(this._callback.onFormSubmitClick);
     this.setOnFormDeleteClick(this._callback.onFormDeleteClick);
+  }
+
+  _setDatepicker() {
+    if (this._datepickerStart) {
+      this._datepickerStart.destroy();
+      this._datepickerStart = null;
+    }
+
+    if (this._datepickerEnd) {
+      this._datepickerEnd.destroy();
+      this._datepickerEnd = null;
+    }
+
+    // if (this._data.dateTimeStartEvent) {
+    this._datepickerStart = flatpickr(
+        this.getElement().querySelector(`#event-start-time-1`),
+        {
+          dateFormat: `d/m/Y H:i`,
+          // defaultDate: this._data.dateTimeStartEvent,
+          onChange: this._onStartDateChange // На событие flatpickr передаём наш колбэк
+        }
+    );
+    this._datepickerEnd = flatpickr(
+        this.getElement().querySelector(`#event-end-time-1`),
+        {
+          dateFormat: `d/m/Y H:i`,
+          // defaultDate: this._data.dateTimeStartEvent,
+          onChange: this._onEndDateChange // На событие flatpickr передаём наш колбэк
+        }
+    );
+    // }
+  }
+
+  _onStartDateChange([userDate]) {
+    this.updateData({
+      dateTimeStartEvent: dayjs(userDate).hour(23).minute(59).second(59).toDate(),
+    });
+  }
+
+  _onEndDateChange([userDate]) {
+    this.updateData({
+      dateTimeEndEvent: dayjs(userDate).hour(23).minute(59).second(59).toDate(),
+    });
   }
 
   _setListeners() {
@@ -367,7 +420,14 @@ export default class PointEdit extends SmartView {
   }
 
   static parseDataToPoint(data) {
-    const pointData = Object.assign({}, data);
+    const pointData = Object.assign(
+        {},
+        data,
+        {
+          dateTimeStartEvent: dayjs(data.dateTimeStartEvent),
+          dateTimeEndEvent: dayjs(data.dateTimeEndEvent),
+        }
+    );
 
     delete pointData.isWrongCity;
     delete pointData.isRepeating;
