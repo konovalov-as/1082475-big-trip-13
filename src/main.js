@@ -1,13 +1,12 @@
-import InfoView from './view/info';
 // import ControlsView from './view/controls';
 // import NewEventButtonView from './view/new-event-button';
 import StatsView from './view/stats';
 
 // import {generatePoint} from './mock/point';
-import {generateInfo} from './mock/info';
 // import {generateTab} from './mock/tabs';
 // import {generateFilter} from './mock/filter';
 
+import InfoPresenter from './presenter/info';
 import TripPresenter from './presenter/trip';
 import ControlPresenter from './presenter/controls';
 
@@ -27,7 +26,6 @@ const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 // const pointsCount = 20;
 
 // const points = new Array(pointsCount).fill().map(generatePoint);
-const info = generateInfo();
 // const tabs = generateTab();
 // const filters = generateFilter();
 
@@ -42,6 +40,9 @@ const info = generateInfo();
 const api = new Api(END_POINT, AUTHORIZATION);
 
 // header
+const bodyContainer = document.querySelector(`.page-body`);
+const infoContainer = bodyContainer.querySelector(`.page-header .trip-main`);
+
 const headerContainer = document.querySelector(`.page-header`);
 const tripContainer = headerContainer.querySelector(`.trip-main`);
 tripContainer.innerHTML = ``;
@@ -51,7 +52,6 @@ const mainContainer = document.querySelector(`.page-main`);
 const pointsContainer = mainContainer.querySelector(`.trip-events`);
 
 // tabs
-render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
 // render(tripContainer, new ControlsView(tabs, filters, `everything`), RenderPosition.BEFOREEND);
 // render(tripContainer, new NewEventButtonView(), RenderPosition.BEFOREEND);
 
@@ -95,9 +95,11 @@ const offersModel = new OffersModel();
 const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
+const infoPresenter = new InfoPresenter(infoContainer, pointsModel);
 const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, api);
 const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
 
+infoPresenter.init();
 controlPresenter.init();
 tripPresenter.init();
 
