@@ -20,6 +20,7 @@ import {render, RenderPosition} from './utils/render';
 
 import Api from './api';
 import {UpdateType} from './const';
+
 const AUTHORIZATION = `Basic m48tbw5p39vw2beoyh`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 
@@ -56,6 +57,37 @@ render(tripContainer, new InfoView(info), RenderPosition.BEFOREEND);
 
 const statsContainer = mainContainer.querySelector(`.page-body__container`);
 render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
+
+// const onSiteMenuClick = (evt) => {
+//   evt.preventDefault();
+
+//   if(!evt.target.matches(`a`) && !evt.target.matches(`button`)) {
+//     return;
+//   }
+
+//   switch (evt.target.attributes.id.value) {
+//     case MenuItem.ADD_NEW_POINT:
+//       // Скрыть статистику
+//       // Показать список точек
+//       // Показать форму добавления новой точки
+//       // Убрать выделение с ADD NEW TASK после сохранения
+//       console.log(evt.target.attributes.id.value)
+//       break;
+//     case MenuItem.POINTS:
+//       // Показать доску
+//       // Скрыть статистику
+//       console.log(evt.target.attributes.id.value)
+//       break;
+//     case MenuItem.STATISTICS:
+//       // Скрыть доску
+//       // Показать статистику
+//       console.log(evt.target.attributes.id.value)
+//       break;
+//   }
+// };
+
+// tripContainer.addEventListener('click', onSiteMenuClick);
+
 // trip
 const pointsModel = new PointsModel();
 // pointsModel.setPoints(points);
