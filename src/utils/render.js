@@ -2,7 +2,9 @@ import Abstract from '../view/abstract.js';
 
 export const RenderPosition = {
   AFTERBEGIN: `afterbegin`,
-  BEFOREEND: `beforeend`
+  BEFOREEND: `beforeend`,
+  AFTEREND: `afterend`,
+  BEFOREBEGIN: `beforebegin`,
 };
 
 export const render = (container, child, place) => {
@@ -23,6 +25,12 @@ export const render = (container, child, place) => {
       break;
     case RenderPosition.BEFOREEND:
       receivedContainer.append(receivedChild);
+      break;
+    case RenderPosition.AFTEREND:
+      receivedContainer.after(receivedChild);
+      break;
+    case RenderPosition.BEFOREBEGIN:
+      receivedContainer.before(receivedChild);
       break;
     default:
       throw new Error(`Unknown place of insert a DOM-element: '${place}'!`);
