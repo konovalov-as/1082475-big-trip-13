@@ -41,9 +41,9 @@ export default class Point {
     this._pointEditComponent = new PointEditView(point, this._offers, this._destinations);
 
     this._pointComponent.setOnRollupButtonClick(this._onRollupButtonClick);
-    this._pointEditComponent.setOnEditFormClose(this._onEditFormClose);
-
     this._pointComponent.setOnFavoriteClick(this._onFavoriteClick);
+
+    this._pointEditComponent.setOnEditFormClose(this._onEditFormClose);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmitClick);
     this._pointEditComponent.setOnFormDeleteClick(this._onFormDeleteClick);
 
@@ -101,6 +101,7 @@ export default class Point {
   }
 
   _onEditFormClose() {
+    this._pointEditComponent.reset(this._point);
     this._replaceFormToPoint();
   }
 

@@ -1,5 +1,6 @@
 // import ControlsView from './view/controls';
 // import NewEventButtonView from './view/new-event-button';
+import MainNavView from './view/main-nav';
 import StatsView from './view/stats';
 
 // import {generatePoint} from './mock/point';
@@ -8,17 +9,17 @@ import StatsView from './view/stats';
 
 import InfoPresenter from './presenter/info';
 import TripPresenter from './presenter/trip';
-import ControlPresenter from './presenter/controls';
+import FiltersPresenter from './presenter/filter';
 
 import PointsModel from './model/points';
 import FilterModel from './model/filter';
 import OffersModel from './model/offers';
 import DestinationsModel from './model/destinations';
 
-import {render, RenderPosition} from './utils/render';
+import {render, RenderPosition, remove} from './utils/render';
 
 import Api from './api';
-import {UpdateType} from './const';
+import {UpdateType, MenuItem, FilterType} from './const';
 
 const AUTHORIZATION = `Basic m48tbw5p39vw2beoyh`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
@@ -42,10 +43,13 @@ const api = new Api(END_POINT, AUTHORIZATION);
 // header
 const bodyContainer = document.querySelector(`.page-body`);
 const infoContainer = bodyContainer.querySelector(`.page-header .trip-main`);
+const mainNavTitle = infoContainer.querySelector(`.trip-main__title`);
+const filtersTitle = infoContainer.querySelector(`.trip-main__filter`);
 
-const headerContainer = document.querySelector(`.page-header`);
-const tripContainer = headerContainer.querySelector(`.trip-main`);
-tripContainer.innerHTML = ``;
+
+// const headerContainer = document.querySelector(`.page-header`);
+// const tripContainer = headerContainer.querySelector(`.trip-main`);
+// tripContainer.innerHTML = ``;
 
 // main
 const mainContainer = document.querySelector(`.page-main`);
@@ -56,37 +60,7 @@ const pointsContainer = mainContainer.querySelector(`.trip-events`);
 // render(tripContainer, new NewEventButtonView(), RenderPosition.BEFOREEND);
 
 const statsContainer = mainContainer.querySelector(`.page-body__container`);
-render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
-
-// const onSiteMenuClick = (evt) => {
-//   evt.preventDefault();
-
-//   if(!evt.target.matches(`a`) && !evt.target.matches(`button`)) {
-//     return;
-//   }
-
-//   switch (evt.target.attributes.id.value) {
-//     case MenuItem.ADD_NEW_POINT:
-//       // Скрыть статистику
-//       // Показать список точек
-//       // Показать форму добавления новой точки
-//       // Убрать выделение с ADD NEW TASK после сохранения
-//       console.log(evt.target.attributes.id.value)
-//       break;
-//     case MenuItem.POINTS:
-//       // Показать доску
-//       // Скрыть статистику
-//       console.log(evt.target.attributes.id.value)
-//       break;
-//     case MenuItem.STATISTICS:
-//       // Скрыть доску
-//       // Показать статистику
-//       console.log(evt.target.attributes.id.value)
-//       break;
-//   }
-// };
-
-// tripContainer.addEventListener('click', onSiteMenuClick);
+// render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
 
 // trip
 const pointsModel = new PointsModel();
@@ -97,22 +71,79 @@ const filterModel = new FilterModel();
 
 const infoPresenter = new InfoPresenter(infoContainer, pointsModel);
 const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, api);
-const controlPresenter = new ControlPresenter(tripContainer, filterModel, pointsModel);
+const filtersPresenter = new FiltersPresenter(filtersTitle, filterModel, pointsModel);
+
+let currentMainNavItem = MenuItem.TABLE;
+let mainNavComponent = new MainNavView(infoContainer, currentMainNavItem);
+
+const onPointNewFormClose = () => {
+  mainNavComponent.getElement().querySelector(`.trip-tabs__btn:first-child`).classList.add(`trip-tabs__btn--active`);
+};
+
+const onMainNavClick = (mainNavItem) => {
+  if (currentMainNavItem === mainNavItem) {
+    return;
+  }
+
+  currentMainNavItem = mainNavItem;
+  switch (mainNavItem) {
+    case MenuItem.NEW_EVENT:
+      // Скрыть статистику
+      // Показать список точек
+      // Показать форму добавления новой точки
+      // Убрать выделение с ADD NEW TASK после сохранения
+      console.log(mainNavItem);
+      tripPresenter.destroy();
+      filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+      tripPresenter.init();
+      tripPresenter.createPoint(onPointNewFormClose);
+      break;
+    case MenuItem.TABLE:
+      // Показать доску
+      // Скрыть статистику
+      console.log(mainNavItem);
+      tripPresenter.init();
+      break;
+    case MenuItem.STATS:
+      // Скрыть доску
+      // Показать статистику
+      console.log(mainNavItem);
+      tripPresenter.destroy();
+      render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
+      break;
+  }
+  remove(mainNavComponent);
+  renderMainNav();
+};
+
+const renderMainNav = () => {
+  if (mainNavComponent !== null) {
+    mainNavComponent = null;
+  }
+
+  mainNavComponent = new MainNavView(infoContainer, currentMainNavItem);
+  mainNavComponent.setOnMainNavClick(onMainNavClick);
+  render(mainNavTitle, mainNavComponent, RenderPosition.AFTEREND);
+};
 
 infoPresenter.init();
-controlPresenter.init();
+filtersPresenter.init();
 tripPresenter.init();
 
-document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
-  evt.preventDefault();
-  tripPresenter.createPoint();
-});
+// document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
+//   evt.preventDefault();
+//   tripPresenter.createPoint();
+// });
 
 api.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
+    renderMainNav();
+    // render(mainNavTitle, mainNavComponent, RenderPosition.AFTEREND);
+    // mainNavComponent.setOnMainNavClick(onMainNavClick);
   })
-  .catch(() => {
+  .catch((err) => {
+    console.log(err);
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 

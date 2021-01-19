@@ -6,22 +6,6 @@ import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-import {POINT_TYPES, DESTINATION_CITIES} from '../const';
-
-const BLANK_POINT = {
-  pointType: POINT_TYPES[0],
-  destinationCity: DESTINATION_CITIES[0],
-  offers: [],
-  destinationInfo: {
-    description: null,
-    photos: [],
-  },
-  dateTimeStartEvent: dayjs(),
-  dateTimeEndEvent: dayjs(),
-  cost: 0,
-  isFavorite: false,
-};
-
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
   <input id="event-type-${pointType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType.toLowerCase()}">
@@ -200,7 +184,7 @@ const createPointEditTemplate = (data, offers, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point = BLANK_POINT, offers, destinations) {
+  constructor(point, offers, destinations) {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
@@ -210,6 +194,7 @@ export default class PointEdit extends SmartView {
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
+    this._onEditFormClose = this._onEditFormClose.bind(this);
     this._callback = {};
 
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
@@ -217,7 +202,6 @@ export default class PointEdit extends SmartView {
     this._onDateStartChange = this._onDateStartChange.bind(this);
     this._onDateEndChange = this._onDateEndChange.bind(this);
     this._onCostChange = this._onCostChange.bind(this);
-    this._onEditFormClose = this._onEditFormClose.bind(this);
     this._onStartDateChange = this._onStartDateChange.bind(this);
     this._onEndDateChange = this._onEndDateChange.bind(this);
 
@@ -240,6 +224,7 @@ export default class PointEdit extends SmartView {
     this._setDatepicker();
     this.setOnFormSubmitClick(this._callback.onFormSubmitClick);
     this.setOnFormDeleteClick(this._callback.onFormDeleteClick);
+    this.setOnEditFormClose(this._callback.onEditFormClose);
   }
 
   _setDatepicker() {
