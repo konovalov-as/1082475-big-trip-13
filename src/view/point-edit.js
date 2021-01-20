@@ -184,13 +184,15 @@ const createPointEditTemplate = (data, offers, destinations) => {
 };
 
 export default class PointEdit extends SmartView {
-  constructor(point, offers, destinations) {
+  constructor(point, offers, destinations, newEventButton) {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
     this._destinations = destinations;
     this._datepickerStart = null;
     this._datepickerEnd = null;
+
+    this._newEventButton = newEventButton;
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -377,6 +379,7 @@ export default class PointEdit extends SmartView {
   _onFormSubmitClick(evt) {
     evt.preventDefault();
     this._callback.onFormSubmitClick(PointEdit.parseDataToPoint(this._data));
+    this._newEventButton.disabled = false;
   }
 
   setOnFormSubmitClick(callback) {

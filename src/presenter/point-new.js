@@ -19,9 +19,10 @@ const BLANK_POINT = {
 };
 
 export default class PointNew {
-  constructor(pointListContainer, changeData) {
+  constructor(pointListContainer, changeData, newEventButton) {
     this._pointListContainer = pointListContainer;
     this._changeData = changeData;
+    this._newEventButton = newEventButton;
 
     this._pointEditComponent = null;
     this._destroyCallback = null;
@@ -39,7 +40,7 @@ export default class PointNew {
 
     this._destroyCallback = callback;
 
-    this._pointEditComponent = new PointEditView(BLANK_POINT, offers, destinations);
+    this._pointEditComponent = new PointEditView(BLANK_POINT, offers, destinations, this._newEventButton);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmit);
     this._pointEditComponent.setOnFormDeleteClick(this._onDeleteClick);
     this._pointEditComponent.setOnEditFormClose(this._onCloseClick);

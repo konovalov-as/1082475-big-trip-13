@@ -12,7 +12,7 @@ import {filter} from '../utils/filter';
 import {SortType, UpdateType, UserAction} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api, newEventButton) {
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
@@ -25,6 +25,8 @@ export default class Trip {
 
     this._isLoading = true;
     this._api = api;
+
+    this._newEventButton = newEventButton;
 
     this._points = null;
 
@@ -41,7 +43,7 @@ export default class Trip {
     this._onModeChange = this._onModeChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction);
+    this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction, newEventButton);
   }
 
   init() {
