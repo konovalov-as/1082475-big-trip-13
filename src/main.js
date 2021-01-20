@@ -76,6 +76,14 @@ const filtersPresenter = new FiltersPresenter(filtersTitle, filterModel, pointsM
 let currentMainNavItem = MenuItem.TABLE;
 let mainNavComponent = new MainNavView(infoContainer, currentMainNavItem);
 
+const statsComponent = new StatsView();
+
+infoPresenter.init();
+filtersPresenter.init();
+tripPresenter.init();
+
+render(statsContainer, statsComponent, RenderPosition.AFTEREND);
+
 const onPointNewFormClose = () => {
   mainNavComponent.getElement().querySelector(`.trip-tabs__btn:first-child`).classList.add(`trip-tabs__btn--active`);
 };
@@ -97,19 +105,23 @@ const onMainNavClick = (mainNavItem) => {
       filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
       tripPresenter.init();
       tripPresenter.createPoint(onPointNewFormClose);
+      statsComponent.hide();
       break;
     case MenuItem.TABLE:
       // Показать доску
       // Скрыть статистику
       console.log(mainNavItem);
+      tripPresenter.destroy();
       tripPresenter.init();
+      statsComponent.hide();
       break;
     case MenuItem.STATS:
       // Скрыть доску
       // Показать статистику
       console.log(mainNavItem);
       tripPresenter.destroy();
-      render(statsContainer, new StatsView(), RenderPosition.BEFOREEND);
+      statsComponent.init(pointsModel.getPoints());
+      statsComponent.show();
       break;
   }
   remove(mainNavComponent);
@@ -125,10 +137,6 @@ const renderMainNav = () => {
   mainNavComponent.setOnMainNavClick(onMainNavClick);
   render(mainNavTitle, mainNavComponent, RenderPosition.AFTEREND);
 };
-
-infoPresenter.init();
-filtersPresenter.init();
-tripPresenter.init();
 
 // document.querySelector(`.trip-main__event-add-btn`).addEventListener(`click`, (evt) => {
 //   evt.preventDefault();
