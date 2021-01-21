@@ -173,7 +173,7 @@ export default class Trip {
   }
 
   _renderPoint(point, offers, destinations) {
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange, this._newEventButton);
     pointPresenter.init(point, offers, destinations);
     this._pointPresenter[point.id] = pointPresenter;
   }

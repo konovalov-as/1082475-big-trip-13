@@ -35,11 +35,11 @@ const formatDateTime = (dateTimeStartEvent, dateTimeEndEvent) => {
     : ``;
 
   eventDate.timeStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`HH:MM`)
+    ? dayjs(dateTimeStartEvent).format(`HH:mm`)
     : ``;
 
   eventDate.timeEnd = dateTimeEndEvent !== null
-    ? dayjs(dateTimeEndEvent).format(`HH:MM`)
+    ? dayjs(dateTimeEndEvent).format(`HH:mm`)
     : ``;
 
   eventDate.machineDateStart = dateTimeStartEvent !== null
@@ -47,11 +47,11 @@ const formatDateTime = (dateTimeStartEvent, dateTimeEndEvent) => {
     : ``;
 
   eventDate.machineDateTimeStart = dateTimeStartEvent !== null
-    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DDTHH:MM`)
+    ? dayjs(dateTimeStartEvent).format(`YYYY-MM-DDTHH:mm`)
     : ``;
 
   eventDate.machineDateTimeEnd = dateTimeEndEvent !== null
-    ? dayjs(dateTimeEndEvent).format(`YYYY-MM-DDTHH:MM`)
+    ? dayjs(dateTimeEndEvent).format(`YYYY-MM-DDTHH:mm`)
     : ``;
 
   return eventDate;

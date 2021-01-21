@@ -189,8 +189,7 @@ export default class PointEdit extends SmartView {
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
     this._destinations = destinations;
-    this._datepickerStart = null;
-    this._datepickerEnd = null;
+    this._datepicker = null;
 
     this._newEventButton = newEventButton;
 
@@ -229,47 +228,40 @@ export default class PointEdit extends SmartView {
     this.setOnEditFormClose(this._callback.onEditFormClose);
   }
 
+  _destroyDatepicker() {
+    this._datepicker.start.destroy();
+    this._datepicker.end.destroy();
+    this._datepicker = null;
+  }
+
   _setDatepicker() {
-    if (this._datepickerStart) {
-      this._datepickerStart.destroy();
-      this._datepickerStart = null;
+    if (this._datepicker) {
+      this._destroyDatepicker();
     }
 
-    if (this._datepickerEnd) {
-      this._datepickerEnd.destroy();
-      this._datepickerEnd = null;
-    }
+    const [startDateInput, endDateInput] = Array.from(this.getElement().querySelectorAll(`.event__input--time`));
 
-    // if (this._data.dateTimeStartEvent) {
-    this._datepickerStart = flatpickr(
-        this.getElement().querySelector(`#event-start-time-1`),
-        {
-          dateFormat: `d/m/Y H:i`,
-          // defaultDate: this._data.dateTimeStartEvent,
-          onChange: this._onStartDateChange // На событие flatpickr передаём наш колбэк
-        }
-    );
-    this._datepickerEnd = flatpickr(
-        this.getElement().querySelector(`#event-end-time-1`),
-        {
-          dateFormat: `d/m/Y H:i`,
-          // defaultDate: this._data.dateTimeStartEvent,
-          onChange: this._onEndDateChange // На событие flatpickr передаём наш колбэк
-        }
-    );
-    // }
+    this._datepicker = {
+      start: flatpickr(startDateInput, {
+        enableTime: true,
+        dateFormat: `d/m/Y H:i`,
+        onChange: this._onStartDateChange,
+      }),
+      end: flatpickr(endDateInput, {
+        enableTime: true,
+        dateFormat: `d/m/Y H:i`,
+        onChange: this._onEndDateChange,
+      }),
+    };
   }
 
   _onStartDateChange([userDate]) {
-    this.updateData({
-      dateTimeStartEvent: dayjs(userDate).hour(23).minute(59).second(59).toDate(),
-    });
+    console.log({dateTimeStartEvent: dayjs(userDate, `DD/MM/YYYY HH:mm`)});
+    this.updateData({dateTimeStartEvent: dayjs(userDate, `DD/MM/YYYY HH:mm`)}, true);
   }
 
-  _onEndDateChange([userDate]) {
-    this.updateData({
-      dateTimeEndEvent: dayjs(userDate).hour(23).minute(59).second(59).toDate(),
-    });
+  _onEndDateChange(userDate) {
+    this.updateData({dateTimeEndEvent: dayjs(userDate)}, true);
   }
 
   _setListeners() {
