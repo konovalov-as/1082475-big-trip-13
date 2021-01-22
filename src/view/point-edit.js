@@ -200,8 +200,6 @@ export default class PointEdit extends SmartView {
 
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
-    this._onDateStartChange = this._onDateStartChange.bind(this);
-    this._onDateEndChange = this._onDateEndChange.bind(this);
     this._onCostChange = this._onCostChange.bind(this);
     this._onStartDateChange = this._onStartDateChange.bind(this);
     this._onEndDateChange = this._onEndDateChange.bind(this);
@@ -256,12 +254,13 @@ export default class PointEdit extends SmartView {
   }
 
   _onStartDateChange([userDate]) {
-    console.log({dateTimeStartEvent: dayjs(userDate, `DD/MM/YYYY HH:mm`)});
-    this.updateData({dateTimeStartEvent: dayjs(userDate, `DD/MM/YYYY HH:mm`)}, true);
+    this.updateData({dateTimeStartEvent: dayjs(userDate)}, true);
+    this._datepicker.end.set(`minDate`, userDate);
   }
 
-  _onEndDateChange(userDate) {
+  _onEndDateChange([userDate]) {
     this.updateData({dateTimeEndEvent: dayjs(userDate)}, true);
+    this._datepicker.start.set(`maxDate`, userDate);
   }
 
   _setListeners() {
@@ -271,12 +270,6 @@ export default class PointEdit extends SmartView {
     this.getElement()
       .querySelector(`#event-destination-1`)
       .addEventListener(`input`, this._onDestinationChange);
-    this.getElement()
-      .querySelector(`#event-start-time-1`)
-      .addEventListener(`input`, this._onDateStartChange);
-    this.getElement()
-      .querySelector(`#event-end-time-1`)
-      .addEventListener(`input`, this._onDateEndChange);
     this.getElement()
       .querySelector(`#event-price-1`)
       .addEventListener(`input`, this._onCostChange);
@@ -335,20 +328,6 @@ export default class PointEdit extends SmartView {
       //   }, true);
       // }
     });
-  }
-
-  _onDateStartChange(evt) {
-    evt.preventDefault();
-    this.updateData({
-      dateTimeStartEvent: evt.target.value,
-    }, true);
-  }
-
-  _onDateEndChange(evt) {
-    evt.preventDefault();
-    this.updateData({
-      dateTimeEndEvent: evt.target.value,
-    }, true);
   }
 
   _onCostChange(evt) {

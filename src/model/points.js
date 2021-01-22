@@ -147,7 +147,6 @@ export default class Points extends Observer {
       return readyPhotos;
     };
 
-    console.log(point);
     const adaptedPoint = Object.assign(
         {},
         point,
@@ -174,7 +173,6 @@ export default class Points extends Observer {
     delete adaptedPoint.isFavorite;
     delete adaptedPoint.pointType;
 
-    console.log(adaptedPoint);
     return adaptedPoint;
   }
 }
