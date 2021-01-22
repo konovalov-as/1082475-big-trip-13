@@ -1,5 +1,4 @@
 import PointEditView from '../view/point-edit';
-import {nanoid} from 'nanoid';
 import {remove, render, RenderPosition} from '../utils/render';
 import {UserAction, UpdateType, Key, POINT_TYPES, DESTINATION_CITIES} from '../const';
 import dayjs from 'dayjs';
@@ -69,7 +68,7 @@ export default class PointNew {
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign({id: nanoid()}, point)
+        point
     );
     this.destroy();
   }
