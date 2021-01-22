@@ -18,7 +18,7 @@ const createDestinationCityTemplate = (destinationCity) => {
 };
 
 const createPointHeaderTemplate = (point, offers, destinations) => {
-  const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity} = point;
+  const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity, isDisabled, isSaving, isDeleting} = point;
 
   const dateStart = dateTimeStartEvent !== null
     ? dayjs(dateTimeStartEvent).format(`DD/MM/YYYY HH:mm`)
@@ -80,8 +80,8 @@ const createPointHeaderTemplate = (point, offers, destinations) => {
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(cost.toString())}">
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? `disabled` : ``}>${isSaving ? `Saving...` : `Save`}</button>
+    <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${isDeleting ? `Deleting...` : `Delete`}</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
@@ -374,6 +374,9 @@ export default class PointEdit extends SmartView {
         point,
         {
           isWrongCity: false,
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
         }
     );
   }
@@ -390,6 +393,9 @@ export default class PointEdit extends SmartView {
 
     delete pointData.isWrongCity;
     delete pointData.isRepeating;
+    delete pointData.isDisabled;
+    delete pointData.isSaving;
+    delete pointData.isDeleting;
 
     return pointData;
   }
