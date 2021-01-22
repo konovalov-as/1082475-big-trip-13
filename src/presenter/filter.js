@@ -1,14 +1,11 @@
-import ControlsView from '../view/controls';
-import NewEventButtonView from '../view/new-event-button';
+import FiltersView from '../view/filter';
 
 import {render, RenderPosition, replace, remove} from '../utils/render';
 import {filter} from '../utils/filter';
 
 import {FilterType, UpdateType} from '../const';
 
-import {generateTab} from '../mock/tabs';
-
-export default class Filter {
+export default class Filters {
   constructor(filterContainer, filterModel, pointsModel) {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
@@ -20,8 +17,6 @@ export default class Filter {
     this._prevFilterComponent = null;
     this._filterComponent = null;
     this._newEventButtonComponent = null;
-
-    this._tabs = generateTab();
 
     this._onModelEvent = this._onModelEvent.bind(this);
     this._onFilterTypeChange = this._onFilterTypeChange.bind(this);
@@ -36,15 +31,11 @@ export default class Filter {
     this._filters = this._getFilters();
     this._prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new ControlsView(this._tabs, this._filters, this._currentFilter);
+    this._filterComponent = new FiltersView(this._filters, this._currentFilter);
     this._filterComponent.setOnFilterTypeChange(this._onFilterTypeChange);
 
-    this._newEventButtonComponent = new NewEventButtonView();
-
     if (this._prevFilterComponent === null) {
-      render(this._filterContainer, this._filterComponent, RenderPosition.BEFOREEND);
-
-      render(this._filterContainer, this._newEventButtonComponent, RenderPosition.BEFOREEND);
+      render(this._filterContainer, this._filterComponent, RenderPosition.AFTEREND);
       return;
     }
 
@@ -70,17 +61,17 @@ export default class Filter {
     return [
       {
         type: FilterType.EVERYTHING,
-        name: `EVERYTHING`,
+        name: FilterType.EVERYTHING.toUpperCase(),
         count: filter[FilterType.EVERYTHING](points).length
       },
       {
         type: FilterType.PAST,
-        name: `PAST`,
+        name: FilterType.PAST.toUpperCase(),
         count: filter[FilterType.PAST](points).length
       },
       {
         type: FilterType.FUTURE,
-        name: `FUTURE`,
+        name: FilterType.FUTURE.toUpperCase(),
         count: filter[FilterType.FUTURE](points).length
       },
     ];

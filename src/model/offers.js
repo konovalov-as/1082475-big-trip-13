@@ -21,7 +21,7 @@ export default class Offers extends Observer {
 
       const readyOffers = [];
 
-      offers.offers.forEach((offer) => {
+      offers.offers.map((offer) => {
         readyOffers.push(Object.assign(
             {},
             offer,
@@ -32,7 +32,7 @@ export default class Offers extends Observer {
         ));
       });
 
-      readyOffers.forEach((offer) => {
+      readyOffers.map((offer) => {
         delete offer.title;
         delete offer.price;
       });

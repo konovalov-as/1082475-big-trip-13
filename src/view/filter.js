@@ -16,7 +16,7 @@ const createFilterTemplate = (filter, currentFilterType) => {
   </div>`;
 };
 
-const createFilters = (filters, currentFilterType) => {
+const createFiltersContainerTemplate = (filters, currentFilterType) => {
   const template = filters
   .map((filter) => createFilterTemplate(filter, currentFilterType))
   .join(``);
@@ -24,22 +24,9 @@ const createFilters = (filters, currentFilterType) => {
   return `<form class="trip-filters" action="#" method="get">${template}</form>`;
 };
 
-const createTabsTemplate = (tabs, filters, currentFilterType) => {
-  const [table, stats] = tabs;
-  return `<div class="trip-main__trip-controls  trip-controls">
-    <h2 class="visually-hidden">Switch trip view</h2>
-    <nav class="trip-controls__trip-tabs  trip-tabs">
-      <a class="trip-tabs__btn" href="#">${table}</a>
-      <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">${stats}</a>
-    </nav>
-    ${createFilters(filters, currentFilterType)}
-  </div>`;
-};
-
-export default class Controls extends AbstractView {
-  constructor(tabs, filters, currentFilterType) {
+export default class Filters extends AbstractView {
+  constructor(filters, currentFilterType) {
     super();
-    this._tabs = tabs;
     this._filters = filters;
     this._currentFilter = currentFilterType;
 
@@ -47,7 +34,7 @@ export default class Controls extends AbstractView {
   }
 
   getTemplate() {
-    return createTabsTemplate(this._tabs, this._filters, this._currentFilter);
+    return createFiltersContainerTemplate(this._filters, this._currentFilter);
   }
 
   _onFilterTypeChange(evt) {

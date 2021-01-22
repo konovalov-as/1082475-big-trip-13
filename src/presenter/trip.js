@@ -9,10 +9,10 @@ import PointNewPresenter from './point-new';
 import {sortPointDateUp, sortPointTimeMore, sortPointCostMore} from '../utils/point';
 import {render, RenderPosition, remove} from '../utils/render';
 import {filter} from '../utils/filter';
-import {SortType, UpdateType, UserAction, FilterType} from '../const';
+import {SortType, UpdateType, UserAction} from '../const';
 
 export default class Trip {
-  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api) {
+  constructor(tripContainer, pointsModel, filterModel, offersModel, destinationsModel, api, newEventButton) {
     this._pointsModel = pointsModel;
     this._offersModel = offersModel;
     this._destinationsModel = destinationsModel;
@@ -26,7 +26,11 @@ export default class Trip {
     this._isLoading = true;
     this._api = api;
 
+    this._newEventButton = newEventButton;
+
     this._points = null;
+
+    this._callback = {};
 
     this._tripListComponent = new TripView();
     // this._sortingComponent = new SortingView(this._sorting);
@@ -34,29 +38,42 @@ export default class Trip {
     this._loadingComponent = new LoadingView();
     this._noPointComponent = new NoPointView();
 
-    // this._onPointChange = this._onPointChange.bind(this);
     this._onViewAction = this._onViewAction.bind(this);
     this._onModelEvent = this._onModelEvent.bind(this);
     this._onModeChange = this._onModeChange.bind(this);
     this._onSortTypeChange = this._onSortTypeChange.bind(this);
 
+    this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction, newEventButton);
+  }
+
+  init() {
+    // this._points = points;
     this._pointsModel.addObserver(this._onModelEvent);
     this._offersModel.addObserver(this._onModelEvent);
     this._destinationsModel.addObserver(this._onModelEvent);
     this._filterModel.addObserver(this._onModelEvent);
 
-    this._pointNewPresenter = new PointNewPresenter(this._tripListComponent, this._onViewAction);
-  }
-
-  init() {
-    // this._points = points;
     this._renderTrip();
   }
 
-  createPoint() {
-    this._currentSortType = SortType.DATE_UP;
-    this._filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
-    this._pointNewPresenter.init();
+  destroy() {
+    this._clearTrip({resetSortType: true});
+
+    remove(this._tripListComponent);
+
+    this._pointsModel.removeObserver(this._onModelEvent);
+    this._offersModel.removeObserver(this._onModelEvent);
+    this._destinationsModel.removeObserver(this._onModelEvent);
+    this._filterModel.removeObserver(this._onModelEvent);
+  }
+
+  createPoint(callback) {
+    if (this._getPoints().length === 0) {
+      remove(this._noPointComponent);
+      render(this._tripContainer, this._tripListComponent, RenderPosition.BEFOREEND);
+    }
+
+    this._pointNewPresenter.init(callback, this._offersModel.getOffers(), this._destinationsModel.getDestinations());
   }
 
   _getPoints() {
@@ -156,7 +173,7 @@ export default class Trip {
   }
 
   _renderPoint(point, offers, destinations) {
-    const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange);
+    const pointPresenter = new PointPresenter(this._tripListComponent, this._onViewAction, this._onModeChange, this._newEventButton);
     pointPresenter.init(point, offers, destinations);
     this._pointPresenter[point.id] = pointPresenter;
   }

@@ -17,23 +17,13 @@ export default class Destinations extends Observer {
   }
 
   static adaptToClient(destinations) {
-    const getPhotos = (photos) => {
-      const readyPhotos = [];
-
-      photos.forEach((photo) => {
-        readyPhotos.push(photo.src);
-      });
-
-      return readyPhotos;
-    };
-
     const adaptedDestination = Object.assign(
         {},
         destinations,
         {
           destinationInfo: {
             description: destinations.description,
-            photos: getPhotos(destinations.pictures),
+            photos: destinations.pictures.map((photo) => photo.src),
           },
         }
     );

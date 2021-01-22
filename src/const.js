@@ -63,3 +63,9 @@ export const Key = {
   ESCAPE: `Escape`,
   ESC: `Esc`,
 };
+
+export const MenuItem = {
+  NEW_EVENT: `New event`,
+  TABLE: `Table`,
+  STATS: `Stats`
+};
