@@ -4,7 +4,7 @@ import {UserAction, UpdateType, Key, POINT_TYPES, DESTINATION_CITIES} from '../c
 import dayjs from 'dayjs';
 
 const BLANK_POINT = {
-  pointType: POINT_TYPES[0],
+  pointType: POINT_TYPES[0].toLowerCase(),
   destinationCity: DESTINATION_CITIES[0],
   offers: [],
   destinationInfo: {
@@ -39,6 +39,9 @@ export default class PointNew {
 
     this._destroyCallback = callback;
 
+    this._getOffers(offers);
+    this._getDestinations(destinations);
+
     this._pointEditComponent = new PointEditView(BLANK_POINT, offers, destinations, this._newEventButton);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmit);
     this._pointEditComponent.setOnFormDeleteClick(this._onDeleteClick);
@@ -47,6 +50,25 @@ export default class PointNew {
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _getOffers(offers) {
+    for (const offer of offers) {
+      if (offer.pointType === (BLANK_POINT.pointType.toLowerCase())) {
+        BLANK_POINT.offers = offer.offers;
+        break;
+      }
+    }
+  }
+
+  _getDestinations(destinations) {
+    for (const destination of destinations) {
+      if (destination.name === BLANK_POINT.destinationCity) {
+        BLANK_POINT.destinationInfo.description = destination.destinationInfo.description;
+        BLANK_POINT.destinationInfo.photos = destination.destinationInfo.photos;
+        break;
+      }
+    }
   }
 
   destroy() {
