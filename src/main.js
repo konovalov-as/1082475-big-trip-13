@@ -18,7 +18,7 @@ import DestinationsModel from './model/destinations';
 
 import {render, RenderPosition} from './utils/render';
 
-import Api from './api';
+import Api from './api/api';
 import {UpdateType, MenuItem, FilterType} from './const';
 
 const AUTHORIZATION = `Basic m48tbw5p39vw2beoyh`;
