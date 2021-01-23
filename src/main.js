@@ -138,3 +138,7 @@ api.getDestinations()
   .catch(() => {
     destinationsModel.setDestinations(UpdateType.MINOR, []);
   });
+
+window.addEventListener(`load`, () => {
+  navigator.serviceWorker.register(`/sw.js`);
+});
