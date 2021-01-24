@@ -1,13 +1,3 @@
-export const OfferCost = {
-  FROM: 1,
-  TO: 500,
-};
-
-export const DateGap = {
-  FROM: 1,
-  TO: 7,
-};
-
 export const DESTINATION_CITIES = [
   `Chamonix`,
   `Geneva`,
