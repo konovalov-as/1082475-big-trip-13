@@ -4,17 +4,29 @@ export default class Store {
     this._storeKey = key;
   }
 
-  getItems() {
+  get storeKey() {
+    return this._storeKey;
+  }
+
+  getItems(key = null) {
+    if (key === null) {
+      key = this._storeKey;
+    }
+
     try {
-      return JSON.parse(this._storage.getItem(this._storeKey)) || {};
+      return JSON.parse(this._storage.getItem(key)) || {};
     } catch (err) {
       return {};
     }
   }
 
-  setItems(items) {
+  setItems(items, key = null) {
+    if (key === null) {
+      key = this._storeKey;
+    }
+
     this._storage.setItem(
-        this._storeKey,
+        key,
         JSON.stringify(items)
     );
   }

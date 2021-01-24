@@ -1,5 +1,7 @@
 import AbstractView from './abstract';
 import {MenuItem} from '../const';
+import {isOnline} from '../utils/common';
+import {toast} from '../utils/toast/toast.js';
 
 const createMainNavTemplate = () => {
   return `<nav class="trip-controls__trip-tabs trip-tabs">
@@ -27,6 +29,12 @@ export default class MainNav extends AbstractView {
     evt.preventDefault();
     const target = evt.target;
     if (target.attributes.id === undefined) {
+      return;
+    }
+
+    if (!isOnline()) {
+      toast(`You can't create a new point offline`);
+      this.setMenuItem(MenuItem.TABLE);
       return;
     }
 

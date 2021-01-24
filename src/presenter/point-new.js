@@ -3,6 +3,9 @@ import {remove, render, RenderPosition} from '../utils/render';
 import {UserAction, UpdateType, Key, POINT_TYPES, DESTINATION_CITIES} from '../const';
 import dayjs from 'dayjs';
 
+import {isOnline} from '../utils/common';
+import {toast} from '../utils/toast/toast.js';
+
 const BLANK_POINT = {
   pointType: POINT_TYPES[0].toLowerCase(),
   destinationCity: DESTINATION_CITIES[0],
@@ -106,6 +109,11 @@ export default class PointNew {
   }
 
   _onFormSubmit(point) {
+    if (!isOnline()) {
+      toast(`You can't save a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
@@ -114,6 +122,11 @@ export default class PointNew {
   }
 
   _onDeleteClick() {
+    if (!isOnline()) {
+      toast(`You can't delete a point offline`);
+      return;
+    }
+
     this.destroy();
   }
 

@@ -19,10 +19,16 @@ import DestinationsModel from './model/destinations';
 import {render, RenderPosition} from './utils/render';
 
 import Api from './api/api';
+import Store from './api/store';
+import Provider from './api/provider';
+
 import {UpdateType, MenuItem, FilterType} from './const';
 
 const AUTHORIZATION = `Basic m48tbw5p39vw2beoyh`;
 const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
+const STORE_PREFIX = `big-trip-localstorage`;
+const STORE_VER = `v13`;
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
 // const pointsCount = 20;
 
@@ -39,6 +45,8 @@ const END_POINT = `https://13.ecmascript.pages.academy/big-trip`;
 // ];
 
 const api = new Api(END_POINT, AUTHORIZATION);
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 // header
 const bodyContainer = document.querySelector(`.page-body`);
@@ -71,7 +79,7 @@ const destinationsModel = new DestinationsModel();
 const filterModel = new FilterModel();
 
 const infoPresenter = new InfoPresenter(infoContainer, pointsModel);
-const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, api, newEventButton);
+const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, apiWithProvider, newEventButton);
 const filtersPresenter = new FiltersPresenter(filtersTitle, filterModel, pointsModel);
 
 const mainNavComponent = new MainNavView(newEventButton, MenuItem.TABLE);
@@ -113,7 +121,7 @@ const onMainNavClick = (mainNavItem) => {
   }
 };
 
-api.getPoints()
+apiWithProvider.getPoints()
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
     render(mainNavTitle, mainNavComponent, RenderPosition.AFTEREND);
@@ -123,7 +131,7 @@ api.getPoints()
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 
-api.getOffers()
+apiWithProvider.getOffers()
   .then((offers) => {
     offersModel.setOffers(UpdateType.MINOR, offers);
   })
@@ -131,7 +139,7 @@ api.getOffers()
     offersModel.setOffers(UpdateType.MINOR, []);
   });
 
-api.getDestinations()
+apiWithProvider.getDestinations()
   .then((destinations) => {
     destinationsModel.setDestinations(UpdateType.MINOR, destinations);
   })
@@ -141,4 +149,19 @@ api.getDestinations()
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`/sw.js`);
+});
+
+window.addEventListener(`online`, () => {
+  document.title = document.title.replace(` [offline]`, ``);
+  if (apiWithProvider.isSync) {
+    apiWithProvider
+      .sync()
+      .then((points) => {
+        pointsModel.setPoints(UpdateType.MINOR, points);
+      });
+  }
+});
+
+window.addEventListener(`offline`, () => {
+  document.title += ` [offline]`;
 });

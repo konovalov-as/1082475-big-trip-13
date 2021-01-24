@@ -1,6 +1,9 @@
 import PointView from '../view/point';
 import PointEditView from '../view/point-edit';
 
+import {isOnline} from '../utils/common';
+import {toast} from '../utils/toast/toast.js';
+
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
 import {UserAction, UpdateType, Key} from '../const';
@@ -136,6 +139,11 @@ export default class Point {
   }
 
   _onRollupButtonClick() {
+    if (!isOnline()) {
+      toast(`You can't edit a point offline`);
+      return;
+    }
+
     this._replacePointToForm();
   }
 
@@ -159,6 +167,11 @@ export default class Point {
   }
 
   _onFormSubmitClick(point) {
+    if (!isOnline()) {
+      toast(`You can't save a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.MINOR,
@@ -167,6 +180,11 @@ export default class Point {
   }
 
   _onFormDeleteClick(point) {
+    if (!isOnline()) {
+      toast(`You can't delete a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.DELETE_POINT,
         UpdateType.MINOR,

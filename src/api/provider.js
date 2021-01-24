@@ -18,6 +18,11 @@ export default class Provider {
   constructor(api, store) {
     this._api = api;
     this._store = store;
+    this._isSync = false;
+  }
+
+  get isSync() {
+    return this._isSync;
   }
 
   getPoints() {
@@ -45,6 +50,7 @@ export default class Provider {
     }
 
     this._store.setItem(point.id, PointsModel.adaptToServer(Object.assign({}, point)));
+    this._isSync = true;
 
     return Promise.resolve(point);
   }
@@ -58,7 +64,9 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(new Error(`Add point failed`));
+    this._isSync = true;
+
+    return Promise.reject(new Error(`Add a point failed`));
   }
 
   deletePoint(point) {
@@ -67,7 +75,43 @@ export default class Provider {
         .then(() => this._store.removeItem(point.id));
     }
 
-    return Promise.reject(new Error(`Delete point failed`));
+    this._isSync = true;
+
+    return Promise.reject(new Error(`Delete a point failed`));
+  }
+
+  getOffers() {
+    const key = `${this._store.storeKey}-offers`;
+
+    if (isOnline()) {
+      return this._api.getOffers()
+        .then((offers) => {
+          const items = Object.assign({}, offers);
+          this._store.setItems(items, key);
+          return offers;
+        });
+    }
+
+    const storeOffers = Object.values(this._store.getItems(key));
+
+    return Promise.resolve(storeOffers);
+  }
+
+  getDestinations() {
+    const key = `${this._store.storeKey}-destinations`;
+
+    if (isOnline()) {
+      return this._api.getDestinations()
+        .then((destinations) => {
+          const items = Object.assign({}, destinations);
+          this._store.setItems(items, key);
+          return destinations;
+        });
+    }
+
+    const storeDestinations = Object.values(this._store.getItems(key));
+
+    return Promise.resolve(storeDestinations);
   }
 
   sync() {
@@ -85,6 +129,7 @@ export default class Provider {
           const items = createStoreStructure([...createdPoints, ...updatedPoints]);
 
           this._store.setItems(items);
+          this._isSync = false;
         });
     }
 
