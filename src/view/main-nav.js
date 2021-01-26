@@ -1,7 +1,5 @@
 import AbstractView from './abstract';
 import {MenuItem} from '../const';
-import {isOnline} from '../utils/common';
-import {toast} from '../utils/toast/toast.js';
 
 const createMainNavTemplate = () => {
   return `<nav class="trip-controls__trip-tabs trip-tabs">
@@ -32,12 +30,6 @@ export default class MainNav extends AbstractView {
       return;
     }
 
-    if (!isOnline()) {
-      toast(`You can't create a new point offline`);
-      this.setMenuItem(MenuItem.TABLE);
-      return;
-    }
-
     const mainNavItems = target.parentNode.querySelectorAll(`.trip-tabs__btn`);
     mainNavItems.forEach((mainNavItem) => {
       mainNavItem.classList.remove(`trip-tabs__btn--active`);
@@ -46,10 +38,6 @@ export default class MainNav extends AbstractView {
         this._newEventButton.disabled = false;
       }
     });
-
-    if (target.attributes.id.value === MenuItem.NEW_EVENT) {
-      this._newEventButton.disabled = true;
-    }
 
     this._callback.onMainNavClick(target.attributes.id.value);
   }

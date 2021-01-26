@@ -1,5 +1,7 @@
 import {render, RenderPosition} from './utils/render';
 import {UpdateType, MenuItem, FilterType} from './const';
+import {isOnline} from './utils/common';
+import {toast} from './utils/toast/toast.js';
 
 import MainNavView from './view/main-nav';
 import StatsView from './view/stats';
@@ -63,6 +65,13 @@ const onPointNewFormClose = () => {
 const onMainNavClick = (mainNavItem) => {
   switch (mainNavItem) {
     case MenuItem.NEW_EVENT:
+      if (!isOnline()) {
+        toast(`You can't create a new point offline`);
+        mainNavComponent.setMenuItem(MenuItem.TABLE);
+        newEventButton.disabled = false;
+        return;
+      }
+      newEventButton.disabled = true;
       tripPresenter.destroy();
       filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
       tripPresenter.init();
