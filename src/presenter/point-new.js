@@ -12,10 +12,10 @@ const BLANK_POINT = {
   offers: [],
   destinationInfo: {
     description: ``,
-    photos: [],
+    photos: ``,
   },
   dateTimeStartEvent: dayjs(),
-  dateTimeEndEvent: dayjs(),
+  dateTimeEndEvent: dayjs().add(1, `day`),
   cost: 0,
   isFavorite: false,
 };
@@ -68,10 +68,28 @@ export default class PointNew {
     for (const destination of destinations) {
       if (destination.name === BLANK_POINT.destinationCity) {
         BLANK_POINT.destinationInfo.description = destination.destinationInfo.description;
-        BLANK_POINT.destinationInfo.photos = destination.destinationInfo.photos;
+        BLANK_POINT.destinationInfo.photos = this._getPhotos(destination.destinationInfo.photos);
         break;
       }
     }
+  }
+
+  _getPhotos(photos) {
+    const readyPhotos = [];
+
+    photos.map((photo) => {
+      readyPhotos.push(Object.assign(
+          {},
+          photo,
+          {
+            src: photo.src,
+            alt: photo.alt,
+          }
+      ));
+    });
+
+    readyPhotos.map((photo) => delete photo.description);
+    return readyPhotos;
   }
 
   destroy() {

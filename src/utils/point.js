@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 dayjs.extend(isSameOrBefore);
 
@@ -69,4 +70,81 @@ export const isPointExpired = (endEventDate) => {
 
 export const isPointUnexpired = (endStartDate) => {
   return endStartDate === null ? false : dayjs().isSameOrBefore(endStartDate, `D`);
+};
+
+export const adaptPhotosToClient = (photos) => {
+  const readyPhotos = [];
+
+  photos.map((photo) => {
+    readyPhotos.push(Object.assign(
+        {},
+        photo,
+        {
+          src: photo.src,
+          alt: photo.description,
+        }
+    ));
+  });
+
+  readyPhotos.map((photo) => delete photo.description);
+  return readyPhotos;
+};
+
+export const adaptPhotosToServer = (photos) => {
+  const readyPhotos = [];
+
+  photos.map((photo) => {
+    readyPhotos.push({
+      'src': photo.src,
+      'description': photo.alt,
+    });
+  });
+
+  return readyPhotos;
+};
+
+export const adaptOffersToClient = (offers) => {
+  const readyOffers = [];
+
+  offers.map((offer) => {
+    readyOffers.push(Object.assign(
+        {},
+        offer,
+        {
+          id: nanoid(),
+          condition: offer.title,
+          cost: offer.price,
+        }
+    ));
+  });
+
+  readyOffers.map((offer) => {
+    delete offer.title;
+    delete offer.price;
+  });
+
+  return readyOffers;
+};
+
+export const adaptOffersToServer = (offers) => {
+  const readyOffers = [];
+
+  offers.map((offer) => {
+    readyOffers.push(Object.assign(
+        {},
+        offer,
+        {
+          title: offer.condition,
+          price: offer.cost,
+        }
+    ));
+  });
+
+  readyOffers.map((offer) => {
+    delete offer.id;
+    delete offer.cost;
+    delete offer.condition;
+  });
+
+  return readyOffers;
 };
