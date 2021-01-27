@@ -1,6 +1,9 @@
 import PointView from '../view/point';
 import PointEditView from '../view/point-edit';
 
+import {isOnline} from '../utils/common';
+import {toast} from '../utils/toast/toast.js';
+
 import {render, RenderPosition, replace, remove} from '../utils/render';
 
 import {UserAction, UpdateType, Key} from '../const';
@@ -8,6 +11,12 @@ import {UserAction, UpdateType, Key} from '../const';
 const Mode = {
   DEFAULT: `DEFAULT`,
   EDITING: `EDITING`,
+};
+
+export const State = {
+  SAVING: `SAVING`,
+  DELETING: `DELETING`,
+  ABORTING: `ABORTING`,
 };
 
 export default class Point {
@@ -58,7 +67,8 @@ export default class Point {
     }
 
     if (this._mode === Mode.EDITING) {
-      replace(this._pointEditComponent, prevPointEditComponent);
+      replace(this._pointComponent, prevPointEditComponent);
+      this._mode = Mode.DEFAULT;
     }
 
     remove(prevPointComponent);
@@ -73,6 +83,37 @@ export default class Point {
   resetView() {
     if (this._mode !== Mode.DEFAULT) {
       this._replaceFormToPoint();
+    }
+  }
+
+  setViewState(state) {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    switch (state) {
+      case State.SAVING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isSaving: true,
+        });
+        break;
+      case State.DELETING:
+        this._pointEditComponent.updateData({
+          isDisabled: true,
+          isDeleting: true,
+        });
+        break;
+      case State.ABORTING:
+        this._pointComponent.shake(resetFormState);
+        this._pointEditComponent.shake(resetFormState);
+        break;
+      default:
+        throw new Error(`Unknown state: '${state}'!`);
     }
   }
 
@@ -98,6 +139,11 @@ export default class Point {
   }
 
   _onRollupButtonClick() {
+    if (!isOnline()) {
+      toast(`You can't edit a point offline`);
+      return;
+    }
+
     this._replacePointToForm();
   }
 
@@ -121,15 +167,24 @@ export default class Point {
   }
 
   _onFormSubmitClick(point) {
+    if (!isOnline()) {
+      toast(`You can't save a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.UPDATE_POINT,
         UpdateType.MINOR,
         point
     );
-    this._replaceFormToPoint();
   }
 
   _onFormDeleteClick(point) {
+    if (!isOnline()) {
+      toast(`You can't delete a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.DELETE_POINT,
         UpdateType.MINOR,

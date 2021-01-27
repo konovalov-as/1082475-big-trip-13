@@ -1,6 +1,6 @@
 import Observer from '../utils/observer';
-import {nanoid} from 'nanoid';
 import dayjs from 'dayjs';
+import {adaptPhotosToClient, adaptPhotosToServer, adaptOffersToClient, adaptOffersToServer} from '../utils/point';
 
 export default class Points extends Observer {
   constructor() {
@@ -59,39 +59,16 @@ export default class Points extends Observer {
   }
 
   static adaptToClient(point) {
-    const getOffers = (offers) => {
-      const readyOffers = [];
-
-      offers.map((offer) => {
-        readyOffers.push(Object.assign(
-            {},
-            offer,
-            {
-              id: nanoid(),
-              condition: offer.title,
-              cost: offer.price,
-            }
-        ));
-      });
-
-      readyOffers.map((offer) => {
-        delete offer.title;
-        delete offer.price;
-      });
-
-      return readyOffers;
-    };
-
     const adaptedPoint = Object.assign(
         {},
         point,
         {
           pointType: point.type,
           destinationCity: point.destination.name,
-          offers: getOffers(point.offers),
+          offers: adaptOffersToClient(point.offers),
           destinationInfo: {
             description: point.destination.description,
-            photos: point.destination.pictures.map((photo) => photo.src),
+            photos: adaptPhotosToClient(point.destination.pictures),
           },
           dateTimeStartEvent: dayjs(point.date_from),
           dateTimeEndEvent: dayjs(point.date_to),
@@ -111,42 +88,6 @@ export default class Points extends Observer {
   }
 
   static adaptToServer(point) {
-    const getOffers = (offers) => {
-      const readyOffers = [];
-
-      offers.map((offer) => {
-        readyOffers.push(Object.assign(
-            {},
-            offer,
-            {
-              title: offer.condition,
-              price: offer.cost,
-            }
-        ));
-      });
-
-      readyOffers.map((offer) => {
-        delete offer.id;
-        delete offer.cost;
-        delete offer.condition;
-      });
-
-      return readyOffers;
-    };
-
-    const getPhotos = (photos) => {
-      const readyPhotos = [];
-
-      photos.map((photo) => {
-        readyPhotos.push({
-          'src': photo,
-          'description': `description`,
-        });
-      });
-
-      return readyPhotos;
-    };
-
     const adaptedPoint = Object.assign(
         {},
         point,
@@ -157,10 +98,10 @@ export default class Points extends Observer {
           'destination': {
             'name': point.destinationCity,
             'description': point.destinationInfo.description,
-            'pictures': getPhotos(point.destinationInfo.photos),
+            'pictures': adaptPhotosToServer(point.destinationInfo.photos),
           },
           'is_favorite': point.isFavorite,
-          'offers': getOffers(point.offers),
+          'offers': adaptOffersToServer(point.offers),
           'type': point.pointType,
         }
     );

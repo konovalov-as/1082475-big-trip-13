@@ -1,4 +1,5 @@
 import Observer from '../utils/observer';
+import {adaptPhotosToClient} from '../utils/point';
 
 export default class Destinations extends Observer {
   constructor() {
@@ -23,7 +24,7 @@ export default class Destinations extends Observer {
         {
           destinationInfo: {
             description: destinations.description,
-            photos: destinations.pictures.map((photo) => photo.src),
+            photos: adaptPhotosToClient(destinations.pictures),
           },
         }
     );

@@ -18,7 +18,7 @@ const createDestinationCityTemplate = (destinationCity) => {
 };
 
 const createPointHeaderTemplate = (point, offers, destinations) => {
-  const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity} = point;
+  const {pointType, destinationCity, dateTimeStartEvent, dateTimeEndEvent, cost, isWrongCity, isDisabled, isSaving, isDeleting} = point;
 
   const dateStart = dateTimeStartEvent !== null
     ? dayjs(dateTimeStartEvent).format(`DD/MM/YYYY HH:mm`)
@@ -80,8 +80,8 @@ const createPointHeaderTemplate = (point, offers, destinations) => {
       <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="${he.encode(cost.toString())}">
     </div>
 
-    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled ? `disabled` : ``}>Save</button>
-    <button class="event__reset-btn" type="reset">Delete</button>
+    <button class="event__save-btn  btn  btn--blue" type="submit" ${isSubmitDisabled || isDisabled ? `disabled` : ``}>${isSaving ? `Saving...` : `Save`}</button>
+    <button class="event__reset-btn" type="reset" ${isDisabled ? `disabled` : ``}>${isDeleting ? `Deleting...` : `Delete`}</button>
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
@@ -127,7 +127,7 @@ const createDestinationTemplate = (description) => {
 };
 
 const createPhotoTemplate = (photo) => {
-  return `<img class="event__photo" src="${photo}" alt="Event photo">`;
+  return `<img class="event__photo" src="${photo.src}" alt="${photo.alt}">`;
 };
 
 const createPhotosTemplate = (photos) => {
@@ -192,6 +192,7 @@ export default class PointEdit extends SmartView {
     this._datepicker = null;
 
     this._newEventButton = newEventButton;
+    this._submitButton = this.getElement().querySelector(`.event__save-btn`);
 
     this._onFormSubmitClick = this._onFormSubmitClick.bind(this);
     this._onFormDeleteClick = this._onFormDeleteClick.bind(this);
@@ -243,11 +244,13 @@ export default class PointEdit extends SmartView {
       start: flatpickr(startDateInput, {
         enableTime: true,
         dateFormat: `d/m/Y H:i`,
+        defaultDate: this._data.dateTimeStartEvent.toDate(),
         onChange: this._onStartDateChange,
       }),
       end: flatpickr(endDateInput, {
         enableTime: true,
         dateFormat: `d/m/Y H:i`,
+        defaultDate: this._data.dateTimeEndEvent.toDate(),
         onChange: this._onEndDateChange,
       }),
     };
@@ -295,12 +298,11 @@ export default class PointEdit extends SmartView {
 
   _onDestinationChange(evt) {
     evt.preventDefault();
-    const submitButton = this.getElement().querySelector(`.event__save-btn`);
 
     this._destinations.find((destination) => {
       if (destination.name !== evt.target.value) {
         evt.target.setCustomValidity(`Необходимо выбрать город из списка`);
-        submitButton.disabled = true;
+        this._submitButton.disabled = true;
         // this.updateData({
         //   isWrongCity: true,
         // });
@@ -332,6 +334,21 @@ export default class PointEdit extends SmartView {
 
   _onCostChange(evt) {
     evt.preventDefault();
+    const target = evt.target;
+    const costNumber = parseInt(target.value, 10);
+    if (!Number.isInteger(costNumber)) {
+      target.setCustomValidity(`Cost is an integer`);
+      this._submitButton.disabled = true;
+      return;
+    }
+    if (costNumber < 0) {
+      target.setCustomValidity(`Cost is a positive number`);
+      this._submitButton.disabled = true;
+      return;
+    }
+    target.setCustomValidity(``);
+    this._submitButton.disabled = false;
+
     this.updateData({
       cost: evt.target.value,
     }, true);
@@ -374,6 +391,9 @@ export default class PointEdit extends SmartView {
         point,
         {
           isWrongCity: false,
+          isDisabled: false,
+          isSaving: false,
+          isDeleting: false,
         }
     );
   }
@@ -390,6 +410,9 @@ export default class PointEdit extends SmartView {
 
     delete pointData.isWrongCity;
     delete pointData.isRepeating;
+    delete pointData.isDisabled;
+    delete pointData.isSaving;
+    delete pointData.isDeleting;
 
     return pointData;
   }

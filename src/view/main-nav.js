@@ -39,10 +39,6 @@ export default class MainNav extends AbstractView {
       }
     });
 
-    if (target.attributes.id.value === MenuItem.NEW_EVENT) {
-      this._newEventButton.disabled = true;
-    }
-
     this._callback.onMainNavClick(target.attributes.id.value);
   }
 

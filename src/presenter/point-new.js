@@ -1,22 +1,11 @@
 import PointEditView from '../view/point-edit';
-import {nanoid} from 'nanoid';
+
 import {remove, render, RenderPosition} from '../utils/render';
-import {UserAction, UpdateType, Key, POINT_TYPES, DESTINATION_CITIES} from '../const';
+import {UserAction, UpdateType, Key, POINT_TYPES} from '../const';
 import dayjs from 'dayjs';
 
-const BLANK_POINT = {
-  pointType: POINT_TYPES[0],
-  destinationCity: DESTINATION_CITIES[0],
-  offers: [],
-  destinationInfo: {
-    description: ``,
-    photos: [],
-  },
-  dateTimeStartEvent: dayjs(),
-  dateTimeEndEvent: dayjs(),
-  cost: 0,
-  isFavorite: false,
-};
+import {isOnline} from '../utils/common';
+import {toast} from '../utils/toast/toast.js';
 
 export default class PointNew {
   constructor(pointListContainer, changeData, newEventButton) {
@@ -31,6 +20,21 @@ export default class PointNew {
     this._onDeleteClick = this._onDeleteClick.bind(this);
     this._onCloseClick = this._onCloseClick.bind(this);
     this._onEscKeyDown = this._onEscKeyDown.bind(this);
+
+    this._listCities = [];
+    this._BLANK_POINT = {
+      pointType: POINT_TYPES[0].toLowerCase(),
+      destinationCity: ``,
+      offers: [],
+      destinationInfo: {
+        description: ``,
+        photos: ``,
+      },
+      dateTimeStartEvent: dayjs(),
+      dateTimeEndEvent: dayjs().add(1, `day`),
+      cost: 0,
+      isFavorite: false,
+    };
   }
 
   init(callback, offers, destinations) {
@@ -40,7 +44,11 @@ export default class PointNew {
 
     this._destroyCallback = callback;
 
-    this._pointEditComponent = new PointEditView(BLANK_POINT, offers, destinations, this._newEventButton);
+    this._getOffers(offers);
+    this._getDestinations(destinations);
+    this._getListCities(destinations);
+
+    this._pointEditComponent = new PointEditView(this._BLANK_POINT, offers, destinations, this._newEventButton);
     this._pointEditComponent.setOnFormSubmitClick(this._onFormSubmit);
     this._pointEditComponent.setOnFormDeleteClick(this._onDeleteClick);
     this._pointEditComponent.setOnEditFormClose(this._onCloseClick);
@@ -48,6 +56,50 @@ export default class PointNew {
     render(this._pointListContainer, this._pointEditComponent, RenderPosition.AFTERBEGIN);
 
     document.addEventListener(`keydown`, this._onEscKeyDown);
+  }
+
+  _getOffers(offers) {
+    for (const offer of offers) {
+      if (offer.pointType === (this._BLANK_POINT.pointType.toLowerCase())) {
+        this._BLANK_POINT.offers = offer.offers;
+        break;
+      }
+    }
+  }
+
+  _getDestinations(destinations) {
+    for (const destination of destinations) {
+      if (destination.name === this._BLANK_POINT.destinationCity) {
+        this._BLANK_POINT.destinationInfo.description = destination.destinationInfo.description;
+        this._BLANK_POINT.destinationInfo.photos = this._getPhotos(destination.destinationInfo.photos);
+        break;
+      }
+    }
+  }
+
+  _getListCities(destinations) {
+    destinations.map((destination) => {
+      this._listCities.push(destination.name);
+    });
+    this._BLANK_POINT.destinationCity = this._listCities[0];
+  }
+
+  _getPhotos(photos) {
+    const readyPhotos = [];
+
+    photos.map((photo) => {
+      readyPhotos.push(Object.assign(
+          {},
+          photo,
+          {
+            src: photo.src,
+            alt: photo.alt,
+          }
+      ));
+    });
+
+    readyPhotos.map((photo) => delete photo.description);
+    return readyPhotos;
   }
 
   destroy() {
@@ -65,16 +117,44 @@ export default class PointNew {
     document.removeEventListener(`keydown`, this._onEscKeyDown);
   }
 
+  setSaving() {
+    this._pointEditComponent.updateData({
+      isDisabled: true,
+      isSaving: true,
+    });
+  }
+
+  setAborting() {
+    const resetFormState = () => {
+      this._pointEditComponent.updateData({
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false
+      });
+    };
+
+    this._pointEditComponent.shake(resetFormState);
+  }
+
   _onFormSubmit(point) {
+    if (!isOnline()) {
+      toast(`You can't save a point offline`);
+      return;
+    }
+
     this._changeData(
         UserAction.ADD_POINT,
         UpdateType.MINOR,
-        Object.assign({id: nanoid()}, point)
+        point
     );
-    this.destroy();
   }
 
   _onDeleteClick() {
+    if (!isOnline()) {
+      toast(`You can't delete a point offline`);
+      return;
+    }
+
     this.destroy();
   }
 
