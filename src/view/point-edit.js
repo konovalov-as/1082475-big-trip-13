@@ -365,7 +365,7 @@ export default class PointEdit extends SmartView {
   _onOfferChange(evt) {
     evt.preventDefault();
     const offerTitle = evt.target.value;
-    let currentOffers = this._offersForPoint;
+    const currentOffers = this._offersForPoint;
 
     const diffOffers = currentOffers.map((currentOffer) => {
       return currentOffer.condition === offerTitle ?
