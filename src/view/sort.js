@@ -2,31 +2,31 @@ import AbstractView from './abstract';
 import {SortType} from '../const';
 
 const sort = [{
-  name: `day`,
+  name: SortType.DAY,
   isChecked: true,
   isDisabled: false,
-  sortType: SortType.DATE_UP,
+  sortType: SortType.DAY,
 },
 {
-  name: `event`,
+  name: SortType.EVENT,
   isChecked: false,
   isDisabled: true,
   sortType: null,
 },
 {
-  name: `time`,
+  name: SortType.TIME,
   isChecked: false,
   isDisabled: false,
-  sortType: SortType.TIME_MORE,
+  sortType: SortType.TIME,
 },
 {
-  name: `price`,
+  name: SortType.PRICE,
   isChecked: false,
   isDisabled: false,
-  sortType: SortType.COST_MORE,
+  sortType: SortType.PRICE,
 },
 {
-  name: `offers`,
+  name: SortType.OFFERS,
   isChecked: false,
   isDisabled: true,
   sortType: null,

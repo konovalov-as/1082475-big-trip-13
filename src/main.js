@@ -47,7 +47,7 @@ const infoPresenter = new InfoPresenter(infoContainer, pointsModel);
 const tripPresenter = new TripPresenter(pointsContainer, pointsModel, filterModel, offersModel, destinationsModel, apiWithProvider, newEventButton);
 const filtersPresenter = new FiltersPresenter(filtersTitle, filterModel, pointsModel);
 
-const mainNavComponent = new MainNavView(newEventButton, MenuItem.TABLE);
+const mainNavComponent = new MainNavView(newEventButton);
 
 const statsComponent = new StatsView();
 

@@ -1,10 +1,7 @@
 import dayjs from 'dayjs';
-import {nanoid} from 'nanoid';
 import isSameOrBefore from 'dayjs/plugin/isSameOrBefore';
 dayjs.extend(isSameOrBefore);
 
-// Функция помещает точки без даты в конце списка,
-// возвращая нужный вес для колбэка sort
 const getWeightWithoutDate = (dateA, dateB) => {
   if (dateA === null && dateB === null) {
     return 0;
@@ -93,6 +90,10 @@ export const adaptPhotosToClient = (photos) => {
 export const adaptPhotosToServer = (photos) => {
   const readyPhotos = [];
 
+  if (!photos.length) {
+    return [];
+  }
+
   photos.map((photo) => {
     readyPhotos.push({
       'src': photo.src,
@@ -111,7 +112,6 @@ export const adaptOffersToClient = (offers) => {
         {},
         offer,
         {
-          id: nanoid(),
           condition: offer.title,
           cost: offer.price,
         }

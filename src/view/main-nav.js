@@ -9,10 +9,9 @@ const createMainNavTemplate = () => {
 };
 
 export default class MainNav extends AbstractView {
-  constructor(newEventButton, currentMainNavItem) {
+  constructor(newEventButton) {
     super();
     this._newEventButton = newEventButton;
-    this._currentMainNavItem = currentMainNavItem;
     this._callback = {};
 
     this._newEventButton.id = MenuItem.NEW_EVENT;
@@ -20,7 +19,7 @@ export default class MainNav extends AbstractView {
   }
 
   getTemplate() {
-    return createMainNavTemplate(this._currentMainNavItem);
+    return createMainNavTemplate();
   }
 
   _onMainNavClick(evt) {

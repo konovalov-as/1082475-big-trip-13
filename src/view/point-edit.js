@@ -6,6 +6,10 @@ import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
+const FormattingToken = {
+  DAY_MONTH_YEAR_HOURS_MIN: `d/m/Y H:i`,
+};
+
 const createPointTemplate = (pointType) => {
   return `<div class="event__type-item">
   <input id="event-type-${pointType.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${pointType.toLowerCase()}">
@@ -243,13 +247,13 @@ export default class PointEdit extends SmartView {
     this._datepicker = {
       start: flatpickr(startDateInput, {
         enableTime: true,
-        dateFormat: `d/m/Y H:i`,
+        dateFormat: FormattingToken.DAY_MONTH_YEAR_HOURS_MIN,
         defaultDate: this._data.dateTimeStartEvent.toDate(),
         onChange: this._onStartDateChange,
       }),
       end: flatpickr(endDateInput, {
         enableTime: true,
-        dateFormat: `d/m/Y H:i`,
+        dateFormat: FormattingToken.DAY_MONTH_YEAR_HOURS_MIN,
         defaultDate: this._data.dateTimeEndEvent.toDate(),
         onChange: this._onEndDateChange,
       }),
@@ -303,14 +307,10 @@ export default class PointEdit extends SmartView {
       if (destination.name !== evt.target.value) {
         evt.target.setCustomValidity(`Необходимо выбрать город из списка`);
         this._submitButton.disabled = true;
-        // this.updateData({
-        //   isWrongCity: true,
-        // });
         return;
       }
 
       this.updateData({
-        // isWrongCity: false,
         destinationCity: evt.target.value,
         destinationInfo: Object.assign(
             {},
@@ -323,12 +323,6 @@ export default class PointEdit extends SmartView {
       });
       const destinationInput = this.getElement().querySelector(`.event__input--destination`);
       destinationInput.focus();
-
-      //  else {
-      //   this.updateData({
-      //     isWrongCity: true,
-      //   }, true);
-      // }
     });
   }
 
