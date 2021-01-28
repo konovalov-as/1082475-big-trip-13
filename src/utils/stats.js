@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-const getDays = (minutes) => {
+const getCountDays = (minutes) => {
   return Math.ceil(minutes / 1440);
 };
 
@@ -17,19 +17,19 @@ export const getData = (labels, points) => {
   labels.map((label) => {
     let cost = 0;
     let count = 0;
-    let minutes = 0;
+    let countMinutes = 0;
 
     points
       .filter((point) => point.pointType.toUpperCase() === label)
       .map((point) => {
         cost += point.cost;
         count++;
-        minutes += dayjs(point.dateTimeEndEvent).diff(point.dateTimeStartEvent, `minute`);
+        countMinutes += dayjs(point.dateTimeEndEvent).diff(point.dateTimeStartEvent, `minute`);
       });
 
     money.push(cost);
     countTypes.push(count);
-    countDays.push(getDays(minutes));
+    countDays.push(getCountDays(countMinutes));
   });
 
   return [money, countTypes, countDays];

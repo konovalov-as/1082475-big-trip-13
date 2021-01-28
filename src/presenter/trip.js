@@ -21,7 +21,7 @@ export default class Trip {
     this._tripContainer = tripContainer;
     this._pointPresenter = {};
 
-    this._currentSortType = SortType.DATE_UP;
+    this._currentSortType = SortType.DAY;
 
     this._isLoading = true;
     this._api = api;
@@ -33,7 +33,6 @@ export default class Trip {
     this._callback = {};
 
     this._tripListComponent = new TripView();
-    // this._sortingComponent = new SortingView(this._sorting);
     this._sortComponent = null;
     this._loadingComponent = new LoadingView();
     this._noPointComponent = new NoPointView();
@@ -47,7 +46,6 @@ export default class Trip {
   }
 
   init() {
-    // this._points = points;
     this._pointsModel.addObserver(this._onModelEvent);
     this._offersModel.addObserver(this._onModelEvent);
     this._destinationsModel.addObserver(this._onModelEvent);
@@ -77,20 +75,17 @@ export default class Trip {
   }
 
   _getPoints() {
-    // todo возможно переменные filterType, points, filteredPoints
-    // нужно перенести в поля класса
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[filterType](points);
 
     switch (this._currentSortType) {
-      case SortType.DATE_UP:
+      case SortType.DAY:
         return filteredPoints.sort(sortPointDateUp);
-      case SortType.TIME_MORE:
+      case SortType.TIME:
         return filteredPoints.sort(sortPointTimeMore);
-      case SortType.COST_MORE:
+      case SortType.PRICE:
         return filteredPoints.sort(sortPointCostMore);
-      // todo default
     }
 
     return filteredPoints;
@@ -139,26 +134,21 @@ export default class Trip {
   }
 
   _onModelEvent(updateType, data) {
-    // В зависимости от типа изменений решаем, что делать:
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._pointPresenter[data.id].init(data);
         break;
       case UpdateType.MINOR:
-        // - обновить список (например, когда задача ушла в архив)
         this._clearTrip();
         this._renderTrip();
         break;
       case UpdateType.MAJOR:
-        // - обновить всю доску (например, при переключении фильтра)
         this._clearTrip({resetSortType: true});
         this._renderTrip();
         break;
       case UpdateType.INIT:
         this._isLoading = false;
         remove(this._loadingComponent);
-        // this._clearTrip();
         this._renderTrip();
         break;
       default:
@@ -172,8 +162,6 @@ export default class Trip {
     }
 
     this._currentSortType = sortType;
-    // this._clearPointList();
-    // this._renderPointList();
     this._clearTrip();
     this._renderTrip();
   }
@@ -187,7 +175,6 @@ export default class Trip {
     this._sortComponent.setOnSortTypeChange(this._onSortTypeChange);
 
     render(this._tripContainer, this._sortComponent, RenderPosition.BEFOREEND);
-    // this._sortingComponent.setOnSortTypeChange(this._onSortTypeChange);
   }
 
   _renderPoint(point, offers, destinations) {
@@ -221,7 +208,7 @@ export default class Trip {
     remove(this._noPointComponent);
 
     if (resetSortType) {
-      this._currentSortType = SortType.DEFAULT;
+      this._currentSortType = SortType.DAY;
     }
   }
 

@@ -18,9 +18,11 @@ export const FilterType = {
 };
 
 export const SortType = {
-  DATE_UP: `date-up`,
-  TIME_MORE: `time-more`,
-  COST_MORE: `cost-more`,
+  DAY: `day`,
+  EVENT: `event`,
+  TIME: `time`,
+  PRICE: `price`,
+  OFFERS: `offers`,
 };
 
 export const UserAction = {

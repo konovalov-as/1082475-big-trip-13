@@ -1,4 +1,5 @@
 import Observer from '../utils/observer';
+import {adaptOffersToClient} from '../utils/point';
 
 export default class Offers extends Observer {
   constructor() {
@@ -17,35 +18,12 @@ export default class Offers extends Observer {
   }
 
   static adaptToClient(offers) {
-    const adaptOffers = () => {
-
-      const readyOffers = [];
-
-      offers.offers.map((offer) => {
-        readyOffers.push(Object.assign(
-            {},
-            offer,
-            {
-              condition: offer.title,
-              cost: offer.price,
-            }
-        ));
-      });
-
-      readyOffers.map((offer) => {
-        delete offer.title;
-        delete offer.price;
-      });
-
-      return readyOffers;
-    };
-
     const adaptedOffers = Object.assign(
         {},
         offers,
         {
           pointType: offers.type,
-          offers: adaptOffers(offers.offers),
+          offers: adaptOffersToClient(offers.offers),
         }
     );
 
