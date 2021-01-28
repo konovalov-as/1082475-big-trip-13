@@ -94,7 +94,7 @@ const createPointHeaderTemplate = (point, offers, destinations) => {
 
 const createOfferTemplate = (offer) => {
   return `<div class="event__offer-selector">
-  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.condition}-1" type="checkbox" name="event-offer-${offer.condition}" ${offer.isChecked ? `checked` : ``}>
+  <input class="event__offer-checkbox  visually-hidden" id="event-offer-${offer.condition}-1" type="checkbox" name="event-offer-${offer.condition}" ${offer.isChecked ? `checked` : ``} value="${offer.condition}">
   <label class="event__offer-label" for="event-offer-${offer.condition}-1">
     <span class="event__offer-title">${offer.condition}</span>
     &plus;&euro;&nbsp;
@@ -170,9 +170,9 @@ const createPointDetailsContainerTemplate = (offersContainerTemplate, destinatio
   return ``;
 };
 
-const createPointEditTemplate = (data, offers, destinations) => {
+const createPointEditTemplate = (data, offers, destinations, offersForPoint) => {
   const pointHeaderTemplate = createPointHeaderTemplate(data, offers, destinations);
-  const offersTemplate = createOffersTemplate(data.offers);
+  const offersTemplate = createOffersTemplate(offersForPoint);
   const offersContainerTemplate = createOffersContainerTemplate(offersTemplate);
   const destinationTemplate = createDestinationTemplate(data.destinationInfo.description);
   const photosTemplate = createPhotosTemplate(data.destinationInfo.photos);
@@ -192,6 +192,7 @@ export default class PointEdit extends SmartView {
     super();
     this._data = PointEdit.parsePointToData(point);
     this._offers = offers;
+    this._offersForPoint = this._data.offers;
     this._destinations = destinations;
     this._datepicker = null;
 
@@ -206,6 +207,7 @@ export default class PointEdit extends SmartView {
     this._onPointTypeChange = this._onPointTypeChange.bind(this);
     this._onDestinationChange = this._onDestinationChange.bind(this);
     this._onCostChange = this._onCostChange.bind(this);
+    this._onOfferChange = this._onOfferChange.bind(this);
     this._onStartDateChange = this._onStartDateChange.bind(this);
     this._onEndDateChange = this._onEndDateChange.bind(this);
 
@@ -214,13 +216,14 @@ export default class PointEdit extends SmartView {
   }
 
   reset(point) {
+    this._offersForPoint = point.offers;
     this.updateData(
         PointEdit.parsePointToData(point)
     );
   }
 
   getTemplate() {
-    return createPointEditTemplate(this._data, this._offers, this._destinations);
+    return createPointEditTemplate(this._data, this._offers, this._destinations, this._offersForPoint);
   }
 
   restoreOn() {
@@ -280,6 +283,7 @@ export default class PointEdit extends SmartView {
     this.getElement()
       .querySelector(`#event-price-1`)
       .addEventListener(`input`, this._onCostChange);
+    this.setOnOfferChange();
   }
 
   _getOffers(targetOffer) {
@@ -293,8 +297,9 @@ export default class PointEdit extends SmartView {
   _onPointTypeChange(evt) {
     if (evt.target.matches(`input.event__type-input`)) {
       evt.preventDefault();
+      this._offersForPoint = this._getAvailableOffers(evt.target.value);
       this.updateData({
-        offers: this._getOffers(evt.target.value),
+        offers: [],
         pointType: evt.target.value,
       });
     }
@@ -305,7 +310,7 @@ export default class PointEdit extends SmartView {
 
     this._destinations.find((destination) => {
       if (destination.name !== evt.target.value) {
-        evt.target.setCustomValidity(`Необходимо выбрать город из списка`);
+        evt.target.setCustomValidity(`It's necessary to choose the city from the list`);
         this._submitButton.disabled = true;
         return;
       }
@@ -346,6 +351,54 @@ export default class PointEdit extends SmartView {
     this.updateData({
       cost: evt.target.value,
     }, true);
+  }
+
+  _getAvailableOffers(pointType) {
+    for (const offer of this._offers) {
+      if (pointType === offer.pointType) {
+        return offer.offers;
+      }
+    }
+    return [];
+  }
+
+  _onOfferChange(evt) {
+    evt.preventDefault();
+    const offerTitle = evt.target.value;
+    let currentOffers = this._offersForPoint;
+
+    const diffOffers = currentOffers.map((currentOffer) => {
+      return currentOffer.condition === offerTitle ?
+        Object.assign(
+            {},
+            currentOffer,
+            {
+              isChecked: !currentOffer.isChecked
+            }
+        ) : currentOffer;
+    });
+
+    this._offersForPoint = diffOffers;
+
+    const checkedOffers = diffOffers.reduce((result, offer) => {
+
+      if (offer.isChecked) {
+        result.push(offer);
+      }
+      return result;
+
+    }, []);
+
+    this.updateData({
+      offers: checkedOffers
+    }, true);
+  }
+
+  setOnOfferChange() {
+    const offersContainer = this.getElement().querySelector(`.event__available-offers`);
+    if (offersContainer) {
+      offersContainer.addEventListener(`change`, this._onOfferChange);
+    }
   }
 
   _onEditFormClose(evt) {
