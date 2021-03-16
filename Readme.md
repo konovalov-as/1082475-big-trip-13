@@ -1,6 +1,6 @@
 # Проект «Большое путешествие» [![Build status][travis-image]][travis-url]
 
-* Опубликованная версия: [Мишка](https://konovalov-as.github.io/1082475-big-trip-13-pb/).
+* Опубликованная версия: [Большое путешествие](https://konovalov-as.github.io/1082475-big-trip-13-pb/).
 * Студент: [Александр Коновалов](https://up.htmlacademy.ru/ecmascript/13/user/1082475).
 * Наставник: [Артем Макаров](https://htmlacademy.ru/profile/deepsick).
 
